@@ -43,7 +43,7 @@ public class DataSeeder implements CommandLineRunner {
                         admin.setPassword(passwordEncoder.encode("Admin@123")); // Change this password after first
                                                                                 // login!
                         admin.setRole(Role.ADMIN);
-                        admin.setIsActive(true);
+                        admin.setActive(true);
                         userRepository.save(admin);
                         System.out.println("=".repeat(60));
                         System.out.println("ADMIN USER CREATED!");
@@ -66,9 +66,21 @@ public class DataSeeder implements CommandLineRunner {
                                         "[{\"_type\":\"block\",\"children\":[{\"_type\":\"span\",\"text\":\"A passionate full-stack developer and tech enthusiast.\",\"marks\":[]}]}]");
                         authorRepository.save(author);
 
-                        Category catReact = new Category(null, "React", "Frontend Framework");
-                        Category catNextJS = new Category(null, "Next.js", "React Framework");
-                        Category catTypeScript = new Category(null, "TypeScript", "Programming Language");
+                        Category catReact = new Category();
+                        catReact.setName("React");
+                        catReact.setSlug("react");
+                        catReact.setDescription("Frontend Framework");
+
+                        Category catNextJS = new Category();
+                        catNextJS.setName("Next.js");
+                        catNextJS.setSlug("nextjs");
+                        catNextJS.setDescription("React Framework");
+
+                        Category catTypeScript = new Category();
+                        catTypeScript.setName("TypeScript");
+                        catTypeScript.setSlug("typescript");
+                        catTypeScript.setDescription("Programming Language");
+
                         categoryRepository.save(catReact);
                         categoryRepository.save(catNextJS);
                         categoryRepository.save(catTypeScript);

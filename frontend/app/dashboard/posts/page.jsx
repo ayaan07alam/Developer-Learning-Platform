@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
-import { Plus, Edit, Trash2, Eye, EyeOff, Heart, MessageCircle } from 'lucide-react';
+import { Plus, Edit, Trash2, Eye, EyeOff, Heart, MessageCircle, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 
 export default function PostsListPage() {
@@ -167,6 +167,7 @@ export default function PostsListPage() {
                                 <tr>
                                     <th className="text-left p-4 font-semibold">Title</th>
                                     <th className="text-left p-4 font-semibold">Status</th>
+                                    <th className="text-left p-4 font-semibold">Categories</th>
                                     <th className="text-left p-4 font-semibold">Author</th>
                                     <th className="text-left p-4 font-semibold">Views</th>
                                     <th className="text-left p-4 font-semibold">Likes</th>
@@ -178,7 +179,7 @@ export default function PostsListPage() {
                             <tbody>
                                 {filteredPosts.length === 0 ? (
                                     <tr>
-                                        <td colSpan={8} className="text-center p-8 text-muted-foreground">
+                                        <td colSpan={9} className="text-center p-8 text-muted-foreground">
                                             No posts found. Create your first post!
                                         </td>
                                     </tr>
@@ -198,6 +199,31 @@ export default function PostsListPage() {
                                                     }`}>
                                                     {post.status}
                                                 </span>
+                                            </td>
+                                            <td className="p-4">
+                                                {post.categories && post.categories.length > 0 ? (
+                                                    post.categories.length === 1 ? (
+                                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20">
+                                                            {post.categories[0].name}
+                                                        </span>
+                                                    ) : (
+                                                        <div className="relative group">
+                                                            <button className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-colors">
+                                                                {post.categories[0].name}
+                                                                <ChevronDown className="w-3 h-3" />
+                                                            </button>
+                                                            <div className="absolute left-0 top-full mt-1 bg-card border border-border rounded-lg shadow-lg p-2 min-w-[150px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                                                                {post.categories.map((cat) => (
+                                                                    <div key={cat.id} className="px-2 py-1 text-xs hover:bg-muted rounded">
+                                                                        {cat.name}
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    )
+                                                ) : (
+                                                    <span className="text-xs text-muted-foreground">No category</span>
+                                                )}
                                             </td>
                                             <td className="p-4 text-sm">
                                                 {post.author?.name || 'No author'}

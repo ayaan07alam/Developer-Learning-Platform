@@ -24,71 +24,102 @@ import java.util.Arrays;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
+        @Autowired
+        private JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+                return new BCryptPasswordEncoder();
+        }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth
-                        // Public endpoints
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/posts", "/api/posts/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/categories", "/api/categories/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/posts/*/likes/count").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/posts/*/likes/me").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/posts/*/comments").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/posts/*/comments/count",
-                                "/api/likes/**",
-                                "/api/comments/post/**")
-                        .permitAll()
-                        .requestMatchers("/h2-console/**").permitAll()
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+                http
+                                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                                .csrf(csrf -> csrf.disable())
+                                .sessionManagement(session -> session.sessionCreationPolicy(
+                                                SessionCreationPolicy.STATELESS))
+                                .authorizeHttpRequests(auth -> auth
+                                                // Public endpoints
+                                                .requestMatchers("/api/auth/**").permitAll()
+                                                .requestMatchers(HttpMethod.GET, "/api/posts", "/api/posts/**")
+                                                .permitAll()
+                                                .requestMatchers(HttpMethod.GET, "/api/categories",
+                                                                "/api/categories/**")
+                                                .permitAll()
+                                                .requestMatchers(HttpMethod.GET, "/api/posts/*/likes/count").permitAll()
+                                                .requestMatchers(HttpMethod.GET, "/api/posts/*/likes/me").permitAll()
+                                                .requestMatchers(HttpMethod.GET, "/api/posts/*/comments").permitAll()
+                                                .requestMatchers(HttpMethod.GET, "/api/posts/*/comments/count",
+                                                                "/api/likes/**",
+                                                                "/api/comments/post/**")
+                                                .permitAll()
+                                                .requestMatchers("/h2-console/**").permitAll()
 
-                        // Like and Comment permissions for authenticated users (BEFORE post management)
-                        .requestMatchers(HttpMethod.POST, "/api/posts/*/likes").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/api/posts/*/likes").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/api/posts/*/comments").authenticated()
-                        .requestMatchers(HttpMethod.PUT, "/api/comments/**").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/api/comments/**").authenticated()
+                                                // Job platform public endpoints (categories and types)
+                                                .requestMatchers(HttpMethod.GET, "/api/jobs/categories",
+                                                                "/api/jobs/types")
+                                                .permitAll()
 
-                        // Protected endpoints - require authentication
-                        .requestMatchers("/api/dashboard/**").hasAnyAuthority("ADMIN", "EDITOR")
-                        .requestMatchers("/api/posts/**").hasAnyAuthority("ADMIN", "EDITOR")
-                        .requestMatchers("/api/categories/**").hasAnyAuthority("ADMIN", "EDITOR")
-                        .requestMatchers("/api/authors/**").hasAnyAuthority("ADMIN", "EDITOR")
-                        .requestMatchers("/api/users/*/role").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasAuthority("ADMIN")
-                        .requestMatchers("/api/admin/**").hasAuthority("ADMIN") // Admin endpoints
-                        .requestMatchers("/api/profile/**").authenticated() // Profile management for all authenticated
-                                                                            // users
-                        .requestMatchers("/api/comments/admin/**").hasAuthority("ADMIN")
-                        .anyRequest().permitAll())
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                                                // Job platform endpoints - require authentication
+                                                .requestMatchers("/api/users/job-role", "/api/users/select-job-role",
+                                                                "/api/users/change-job-role")
+                                                .authenticated()
+                                                .requestMatchers(HttpMethod.GET, "/api/jobs", "/api/jobs/**")
+                                                .authenticated()
+                                                .requestMatchers(HttpMethod.POST, "/api/jobs", "/api/jobs/*/apply")
+                                                .authenticated()
+                                                .requestMatchers(HttpMethod.PUT, "/api/jobs/**").authenticated()
+                                                .requestMatchers(HttpMethod.DELETE, "/api/jobs/**").authenticated()
+                                                .requestMatchers("/api/jobs/my-jobs", "/api/jobs/my-applications",
+                                                                "/api/jobs/*/applications", "/api/jobs/*/close")
+                                                .authenticated()
 
-        // For H2 console
-        http.headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()));
+                                                // Like and Comment permissions for authenticated users (BEFORE post
+                                                // management)
+                                                .requestMatchers(HttpMethod.POST, "/api/posts/*/likes").authenticated()
+                                                .requestMatchers(HttpMethod.DELETE, "/api/posts/*/likes")
+                                                .authenticated()
+                                                .requestMatchers(HttpMethod.POST, "/api/posts/*/comments")
+                                                .authenticated()
+                                                .requestMatchers(HttpMethod.PUT, "/api/comments/**").authenticated()
+                                                .requestMatchers(HttpMethod.DELETE, "/api/comments/**").authenticated()
 
-        return http.build();
-    }
+                                                // Protected endpoints - require authentication
+                                                .requestMatchers("/api/dashboard/**").hasAnyAuthority("ADMIN", "EDITOR")
+                                                .requestMatchers("/api/posts/**").hasAnyAuthority("ADMIN", "EDITOR")
+                                                .requestMatchers("/api/categories/**")
+                                                .hasAnyAuthority("ADMIN", "EDITOR")
+                                                .requestMatchers("/api/authors/**").hasAnyAuthority("ADMIN", "EDITOR")
+                                                .requestMatchers("/api/users/*/role").hasAuthority("ADMIN")
+                                                .requestMatchers(HttpMethod.DELETE, "/api/users/**")
+                                                .hasAuthority("ADMIN")
+                                                .requestMatchers("/api/admin/**").hasAuthority("ADMIN") // Admin
+                                                                                                        // endpoints
+                                                .requestMatchers("/api/profile/**").authenticated() // Profile
+                                                                                                    // management for
+                                                                                                    // all authenticated
+                                                                                                    // users
+                                                .requestMatchers("/api/comments/admin/**").hasAuthority("ADMIN")
+                                                .anyRequest().permitAll())
+                                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setAllowCredentials(true);
+                // For H2 console
+                http.headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()));
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+                return http.build();
+        }
+
+        @Bean
+        public CorsConfigurationSource corsConfigurationSource() {
+                CorsConfiguration configuration = new CorsConfiguration();
+                configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:3001"));
+                configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                configuration.setAllowedHeaders(Arrays.asList("*"));
+                configuration.setAllowCredentials(true);
+
+                UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+                source.registerCorsConfiguration("/**", configuration);
+                return source;
+        }
 }

@@ -71,11 +71,51 @@ const items = [
     link: "/learn/typescript",
     color: "from-blue-600 to-blue-800"
   },
-  // Add more items as needed...
 ];
 
 const Learn = () => {
   const [selectedId, setSelectedId] = useState(null);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/api/categories');
+      const data = await response.json();
+      // Transform API data to match the card format
+      const transformedData = data.map((cat, index) => ({
+        id: cat.id,
+        title: cat.name,
+        subtitle: cat.description || 'Learn more',
+        description: cat.description || `Explore ${cat.name} tutorials and guides`,
+        link: `/categories/${cat.slug}`,
+        color: getColorForIndex(index)
+      }));
+      setCategories(transformedData);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getColorForIndex = (index) => {
+    const colors = [
+      "from-orange-500 to-red-500",
+      "from-blue-400 to-blue-600",
+      "from-yellow-400 to-yellow-600",
+      "from-blue-400 to-cyan-400",
+      "from-gray-800 to-black",
+      "from-blue-600 to-blue-800",
+      "from-green-500 to-emerald-600",
+      "from-purple-500 to-pink-500"
+    ];
+    return colors[index % colors.length];
+  };
 
   useEffect(() => {
     if (selectedId !== null) {
@@ -106,28 +146,34 @@ const Learn = () => {
           layout
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
         >
-          {items.map((item) => (
-            <motion.div
-              layoutId={item.id}
-              key={item.id}
-              onClick={() => setSelectedId(item.id)}
-              whileHover={{ y: -5, scale: 1.02 }}
-              className="group cursor-pointer relative p-6 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/10 hover:border-primary/30 transition-all duration-300 shadow-xl"
-            >
-              <div className={cn("absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity bg-gradient-to-br rounded-3xl", item.color)} />
+          {loading ? (
+            <div className="col-span-full text-center py-12">Loading categories...</div>
+          ) : categories.length === 0 ? (
+            <div className="col-span-full text-center py-12">No categories available</div>
+          ) : (
+            categories.map((item) => (
+              <motion.div
+                layoutId={item.id}
+                key={item.id}
+                onClick={() => setSelectedId(item.id)}
+                whileHover={{ y: -5, scale: 1.02 }}
+                className="group cursor-pointer relative p-6 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/10 hover:border-primary/30 transition-all duration-300 shadow-xl"
+              >
+                <div className={cn("absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity bg-gradient-to-br rounded-3xl", item.color)} />
 
-              <div className="relative z-10 flex flex-col items-start h-full">
-                <div className="mb-4 p-3 rounded-2xl bg-background/50 border border-white/5 shadow-inner">
-                  {getIcon(item.title)}
+                <div className="relative z-10 flex flex-col items-start h-full">
+                  <div className="mb-4 p-3 rounded-2xl bg-background/50 border border-white/5 shadow-inner">
+                    {getIcon(item.title)}
+                  </div>
+                  <h3 className="text-xl font-bold mb-1 text-foreground">{item.title}</h3>
+                  <p className="text-sm font-medium text-primary mb-3">{item.subtitle}</p>
+                  <div className="mt-auto pt-4 flex items-center text-xs font-semibold text-muted-foreground group-hover:text-primary transition-colors">
+                    Read More →
+                  </div>
                 </div>
-                <h3 className="text-xl font-bold mb-1 text-foreground">{item.title}</h3>
-                <p className="text-sm font-medium text-primary mb-3">{item.subtitle}</p>
-                <div className="mt-auto pt-4 flex items-center text-xs font-semibold text-muted-foreground group-hover:text-primary transition-colors">
-                  Read More →
-                </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            ))
+          )}
         </motion.div>
 
         <AnimatePresence>
@@ -154,23 +200,23 @@ const Learn = () => {
 
                 <div className="relative z-10">
                   <div className="mb-6">
-                    {getIcon(items.find((item) => item.id === selectedId).title)}
+                    {getIcon(categories.find((item) => item.id === selectedId)?.title)}
                   </div>
 
                   <motion.h2 className="text-3xl font-bold mb-2 text-white">
-                    {items.find((item) => item.id === selectedId).title}
+                    {categories.find((item) => item.id === selectedId)?.title}
                   </motion.h2>
 
                   <motion.p className="text-lg text-primary mb-4 font-medium">
-                    {items.find((item) => item.id === selectedId).subtitle}
+                    {categories.find((item) => item.id === selectedId)?.subtitle}
                   </motion.p>
 
                   <motion.p className="text-gray-400 leading-relaxed mb-8">
-                    {items.find((item) => item.id === selectedId).description}
+                    {categories.find((item) => item.id === selectedId)?.description}
                   </motion.p>
 
                   <Link
-                    href={items.find((item) => item.id === selectedId).link}
+                    href={categories.find((item) => item.id === selectedId)?.link || '#'}
                     className="inline-flex items-center justify-center w-full px-6 py-3 rounded-xl bg-primary text-white font-bold hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20"
                   >
                     Start Learning Now

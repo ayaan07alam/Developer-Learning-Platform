@@ -10,6 +10,7 @@ import Script from "next/script";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ToastProvider } from "@/contexts/ToastContext";
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import LoginPopup from "@/components/LoginPopup";
 
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
 
@@ -106,15 +107,16 @@ export default function RootLayout({ children }) {
         crossorigin="anonymous"></Script>
       <body className={spaceGrotesk.className}>
         <NextTopLoader
-          color="linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(7,231,13,1) 100%)"
+          color="rgba(147, 112, 219, 0.8)"
           initialPosition={0.08}
           crawlSpeed={500}
-          height={5}
+          height={4}
           crawl={true}
           showSpinner={false}
           easing="ease-in-out"
           speed={500}
-          shadow="0 0 10px #2299DD,0 0 5px #2299DD"
+          shadow="0 0 20px rgba(147, 112, 219, 0.6), 0 0 40px rgba(147, 112, 219, 0.4)"
+          style={{ backdropFilter: 'blur(8px)' }}
         />
         <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
           <AuthProvider>
@@ -133,6 +135,7 @@ export default function RootLayout({ children }) {
                 </div>
                 <SpeedInsights />
                 <ScrollToTop />
+                <LoginPopup />
                 <Footer />
               </ThemeProvider>
             </ToastProvider>

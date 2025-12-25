@@ -58,7 +58,7 @@ public class AuthController {
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(Role.VIEWER); // Default role for new users
-        user.setIsActive(true);
+        user.setActive(true);
 
         User savedUser = userRepository.save(user);
 
@@ -92,7 +92,7 @@ public class AuthController {
         User user = userOpt.get();
 
         // Check if account is active
-        if (!user.getIsActive()) {
+        if (!user.getActive()) {
             Map<String, String> error = new HashMap<>();
             error.put("error", "Account is disabled");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);

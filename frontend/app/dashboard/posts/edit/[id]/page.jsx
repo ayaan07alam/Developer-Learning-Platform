@@ -15,6 +15,8 @@ export default function EditPostPage() {
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState('');
+    const [categories, setCategories] = useState([]);
+    const [selectedCategories, setSelectedCategories] = useState([]);
 
     const [formData, setFormData] = useState({
         title: '',
@@ -35,7 +37,18 @@ export default function EditPostPage() {
             return;
         }
         fetchPost();
+        fetchCategories();
     }, [isAuthenticated, isEditor, router, params.id]);
+
+    const fetchCategories = async () => {
+        try {
+            const response = await fetch('http://localhost:8080/api/categories');
+            const data = await response.json();
+            setCategories(data);
+        } catch (error) {
+            console.error('Error fetching categories:', error);
+        }
+    };
 
     const fetchPost = async () => {
         try {
@@ -62,6 +75,10 @@ export default function EditPostPage() {
                 faqs: post.faqs || [],
                 status: post.status || 'DRAFT'
             });
+            // Set selected categories
+            if (post.categories && post.categories.length > 0) {
+                setSelectedCategories(post.categories.map(cat => cat.id));
+            }
         } catch (err) {
             setError(err.message);
         } finally {
@@ -83,7 +100,8 @@ export default function EditPostPage() {
                 body: JSON.stringify({
                     ...formData,
                     status,
-                    tags: formData.tags.filter(t => t.trim())
+                    tags: formData.tags.filter(t => t.trim()),
+                    categoryIds: selectedCategories
                 })
             });
 
@@ -252,6 +270,101 @@ export default function EditPostPage() {
                                 className="w-full px-4 py-2 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                                 placeholder="react, javascript, tutorial"
                             />
+                        </div>
+
+                        {/* Categories */}
+                        <div>
+                            <label className="block text-sm font-medium mb-2">
+                                Categories
+                                <span className="text-xs text-muted-foreground ml-2">(First is primary)</span>
+                            </label>
+
+                            {/* Selected Categories - Reorderable */}
+                            {selectedCategories.length > 0 && (
+                                <div className="mb-3 p-3 border border-border rounded-lg bg-muted/30">
+                                    <p className="text-xs font-medium mb-2">Selected ({selectedCategories.length}):</p>
+                                    <div className="space-y-1">
+                                        {selectedCategories.map((catId, index) => {
+                                            const category = categories.find(c => c.id === catId);
+                                            if (!category) return null;
+                                            return (
+                                                <div key={catId} className="flex items-center gap-2 bg-background p-2 rounded border border-border">
+                                                    {index === 0 && (
+                                                        <span className="text-yellow-500" title="Primary Category">★</span>
+                                                    )}
+                                                    <span className="text-sm flex-1">{category.name}</span>
+                                                    <div className="flex gap-1">
+                                                        {index > 0 && (
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    const newOrder = [...selectedCategories];
+                                                                    [newOrder[index], newOrder[index - 1]] = [newOrder[index - 1], newOrder[index]];
+                                                                    setSelectedCategories(newOrder);
+                                                                }}
+                                                                className="text-xs px-2 py-1 hover:bg-muted rounded"
+                                                                title="Move up"
+                                                            >
+                                                                ↑
+                                                            </button>
+                                                        )}
+                                                        {index < selectedCategories.length - 1 && (
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    const newOrder = [...selectedCategories];
+                                                                    [newOrder[index], newOrder[index + 1]] = [newOrder[index + 1], newOrder[index]];
+                                                                    setSelectedCategories(newOrder);
+                                                                }}
+                                                                className="text-xs px-2 py-1 hover:bg-muted rounded"
+                                                                title="Move down"
+                                                            >
+                                                                ↓
+                                                            </button>
+                                                        )}
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                setSelectedCategories(selectedCategories.filter(id => id !== catId));
+                                                            }}
+                                                            className="text-xs px-2 py-1 text-red-500 hover:bg-red-500/10 rounded"
+                                                            title="Remove"
+                                                        >
+                                                            ✕
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Available Categories */}
+                            <div className="border border-border rounded-lg p-3 bg-background max-h-48 overflow-y-auto">
+                                {categories.length === 0 ? (
+                                    <p className="text-sm text-muted-foreground">No categories available</p>
+                                ) : (
+                                    <div className="space-y-2">
+                                        {categories
+                                            .filter(cat => !selectedCategories.includes(cat.id))
+                                            .map(cat => (
+                                                <button
+                                                    key={cat.id}
+                                                    type="button"
+                                                    onClick={() => setSelectedCategories([...selectedCategories, cat.id])}
+                                                    className="w-full text-left flex items-center gap-2 cursor-pointer hover:bg-muted/50 p-2 rounded transition-colors"
+                                                >
+                                                    <span className="text-sm">{cat.name}</span>
+                                                    <span className="ml-auto text-xs text-primary">+ Add</span>
+                                                </button>
+                                            ))}
+                                        {categories.filter(cat => !selectedCategories.includes(cat.id)).length === 0 && (
+                                            <p className="text-sm text-muted-foreground">All categories selected</p>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
                         </div>
 
                         {/* Featured Image */}

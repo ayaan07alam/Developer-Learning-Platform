@@ -22,7 +22,14 @@ export default function LoginPage() {
         const result = await login(email, password);
 
         if (result.success) {
-            router.push('/');
+            // Redirect back to the page they were on
+            const returnUrl = sessionStorage.getItem('returnUrl');
+            if (returnUrl && returnUrl !== '/login' && returnUrl !== '/register') {
+                router.push(returnUrl);
+                sessionStorage.removeItem('returnUrl');
+            } else {
+                router.push('/');
+            }
         } else {
             setError(result.error);
         }
@@ -37,7 +44,14 @@ export default function LoginPage() {
         const result = await loginWithGoogle(credentialResponse.credential);
 
         if (result.success) {
-            router.push('/');
+            // Redirect back to the page they were on
+            const returnUrl = sessionStorage.getItem('returnUrl');
+            if (returnUrl && returnUrl !== '/login' && returnUrl !== '/register') {
+                router.push(returnUrl);
+                sessionStorage.removeItem('returnUrl');
+            } else {
+                router.push('/');
+            }
         } else {
             setError(result.error);
         }

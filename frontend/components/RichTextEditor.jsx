@@ -66,6 +66,27 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
             }),
             Subscript,
             Superscript,
+            // Custom extension to allow divs with inline styles (for TOC)
+            {
+                name: 'customDiv',
+                addGlobalAttributes() {
+                    return [
+                        {
+                            types: ['div'],
+                            attributes: {
+                                style: {
+                                    default: null,
+                                    parseHTML: element => element.getAttribute('style'),
+                                    renderHTML: attributes => {
+                                        if (!attributes.style) return {};
+                                        return { style: attributes.style };
+                                    },
+                                },
+                            },
+                        },
+                    ];
+                },
+            },
         ],
         content,
         immediatelyRender: false,
@@ -185,16 +206,33 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
                 editor.commands.setTextSelection(0);
             }
 
-            // Generate TOC HTML with inline onclick handlers (won't be affected by React re-renders)
-            let tocHTML = '<div class="table-of-contents" style="background: #f9f9f9; border: 2px solid #e0e0e0; padding: 20px; border-radius: 8px; margin: 20px 0;"><h2 style="margin-top: 0; color: #333;">📑 Table of Contents</h2><ul style="list-style: none; padding-left: 0;">';
+            // Generate improved TOC with icon and view more/less
+            const showViewMore = headings.length > 10;
+            const visibleHeadings = showViewMore ? headings.slice(0, 10) : headings;
+            const hiddenHeadings = showViewMore ? headings.slice(10) : [];
 
-            headings.forEach((heading, index) => {
+            let tocHTML = '<table data-toc="true" style="width:100%;background:#f3f0ff;border:1px solid #e0d7ff;padding:24px;border-radius:12px;margin:32px 0;box-shadow:0 1px 3px rgba(0,0,0,0.05);border-collapse:separate;border-spacing:0;"><tr><td><div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid #e0d7ff;"><span style="font-size:20px;color:#6b21a8;">☰</span><span style="font-size:18px;font-weight:600;color:#1f2937;">Table of Contents</span></div><ul style="list-style:none;padding:0;margin:0;">';
+
+            visibleHeadings.forEach((heading, index) => {
                 const indent = (heading.level - 2) * 20;
-                // href with hash for bookmarking, onclick prevents navigation
-                tocHTML += `<li style="margin: 8px 0; margin-left: ${indent}px;"><a href="#${heading.id}" style="color: #2563eb; text-decoration: none; cursor: pointer; transition: all 0.2s;" onmouseenter="this.style.textDecoration='underline'; this.style.color='#1d4ed8';" onmouseleave="this.style.textDecoration='none'; this.style.color='#2563eb';" onclick="event.preventDefault(); event.stopPropagation(); const el = document.getElementById('${heading.id}'); if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); window.history.replaceState(null, '', '#${heading.id}'); } return false;">${heading.text}</a></li>`;
+                const icon = heading.level === 2 ? '▸' : '•';
+                const marginStyle = indent > 0 ? ` style="margin-left:${indent}px;margin-top:12px;"` : ' style="margin-top:12px;"';
+                tocHTML += `<li${marginStyle}><a href="#${heading.id}" style="color:#7c3aed;text-decoration:none;display:inline-block;padding:4px 0;font-size:15px;">${icon} ${heading.text}</a></li>`;
             });
 
-            tocHTML += '</ul></div>';
+            if (showViewMore) {
+                tocHTML += '<div id="toc-hidden-items" style="display:none;">';
+                hiddenHeadings.forEach((heading) => {
+                    const indent = (heading.level - 2) * 20;
+                    const icon = heading.level === 2 ? '▸' : '•';
+                    const marginStyle = indent > 0 ? ` style="margin-left:${indent}px;margin-top:12px;"` : ' style="margin-top:12px;"';
+                    tocHTML += `<li${marginStyle}><a href="#${heading.id}" style="color:#7c3aed;text-decoration:none;display:inline-block;padding:4px 0;font-size:15px;">${icon} ${heading.text}</a></li>`;
+                });
+                tocHTML += '</div>';
+                tocHTML += `<button id="toc-toggle-btn" style="background:transparent;color:#7c3aed;border:none;padding:8px 0;cursor:pointer;font-size:14px;font-weight:500;margin-top:16px;" onclick="const hidden = document.getElementById('toc-hidden-items'); const btn = document.getElementById('toc-toggle-btn'); if (hidden.style.display === 'none') { hidden.style.display = 'block'; btn.textContent = 'View less ↑'; } else { hidden.style.display = 'none'; btn.textContent = 'View all ↓'; }">View all ↓</button>`;
+            }
+
+            tocHTML += '</ul></td></tr></table>';
 
             // Insert TOC at current cursor position
             editor.chain().focus().insertContent(tocHTML).run();

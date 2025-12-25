@@ -4,17 +4,21 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class User implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,36 +26,81 @@ public class User {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(unique = true)
-    private String username;
+    @Column(nullable = false)
+    private String password;
 
     @Column(nullable = false)
-    private String password; // Hashed password
+    private String username;
+
+    private String phoneNumber;
+
+    private String bio;
+
+    private String profilePhoto;
+
+    private String oauthProvider;
+
+    private String oauthId;
+
+    private Boolean active = true;
+
+    @Enumerated(EnumType.STRING)
+    private JobRole jobRole; // Job platform role (nullable until user selects)
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role = Role.VIEWER;
+    private Role role = Role.USER;
 
-    @Column(name = "oauth_provider")
-    private String oauthProvider; // "google", "github", etc. or null for email/password
-
-    @Column(name = "oauth_id")
-    private String oauthId; // ID from OAuth provider
-
-    @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @Column(columnDefinition = "TEXT")
-    private String bio; // User description/biography
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
 
-    @Column(name = "profile_photo", columnDefinition = "TEXT")
-    private String profilePhoto; // Base64 encoded image or URL
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 
-    @Column(name = "is_active")
-    private Boolean isActive = true;
+    // UserDetails implementation
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

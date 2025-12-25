@@ -93,8 +93,8 @@ public class PostController {
                     // Search in categories
                     boolean categoryMatch = post.getCategories() != null &&
                             post.getCategories().stream()
-                                    .anyMatch(cat -> cat.getTitle() != null &&
-                                            cat.getTitle().toLowerCase().contains(query));
+                                    .anyMatch(cat -> cat.getName() != null &&
+                                            cat.getName().toLowerCase().contains(query));
 
                     return titleMatch || contentMatch || excerptMatch || categoryMatch;
                 })
@@ -158,11 +158,21 @@ public class PostController {
         post.setTitle(request.getTitle());
 
         // Auto-generate slug if not provided
+        String baseSlug;
         if (request.getSlug() == null || request.getSlug().isEmpty()) {
-            post.setSlug(generateSlug(request.getTitle()));
+            baseSlug = generateSlug(request.getTitle());
         } else {
-            post.setSlug(request.getSlug());
+            baseSlug = request.getSlug();
         }
+
+        // Ensure slug is unique by appending number if needed
+        String uniqueSlug = baseSlug;
+        int counter = 1;
+        while (postRepository.findBySlug(uniqueSlug).isPresent()) {
+            uniqueSlug = baseSlug + "-" + counter;
+            counter++;
+        }
+        post.setSlug(uniqueSlug);
 
         post.setStatus(request.getStatus());
         post.setMainImage(request.getMainImage());
@@ -203,22 +213,27 @@ public class PostController {
             post.setPublishedAt(LocalDateTime.now());
         }
 
-        Post savedPost = postRepository.save(post);
+        try {
+            Post savedPost = postRepository.save(post);
 
-        // Create FAQs if provided
-        if (request.getFaqs() != null && !request.getFaqs().isEmpty()) {
-            for (com.blog.backend.dto.FAQDTO faqDTO : request.getFaqs()) {
-                FAQ faq = new FAQ();
-                faq.setPost(savedPost);
-                faq.setQuestion(faqDTO.getQuestion());
-                faq.setAnswer(faqDTO.getAnswer());
-                faq.setDisplayOrder(faqDTO.getDisplayOrder());
-                savedPost.getFaqs().add(faq);
+            // Create FAQs if provided
+            if (request.getFaqs() != null && !request.getFaqs().isEmpty()) {
+                for (com.blog.backend.dto.FAQDTO faqDTO : request.getFaqs()) {
+                    FAQ faq = new FAQ();
+                    faq.setPost(savedPost);
+                    faq.setQuestion(faqDTO.getQuestion());
+                    faq.setAnswer(faqDTO.getAnswer());
+                    faq.setDisplayOrder(faqDTO.getDisplayOrder());
+                    savedPost.getFaqs().add(faq);
+                }
+                savedPost = postRepository.save(savedPost);
             }
-            savedPost = postRepository.save(savedPost);
-        }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedPost);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedPost);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to create post: " + e.getMessage()));
+        }
     }
 
     // Update post (ADMIN, EDITOR - own posts)
@@ -336,13 +351,28 @@ public class PostController {
                     .body(Map.of("error", "Only admins can delete posts"));
         }
 
-        if (!postRepository.existsById(id)) {
+        Optional<Post> postOptional = postRepository.findById(id);
+        if (postOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Map.of("error", "Post not found"));
         }
 
-        postRepository.deleteById(id);
-        return ResponseEntity.ok(Map.of("message", "Post deleted successfully"));
+        try {
+            Post post = postOptional.get();
+
+            // Clear relationships before deleting
+            post.setCategories(new HashSet<>());
+            post.setTags(new ArrayList<>());
+            postRepository.save(post);
+
+            // Now delete the post (FAQs and views should cascade)
+            postRepository.deleteById(id);
+
+            return ResponseEntity.ok(Map.of("message", "Post deleted successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to delete post: " + e.getMessage()));
+        }
     }
 
     // Publish post

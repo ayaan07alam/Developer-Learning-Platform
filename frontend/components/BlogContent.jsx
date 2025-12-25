@@ -50,6 +50,84 @@ export default function BlogContent({ htmlContent }) {
                 />
             );
         });
+
+        // Style TOC tables (apply styles via JavaScript to bypass backend sanitization)
+        const tocTables = contentElement.querySelectorAll('table[data-toc="true"]');
+        const allTables = tocTables.length === 0 ? contentElement.querySelectorAll('table') : tocTables;
+
+        allTables.forEach((table) => {
+            const firstCell = table.querySelector('td');
+            if (!firstCell) return;
+
+            // Check if this is a TOC table
+            if (tocTables.length === 0 && !firstCell.textContent.includes('Table of Contents')) return;
+
+            // Apply container styles
+            table.style.width = '100%';
+            table.style.background = '#f3f0ff';
+            table.style.border = '1px solid #e0d7ff';
+            table.style.padding = '24px';
+            table.style.borderRadius = '12px';
+            table.style.margin = '32px 0';
+            table.style.boxShadow = '0 1px 3px rgba(0,0,0,0.05)';
+            table.style.borderCollapse = 'separate';
+            table.style.borderSpacing = '0';
+
+            // Style the header div
+            const headerDiv = firstCell.querySelector('div');
+            if (headerDiv) {
+                headerDiv.style.display = 'flex';
+                headerDiv.style.alignItems = 'center';
+                headerDiv.style.gap = '12px';
+                headerDiv.style.marginBottom = '20px';
+                headerDiv.style.paddingBottom = '16px';
+                headerDiv.style.borderBottom = '1px solid #e0d7ff';
+
+                // Style icon and title
+                const icon = headerDiv.querySelector('span:first-child');
+                const title = headerDiv.querySelector('span:last-child');
+                if (icon) {
+                    icon.style.fontSize = '20px';
+                    icon.style.color = '#6b21a8';
+                }
+                if (title) {
+                    title.style.fontSize = '18px';
+                    title.style.fontWeight = '600';
+                    title.style.color = '#1f2937';
+                }
+            }
+
+            // Style all links
+            const links = firstCell.querySelectorAll('a');
+            links.forEach(link => {
+                link.style.color = '#7c3aed';
+                link.style.textDecoration = 'none';
+                link.style.display = 'inline-block';
+                link.style.padding = '4px 0';
+                link.style.fontSize = '15px';
+
+                // Add hover effect
+                link.addEventListener('mouseenter', () => {
+                    link.style.color = '#5b21b6';
+                });
+                link.addEventListener('mouseleave', () => {
+                    link.style.color = '#7c3aed';
+                });
+            });
+
+            // Style the View all button
+            const button = firstCell.querySelector('button');
+            if (button) {
+                button.style.background = 'transparent';
+                button.style.color = '#7c3aed';
+                button.style.border = 'none';
+                button.style.padding = '8px 0';
+                button.style.cursor = 'pointer';
+                button.style.fontSize = '14px';
+                button.style.fontWeight = '500';
+                button.style.marginTop = '16px';
+            }
+        });
     }, [htmlContent]);
 
     // Second useEffect: Global click handler (runs ONCE, never removed until unmount)

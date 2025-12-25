@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Moon, Sun, Menu, X, Terminal, LogOut, User, Search, ChevronDown, LayoutDashboard, Users, MessageSquare } from "lucide-react";
+import { Moon, Sun, Menu, X, Terminal, LogOut, User, Search, ChevronDown, LayoutDashboard, Users, MessageSquare, Folder } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -38,6 +38,7 @@ const Header = () => {
     { name: "Blogs", href: "/blogs" },
     { name: "Roadmaps", href: "/roadmaps" },
     { name: "Tools", href: "/tools" },
+    { name: "Jobs", href: "/jobs" },
   ];
 
   return (
@@ -51,14 +52,17 @@ const Header = () => {
     >
       <div className="container mx-auto px-6 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 group-hover:border-primary/50 transition-colors">
-            <Terminal className="w-5 h-5 text-primary" />
-            <div className="absolute inset-0 bg-primary/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+        <Link href="/" className="flex items-center gap-3 group">
+          <div className="relative flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 border border-primary/30 group-hover:border-primary/60 transition-all duration-300 group-hover:scale-110">
+            <Terminal className="w-6 h-6 text-primary group-hover:rotate-12 transition-transform duration-300" />
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-accent/30 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </div>
-          <span className="text-xl font-bold tracking-tight">
-            Intelli<span className="text-primary">Geek</span>
-          </span>
+          <div className="flex flex-col">
+            <span className="text-2xl font-bold tracking-tight leading-none bg-clip-text text-transparent bg-gradient-to-r from-foreground via-primary to-accent bg-[length:200%_auto] animate-gradient">
+              Intel<span className="font-extrabold">for</span>Geeks
+            </span>
+            <span className="text-[10px] text-muted-foreground tracking-wider uppercase">Tech Excellence</span>
+          </div>
         </Link>
 
         {/* Desktop Nav */}
@@ -139,6 +143,10 @@ const Header = () => {
                         <Link href="/dashboard/comments" className="flex items-center gap-3 px-4 py-2 hover:bg-muted transition-colors">
                           <MessageSquare className="w-4 h-4" />
                           <span>Comments</span>
+                        </Link>
+                        <Link href="/dashboard/categories" className="flex items-center gap-3 px-4 py-2 hover:bg-muted transition-colors">
+                          <Folder className="w-4 h-4" />
+                          <span>Categories</span>
                         </Link>
                       </>
                     )}

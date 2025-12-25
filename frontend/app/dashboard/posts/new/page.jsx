@@ -14,6 +14,10 @@ export default function NewPostPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [showPreview, setShowPreview] = useState(false);
+    const [categories, setCategories] = useState([]);
+    const [selectedCategories, setSelectedCategories] = useState([]);
+    const [hasChanges, setHasChanges] = useState(true); // Track if form has unsaved changes
+    const [lastSubmittedData, setLastSubmittedData] = useState(null); // Track last submitted state
 
     const [formData, setFormData] = useState({
         title: '',
@@ -24,7 +28,8 @@ export default function NewPostPage() {
         metaTitle: '',
         metaDescription: '',
         tags: [],
-        faqs: []
+        faqs: [],
+        categoryIds: []
     });
 
     useEffect(() => {
@@ -32,6 +37,55 @@ export default function NewPostPage() {
             router.push('/login');
         }
     }, [isAuthenticated, isEditor, router]);
+
+    useEffect(() => {
+        fetchCategories();
+    }, []);
+
+    // Track changes to re-enable buttons
+    useEffect(() => {
+        // This effect runs whenever formData or selectedCategories changes.
+        // We only want to set hasChanges to true if the current state is different from the last submitted state.
+        // If lastSubmittedData is null (initial load), then there are changes (or it's a new post).
+        if (!lastSubmittedData) {
+            setHasChanges(true);
+            return;
+        }
+
+        // Deep comparison to check if current form data differs from last submitted data
+        const currentData = {
+            ...formData,
+            categoryIds: selectedCategories
+        };
+
+        const isDifferent = Object.keys(currentData).some(key => {
+            if (Array.isArray(currentData[key]) && Array.isArray(lastSubmittedData[key])) {
+                // Compare arrays (e.g., tags, faqs, categoryIds)
+                if (currentData[key].length !== lastSubmittedData[key].length) return true;
+                if (key === 'faqs') { // Deep compare FAQ objects
+                    return currentData[key].some((faq, index) =>
+                        faq.question !== lastSubmittedData[key][index]?.question ||
+                        faq.answer !== lastSubmittedData[key][index]?.answer
+                    );
+                }
+                return !currentData[key].every((item, index) => item === lastSubmittedData[key][index]);
+            }
+            return currentData[key] !== lastSubmittedData[key];
+        });
+
+        setHasChanges(isDifferent);
+
+    }, [formData, selectedCategories, lastSubmittedData]);
+
+    const fetchCategories = async () => {
+        try {
+            const response = await fetch('http://localhost:8080/api/categories');
+            const data = await response.json();
+            setCategories(data);
+        } catch (error) {
+            console.error('Error fetching categories:', error);
+        }
+    };
 
     const handleSubmit = async (status) => {
         setLoading(true);
@@ -50,16 +104,26 @@ export default function NewPostPage() {
                 body: JSON.stringify({
                     ...formData,
                     status,
-                    tags: formData.tags.filter(t => t.trim())
+                    tags: formData.tags.filter(t => t.trim()),
+                    categoryIds: selectedCategories
                 })
             });
 
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Failed to create post');
+                const errorData = await response.json().catch(() => ({ error: 'Failed to create post' }));
+                console.error('Backend error:', errorData);
+                throw new Error(errorData.error || errorData.message || 'Failed to create post');
             }
 
             const post = await response.json();
+
+            // Mark as saved - disable buttons until next change
+            setHasChanges(false);
+            setLastSubmittedData({
+                ...formData,
+                status,
+                categoryIds: selectedCategories
+            });
 
             // Only redirect to dashboard if publishing
             if (status === 'PUBLISHED') {
@@ -114,7 +178,7 @@ export default function NewPostPage() {
                                 type="button"
                                 variant="outline"
                                 onClick={() => handleSubmit('DRAFT')}
-                                disabled={loading || !formData.title || !formData.content}
+                                disabled={loading || !formData.title || !formData.content || !hasChanges}
                                 className="gap-2"
                             >
                                 {loading ? (
@@ -144,7 +208,7 @@ export default function NewPostPage() {
                             <Button
                                 type="button"
                                 onClick={() => handleSubmit('PUBLISHED')}
-                                disabled={loading || !formData.title || !formData.content}
+                                disabled={loading || !formData.title || !formData.content || !hasChanges}
                                 className="gap-2 bg-primary hover:bg-primary/90"
                             >
                                 {loading ? (
@@ -234,6 +298,101 @@ export default function NewPostPage() {
                                 rows={3}
                                 placeholder="Short description for SEO and previews..."
                             />
+                        </div>
+
+                        {/* Categories */}
+                        <div>
+                            <label className="block text-sm font-medium mb-2">
+                                Categories
+                                <span className="text-xs text-muted-foreground ml-2">(First is primary)</span>
+                            </label>
+
+                            {/* Selected Categories - Reorderable */}
+                            {selectedCategories.length > 0 && (
+                                <div className="mb-3 p-3 border border-border rounded-lg bg-muted/30">
+                                    <p className="text-xs font-medium mb-2">Selected ({selectedCategories.length}):</p>
+                                    <div className="space-y-1">
+                                        {selectedCategories.map((catId, index) => {
+                                            const category = categories.find(c => c.id === catId);
+                                            if (!category) return null;
+                                            return (
+                                                <div key={catId} className="flex items-center gap-2 bg-background p-2 rounded border border-border">
+                                                    {index === 0 && (
+                                                        <span className="text-yellow-500" title="Primary Category">★</span>
+                                                    )}
+                                                    <span className="text-sm flex-1">{category.name}</span>
+                                                    <div className="flex gap-1">
+                                                        {index > 0 && (
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    const newOrder = [...selectedCategories];
+                                                                    [newOrder[index], newOrder[index - 1]] = [newOrder[index - 1], newOrder[index]];
+                                                                    setSelectedCategories(newOrder);
+                                                                }}
+                                                                className="text-xs px-2 py-1 hover:bg-muted rounded"
+                                                                title="Move up"
+                                                            >
+                                                                ↑
+                                                            </button>
+                                                        )}
+                                                        {index < selectedCategories.length - 1 && (
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    const newOrder = [...selectedCategories];
+                                                                    [newOrder[index], newOrder[index + 1]] = [newOrder[index + 1], newOrder[index]];
+                                                                    setSelectedCategories(newOrder);
+                                                                }}
+                                                                className="text-xs px-2 py-1 hover:bg-muted rounded"
+                                                                title="Move down"
+                                                            >
+                                                                ↓
+                                                            </button>
+                                                        )}
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                setSelectedCategories(selectedCategories.filter(id => id !== catId));
+                                                            }}
+                                                            className="text-xs px-2 py-1 text-red-500 hover:bg-red-500/10 rounded"
+                                                            title="Remove"
+                                                        >
+                                                            ✕
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Available Categories */}
+                            <div className="border border-border rounded-lg p-3 bg-background max-h-48 overflow-y-auto">
+                                {categories.length === 0 ? (
+                                    <p className="text-sm text-muted-foreground">No categories available</p>
+                                ) : (
+                                    <div className="space-y-2">
+                                        {categories
+                                            .filter(cat => !selectedCategories.includes(cat.id))
+                                            .map(cat => (
+                                                <button
+                                                    key={cat.id}
+                                                    type="button"
+                                                    onClick={() => setSelectedCategories([...selectedCategories, cat.id])}
+                                                    className="w-full text-left flex items-center gap-2 cursor-pointer hover:bg-muted/50 p-2 rounded transition-colors"
+                                                >
+                                                    <span className="text-sm">{cat.name}</span>
+                                                    <span className="ml-auto text-xs text-primary">+ Add</span>
+                                                </button>
+                                            ))}
+                                        {categories.filter(cat => !selectedCategories.includes(cat.id)).length === 0 && (
+                                            <p className="text-sm text-muted-foreground">All categories selected</p>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
                         </div>
 
                         {/* Tags */}

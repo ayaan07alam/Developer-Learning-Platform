@@ -113,3 +113,96 @@
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-muted-foreground/50;
   }
+
+  /* Table of Contents Styles - Light Container Design */
+  .table-of-contents {
+    background: #f3f0ff;
+    border: 1px solid #e0d7ff;
+    padding: 24px;
+    border-radius: 12px;
+    margin: 32px 0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+
+  .dark .table-of-contents {
+    background: #1e1b2e;
+    border: 1px solid #2d2a3f;
+  }
+
+  .toc-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e0d7ff;
+  }
+
+  .dark .toc-header {
+    border-bottom: 1px solid #2d2a3f;
+  }
+
+  .toc-icon {
+    font-size: 20px;
+    color: #6b21a8;
+  }
+
+  .toc-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0;
+  }
+
+  .dark .toc-title {
+    color: #e5e7eb;
+  }
+
+  .toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .toc-item {
+    margin-top: 12px;
+  }
+
+  .toc-link {
+    color: #7c3aed;
+    text-decoration: none;
+    display: inline-block;
+    padding: 4px 0;
+    transition: color 0.2s;
+    font-size: 15px;
+  }
+
+  .dark .toc-link {
+    color: #a78bfa;
+  }
+
+  .toc-link:hover {
+    color: #5b21b6;
+  }
+
+  .dark .toc-link:hover {
+    color: #c4b5fd;
+  }
+
+  .toc-toggle-btn {
+    background: transparent;
+    color: #7c3aed;
+    border: none;
+    padding: 8px 0;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: opacity 0.2s;
+    margin-top: 16px;
+  }
+
+  .toc-toggle-btn:hover {
+    opacity: 0.8;
+  }
+
+
