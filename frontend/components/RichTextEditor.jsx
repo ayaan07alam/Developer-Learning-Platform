@@ -5,17 +5,27 @@ import Image from '@tiptap/extension-image';
 import Link from '@tiptap/extension-link';
 import Placeholder from '@tiptap/extension-placeholder';
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
+import TextAlign from '@tiptap/extension-text-align';
+import Underline from '@tiptap/extension-underline';
+import TextStyle from '@tiptap/extension-text-style';
+import Color from '@tiptap/extension-color';
+import Highlight from '@tiptap/extension-highlight';
+import Subscript from '@tiptap/extension-subscript';
+import Superscript from '@tiptap/extension-superscript';
 import { common, createLowlight } from 'lowlight';
 import {
     Bold, Italic, List, ListOrdered, Heading1, Heading2, Heading3,
     Code, Quote, Undo, Redo, ImageIcon, Link as LinkIcon,
-    ListTree, Play, Copy, Check
+    ListTree, Strikethrough, Underline as UnderlineIcon,
+    AlignLeft, AlignCenter, AlignRight, AlignJustify,
+    Minus, Superscript as SuperscriptIcon, Subscript as SubscriptIcon,
+    Eraser, Palette, Highlighter
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import CodeBlockComponent from './CodeBlockComponent';
 
-// Initialize lowlight with common languages (safer than 'all')
+// Initialize lowlight with common languages
 const lowlight = createLowlight(common);
 
 export default function RichTextEditor({ content, onChange, placeholder = "Start writing..." }) {
@@ -38,10 +48,24 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
             Image,
             Link.configure({
                 openOnClick: false,
+                HTMLAttributes: {
+                    class: 'text-primary underline',
+                },
             }),
             Placeholder.configure({
                 placeholder,
             }),
+            TextAlign.configure({
+                types: ['heading', 'paragraph'],
+            }),
+            Underline,
+            TextStyle,
+            Color,
+            Highlight.configure({
+                multicolor: true,
+            }),
+            Subscript,
+            Superscript,
         ],
         content,
         immediatelyRender: false,
@@ -50,7 +74,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
         },
         editorProps: {
             attributes: {
-                class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-xl dark:prose-invert focus:outline-none min-h-[300px] max-w-none p-4',
+                class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-2xl dark:prose-invert focus:outline-none min-h-[600px] max-w-none p-6',
             },
         },
     });
@@ -73,24 +97,51 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
         }
     };
 
+    const setTextColor = () => {
+        const color = window.prompt('Enter color (e.g., #FF0000 or red):');
+        if (color) {
+            editor.chain().focus().setColor(color).run();
+        }
+    };
+
+    const setHighlight = () => {
+        const color = window.prompt('Enter highlight color (e.g., #FFFF00 or yellow):');
+        if (color) {
+            editor.chain().focus().setHighlight({ color }).run();
+        }
+    };
+
     // Generate Table of Contents
     const generateTOC = () => {
+        // First, save the current cursor position
+        const { from } = editor.state.selection;
+
         const json = editor.getJSON();
         const headings = [];
 
-        // Extract headings from content
-        const extractHeadings = (node, level = 0) => {
-            if (node.type === 'heading' && selectedHeadings.includes(node.attrs.level)) {
-                const text = node.content?.[0]?.text || '';
-                const id = text.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-                headings.push({
-                    level: node.attrs.level,
-                    text,
-                    id
-                });
+        // Recursively extract headings from TipTap JSON structure
+        const extractHeadings = (node) => {
+            if (node.type === 'heading' && selectedHeadings.includes(node.attrs?.level)) {
+                // Get text content from the heading
+                let text = '';
+                if (node.content) {
+                    node.content.forEach(child => {
+                        if (child.type === 'text') {
+                            text += child.text || '';
+                        }
+                    });
+                }
+
+                if (text.trim()) {
+                    const level = node.attrs.level;
+                    const id = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+                    headings.push({ level, text: text.trim(), id });
+                }
             }
+
+            // Recursively check children
             if (node.content) {
-                node.content.forEach(child => extractHeadings(child, level + 1));
+                node.content.forEach(child => extractHeadings(child));
             }
         };
 
@@ -101,32 +152,60 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
             return;
         }
 
-        // Generate TOC HTML
-        let tocHTML = '<div class="table-of-contents"><h2>Table of Contents</h2><ul>';
-        let currentLevel = headings[0].level;
+        // STEP 1: Add IDs to headings by updating HTML while preserving structure
+        const html = editor.getHTML();
+        let updatedHTML = html;
 
-        headings.forEach((heading, index) => {
-            const indent = (heading.level - 2) * 20; // Indent based on level
-            if (heading.level > currentLevel) {
-                tocHTML += '<ul>';
-            } else if (heading.level < currentLevel) {
-                tocHTML += '</ul>';
-            }
-            tocHTML += `<li style="margin-left: ${indent}px"><a href="#${heading.id}">${heading.text}</a></li>`;
-            currentLevel = heading.level;
+        headings.forEach(({ level, text, id }) => {
+            const escapedText = text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            // Match headings - handles both with and without existing id attributes
+            const patterns = [
+                // Heading without any id
+                new RegExp(`<h${level}((?!\\sid=)[^>]*)>\\s*${escapedText}\\s*</h${level}>`, 'gi'),
+                // Heading with existing id - replace it
+                new RegExp(`<h${level}([^>]*)\\sid="[^"]*"([^>]*)>\\s*${escapedText}\\s*</h${level}>`, 'gi')
+            ];
+
+            patterns.forEach(pattern => {
+                updatedHTML = updatedHTML.replace(pattern, `<h${level} id="${id}">${text}</h${level}>`);
+            });
         });
 
-        tocHTML += '</ul></div>';
+        // Update content with IDs (this will reset cursor)
+        editor.commands.setContent(updatedHTML);
 
-        // Insert TOC at current cursor position
-        editor.chain().focus().insertContent(tocHTML).run();
-        setShowTOCDialog(false);
+        // STEP 2: Restore cursor position and insert TOC there
+        // Use a small timeout to ensure content is updated
+        setTimeout(() => {
+            // Try to restore position, or go to start if position invalid
+            try {
+                editor.commands.setTextSelection(from);
+            } catch (e) {
+                // If position is invalid, go to start
+                editor.commands.setTextSelection(0);
+            }
+
+            // Generate TOC HTML with inline onclick handlers (won't be affected by React re-renders)
+            let tocHTML = '<div class="table-of-contents" style="background: #f9f9f9; border: 2px solid #e0e0e0; padding: 20px; border-radius: 8px; margin: 20px 0;"><h2 style="margin-top: 0; color: #333;">📑 Table of Contents</h2><ul style="list-style: none; padding-left: 0;">';
+
+            headings.forEach((heading, index) => {
+                const indent = (heading.level - 2) * 20;
+                // href with hash for bookmarking, onclick prevents navigation
+                tocHTML += `<li style="margin: 8px 0; margin-left: ${indent}px;"><a href="#${heading.id}" style="color: #2563eb; text-decoration: none; cursor: pointer; transition: all 0.2s;" onmouseenter="this.style.textDecoration='underline'; this.style.color='#1d4ed8';" onmouseleave="this.style.textDecoration='none'; this.style.color='#2563eb';" onclick="event.preventDefault(); event.stopPropagation(); const el = document.getElementById('${heading.id}'); if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); window.history.replaceState(null, '', '#${heading.id}'); } return false;">${heading.text}</a></li>`;
+            });
+
+            tocHTML += '</ul></div>';
+
+            // Insert TOC at current cursor position
+            editor.chain().focus().insertContent(tocHTML).run();
+            setShowTOCDialog(false);
+        }, 100);
     };
 
     return (
-        <div className="border border-border rounded-lg overflow-hidden bg-card">
-            {/* Sticky Toolbar */}
-            <div className="sticky top-0 z-30 bg-card border-b border-border">
+        <div className="border border-border rounded-lg bg-card flex flex-col overflow-hidden" style={{ height: '900px' }}>
+            {/* Sticky Toolbar - Fixed at top */}
+            <div className="flex-none bg-card border-b border-border shadow-sm">
                 <div className="flex flex-wrap items-center gap-1 p-2">
                     {/* Text Formatting */}
                     <Button
@@ -135,7 +214,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
                         variant={editor.isActive('bold') ? 'default' : 'ghost'}
                         size="sm"
                         className="h-8 w-8 p-0"
-                        title="Bold"
+                        title="Bold (Ctrl+B)"
                     >
                         <Bold className="w-4 h-4" />
                     </Button>
@@ -145,9 +224,53 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
                         variant={editor.isActive('italic') ? 'default' : 'ghost'}
                         size="sm"
                         className="h-8 w-8 p-0"
-                        title="Italic"
+                        title="Italic (Ctrl+I)"
                     >
                         <Italic className="w-4 h-4" />
+                    </Button>
+                    <Button
+                        type="button"
+                        onClick={() => editor.chain().focus().toggleUnderline().run()}
+                        variant={editor.isActive('underline') ? 'default' : 'ghost'}
+                        size="sm"
+                        className="h-8 w-8 p-0"
+                        title="Underline (Ctrl+U)"
+                    >
+                        <UnderlineIcon className="w-4 h-4" />
+                    </Button>
+                    <Button
+                        type="button"
+                        onClick={() => editor.chain().focus().toggleStrike().run()}
+                        variant={editor.isActive('strike') ? 'default' : 'ghost'}
+                        size="sm"
+                        className="h-8 w-8 p-0"
+                        title="Strikethrough"
+                    >
+                        <Strikethrough className="w-4 h-4" />
+                    </Button>
+
+                    <div className="w-px h-6 bg-border mx-1" />
+
+                    {/* Colors */}
+                    <Button
+                        type="button"
+                        onClick={setTextColor}
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 w-8 p-0"
+                        title="Text Color"
+                    >
+                        <Palette className="w-4 h-4" />
+                    </Button>
+                    <Button
+                        type="button"
+                        onClick={setHighlight}
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 w-8 p-0"
+                        title="Highlight Color"
+                    >
+                        <Highlighter className="w-4 h-4" />
                     </Button>
 
                     <div className="w-px h-6 bg-border mx-1" />
@@ -182,6 +305,50 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
                         title="Heading 3"
                     >
                         <Heading3 className="w-4 h-4" />
+                    </Button>
+
+                    <div className="w-px h-6 bg-border mx-1" />
+
+                    {/* Alignment */}
+                    <Button
+                        type="button"
+                        onClick={() => editor.chain().focus().setTextAlign('left').run()}
+                        variant={editor.isActive({ textAlign: 'left' }) ? 'default' : 'ghost'}
+                        size="sm"
+                        className="h-8 w-8 p-0"
+                        title="Align Left"
+                    >
+                        <AlignLeft className="w-4 h-4" />
+                    </Button>
+                    <Button
+                        type="button"
+                        onClick={() => editor.chain().focus().setTextAlign('center').run()}
+                        variant={editor.isActive({ textAlign: 'center' }) ? 'default' : 'ghost'}
+                        size="sm"
+                        className="h-8 w-8 p-0"
+                        title="Align Center"
+                    >
+                        <AlignCenter className="w-4 h-4" />
+                    </Button>
+                    <Button
+                        type="button"
+                        onClick={() => editor.chain().focus().setTextAlign('right').run()}
+                        variant={editor.isActive({ textAlign: 'right' }) ? 'default' : 'ghost'}
+                        size="sm"
+                        className="h-8 w-8 p-0"
+                        title="Align Right"
+                    >
+                        <AlignRight className="w-4 h-4" />
+                    </Button>
+                    <Button
+                        type="button"
+                        onClick={() => editor.chain().focus().setTextAlign('justify').run()}
+                        variant={editor.isActive({ textAlign: 'justify' }) ? 'default' : 'ghost'}
+                        size="sm"
+                        className="h-8 w-8 p-0"
+                        title="Justify"
+                    >
+                        <AlignJustify className="w-4 h-4" />
                     </Button>
 
                     <div className="w-px h-6 bg-border mx-1" />
@@ -230,6 +397,56 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
                         title="Quote"
                     >
                         <Quote className="w-4 h-4" />
+                    </Button>
+
+                    <div className="w-px h-6 bg-border mx-1" />
+
+                    {/* Superscript/Subscript */}
+                    <Button
+                        type="button"
+                        onClick={() => editor.chain().focus().toggleSuperscript().run()}
+                        variant={editor.isActive('superscript') ? 'default' : 'ghost'}
+                        size="sm"
+                        className="h-8 w-8 p-0"
+                        title="Superscript"
+                    >
+                        <SuperscriptIcon className="w-4 h-4" />
+                    </Button>
+                    <Button
+                        type="button"
+                        onClick={() => editor.chain().focus().toggleSubscript().run()}
+                        variant={editor.isActive('subscript') ? 'default' : 'ghost'}
+                        size="sm"
+                        className="h-8 w-8 p-0"
+                        title="Subscript"
+                    >
+                        <SubscriptIcon className="w-4 h-4" />
+                    </Button>
+
+                    <div className="w-px h-6 bg-border mx-1" />
+
+                    {/* Horizontal Rule */}
+                    <Button
+                        type="button"
+                        onClick={() => editor.chain().focus().setHorizontalRule().run()}
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 w-8 p-0"
+                        title="Horizontal Rule"
+                    >
+                        <Minus className="w-4 h-4" />
+                    </Button>
+
+                    {/* Clear Formatting */}
+                    <Button
+                        type="button"
+                        onClick={() => editor.chain().focus().unsetAllMarks().clearNodes().run()}
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 w-8 p-0"
+                        title="Clear Formatting"
+                    >
+                        <Eraser className="w-4 h-4" />
                     </Button>
 
                     <div className="w-px h-6 bg-border mx-1" />
@@ -298,7 +515,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
 
             {/* TOC Dialog */}
             {showTOCDialog && (
-                <div className="p-4 border-b border-border bg-muted/30">
+                <div className="flex-none p-4 border-b border-border bg-muted/30">
                     <h3 className="text-sm font-semibold mb-3">Select Heading Levels for TOC:</h3>
                     <div className="flex flex-wrap gap-2 mb-3">
                         {[1, 2, 3, 4, 5, 6].map(level => (
@@ -340,8 +557,12 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
                 </div>
             )}
 
-            {/* Editor */}
-            <EditorContent editor={editor} />
+            {/* Editor - Scrollable content area */}
+            <div className="flex-1 overflow-y-auto">
+                <EditorContent editor={editor} />
+            </div>
         </div>
     );
 }
+
+

@@ -31,7 +31,15 @@ public class UserController {
                     .body(Map.of("error", "Authentication required"));
         }
 
-        User currentUser = (User) authentication.getPrincipal();
+        // Safely cast the principal
+        Object principal = authentication.getPrincipal();
+        if (!(principal instanceof User)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error",
+                            "Invalid authentication token. Principal type: " + principal.getClass().getName()));
+        }
+
+        User currentUser = (User) principal;
         if (currentUser.getRole() != Role.ADMIN) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body(Map.of("error", "Only admins can view all users"));
@@ -65,7 +73,14 @@ public class UserController {
                     .body(Map.of("error", "Authentication required"));
         }
 
-        User currentUser = (User) authentication.getPrincipal();
+        // Safely cast the principal
+        Object principal = authentication.getPrincipal();
+        if (!(principal instanceof User)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Invalid authentication token"));
+        }
+
+        User currentUser = (User) principal;
         if (currentUser.getRole() != Role.ADMIN) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body(Map.of("error", "Only admins can update user roles"));
@@ -110,7 +125,14 @@ public class UserController {
                     .body(Map.of("error", "Authentication required"));
         }
 
-        User currentUser = (User) authentication.getPrincipal();
+        // Safely cast the principal
+        Object principal = authentication.getPrincipal();
+        if (!(principal instanceof User)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Invalid authentication token"));
+        }
+
+        User currentUser = (User) principal;
         if (currentUser.getRole() != Role.ADMIN) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body(Map.of("error", "Only admins can delete users"));

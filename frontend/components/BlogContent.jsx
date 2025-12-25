@@ -6,49 +6,41 @@ import CodeBlockRenderer from './CodeBlockRenderer';
 export default function BlogContent({ htmlContent }) {
     const contentRef = useRef(null);
 
+    // First useEffect: Setup content (headings, code blocks) when HTML changes
     useEffect(() => {
         if (!contentRef.current) return;
 
-        // Add IDs to all headings for TOC navigation
-        const headings = contentRef.current.querySelectorAll('h2, h3, h4, h5, h6');
+        const contentElement = contentRef.current;
+
+        // Add IDs to all headings for TOC navigation (only if they don't have one)
+        const headings = contentElement.querySelectorAll('h1, h2, h3, h4, h5, h6');
         headings.forEach((heading, index) => {
-            if (!heading.id) {
+            if (!heading.id || heading.id.trim() === '') {
                 const text = heading.textContent || '';
-                // Generate ID same way as TOCBuilder does
                 const id = text
                     .toLowerCase()
                     .replace(/[^a-z0-9]+/g, '-')
                     .replace(/(^-|-$)/g, '') || `heading-${index}`;
                 heading.id = id;
-
-                // Ensure heading is scrollable with offset for fixed header
-                heading.style.scrollMarginTop = '100px';
             }
+            heading.style.scrollMarginTop = '100px';
         });
 
         // Find all code blocks in the HTML
-        const codeBlocks = contentRef.current.querySelectorAll('pre code');
-
+        const codeBlocks = contentElement.querySelectorAll('pre code');
         codeBlocks.forEach((codeElement) => {
             const preElement = codeElement.parentElement;
             if (!preElement) return;
 
-            // Extract language from class (e.g., "language-python")
             const className = codeElement.className || '';
             const languageMatch = className.match(/language-(\w+)/);
             const language = languageMatch ? languageMatch[1] : 'text';
-
-            // Get the code content
             const code = codeElement.textContent || '';
-
-            // Try to extract saved output from data attributes
             const savedOutput = preElement.getAttribute('data-saved-output');
 
-            // Create a wrapper div
             const wrapper = document.createElement('div');
             preElement.parentNode?.replaceChild(wrapper, preElement);
 
-            // Render the interactive code block
             const root = createRoot(wrapper);
             root.render(
                 <CodeBlockRenderer
@@ -59,6 +51,43 @@ export default function BlogContent({ htmlContent }) {
             );
         });
     }, [htmlContent]);
+
+    // Second useEffect: Global click handler (runs ONCE, never removed until unmount)
+    useEffect(() => {
+        const handleHashLinkClick = (e) => {
+            const link = e.target.closest('a');
+            if (!link) return;
+
+            const href = link.getAttribute('href');
+
+            if (href && href.startsWith('#')) {
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+
+                const targetId = href.substring(1);
+                const targetElement = document.getElementById(targetId);
+
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    // NOTE: Not updating URL to avoid Next.js navigation issues
+                }
+
+                return false;
+            }
+        };
+
+        // Add listener ONCE on mount
+        document.addEventListener('click', handleHashLinkClick, true);
+
+        // Remove ONLY on unmount
+        return () => {
+            document.removeEventListener('click', handleHashLinkClick, true);
+        };
+    }, []); // Empty array = runs once on mount, cleanup on unmount only
 
     return (
         <div

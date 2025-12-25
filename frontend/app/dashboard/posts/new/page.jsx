@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import RichTextEditor from '@/components/RichTextEditor';
 import FAQBuilder from '@/components/FAQBuilder';
-import TOCBuilder from '@/components/TOCBuilder';
 import { Button } from '@/components/ui/button';
 import { Save, Eye, Trash2 } from 'lucide-react';
 
@@ -25,8 +24,6 @@ export default function NewPostPage() {
         metaTitle: '',
         metaDescription: '',
         tags: [],
-        tocItems: [],
-        showToc: true,
         faqs: []
     });
 
@@ -53,9 +50,7 @@ export default function NewPostPage() {
                 body: JSON.stringify({
                     ...formData,
                     status,
-                    tags: formData.tags.filter(t => t.trim()),
-                    tocItems: JSON.stringify(formData.tocItems),
-                    showToc: formData.showToc
+                    tags: formData.tags.filter(t => t.trim())
                 })
             });
 
@@ -85,8 +80,8 @@ export default function NewPostPage() {
     const generateSlug = (title) => {
         return title
             .toLowerCase()
-            .replace(/[^a-z0-9\s-]/g, '')
-            .replace(/\s+/g, '-')
+            .replace(/[^a-z0-9\\s-]/g, '')
+            .replace(/\\s+/g, '-')
             .replace(/-+/g, '-')
             .replace(/^-|-$/g, '');
     };
@@ -108,7 +103,7 @@ export default function NewPostPage() {
         <div className="min-h-screen pt-16 pb-12 bg-background">
             {/* Sticky Action Bar */}
             <div className="sticky top-16 z-40 bg-background/95 backdrop-blur-sm border-b border-border shadow-sm">
-                <div className="container mx-auto px-6 max-w-5xl py-3">
+                <div className="container mx-auto px-6 max-w-full py-3">
                     <div className="flex items-center justify-between">
                         <div>
                             <h1 className="text-xl font-bold">Create New Post</h1>
@@ -169,108 +164,43 @@ export default function NewPostPage() {
                 </div>
             </div>
 
-            <div className="container mx-auto px-6 max-w-5xl mt-6">
+            <div className="container mx-auto px-6 max-w-full mt-6">
                 {error && (
                     <div className="mb-6 p-4 bg-red-500/10 border border-red-500/50 rounded-lg text-red-500">
                         {error}
                     </div>
                 )}
 
-                <div className="space-y-6">
-                    {/* Title */}
-                    <div>
-                        <label className="block text-sm font-medium mb-2">Title *</label>
-                        <input
-                            type="text"
-                            value={formData.title}
-                            onChange={handleTitleChange}
-                            className="w-full px-4 py-3 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-2xl font-bold"
-                            placeholder="Enter post title..."
-                            required
-                        />
-                    </div>
+                {/* Two-Column Layout: 30% Left Sidebar + 70% Right Editor */}
+                <div className="grid grid-cols-[30%_70%] gap-6">
+                    {/* LEFT SIDEBAR - Metadata Fields (30%) */}
+                    <div className="space-y-6">
+                        {/* Title */}
+                        <div>
+                            <label className="block text-sm font-medium mb-2">Title *</label>
+                            <input
+                                type="text"
+                                value={formData.title}
+                                onChange={handleTitleChange}
+                                className="w-full px-4 py-3 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-lg font-bold"
+                                placeholder="Enter post title..."
+                                required
+                            />
+                        </div>
 
-                    {/* Slug */}
-                    <div>
-                        <label className="block text-sm font-medium mb-2">Slug</label>
-                        <input
-                            type="text"
-                            value={formData.slug}
-                            onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                            className="w-full px-4 py-2 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm font-mono"
-                            placeholder="auto-generated-from-title"
-                        />
-                    </div>
+                        {/* Slug */}
+                        <div>
+                            <label className="block text-sm font-medium mb-2">Slug</label>
+                            <input
+                                type="text"
+                                value={formData.slug}
+                                onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                                className="w-full px-4 py-2 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm font-mono"
+                                placeholder="auto-generated-from-title"
+                            />
+                        </div>
 
-                    {/* Excerpt */}
-                    <div>
-                        <label className="block text-sm font-medium mb-2">Excerpt</label>
-                        <textarea
-                            value={formData.excerpt}
-                            onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
-                            className="w-full px-4 py-3 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-none"
-                            rows={3}
-                            placeholder="Short description for SEO and previews..."
-                        />
-                    </div>
-
-                    {/* Featured Image */}
-                    <div>
-                        <label className="block text-sm font-medium mb-2">Featured Image URL</label>
-                        <input
-                            type="url"
-                            value={formData.mainImage}
-                            onChange={(e) => setFormData({ ...formData, mainImage: e.target.value })}
-                            className="w-full px-4 py-2 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                            placeholder="https://example.com/image.jpg"
-                        />
-                    </div>
-
-                    {/* Content Editor */}
-                    <div>
-                        <label className="block text-sm font-medium mb-2">Content *</label>
-                        <RichTextEditor
-                            content={formData.content}
-                            onChange={(content) => setFormData({ ...formData, content })}
-                            placeholder="Start writing your post..."
-                        />
-                    </div>
-
-                    {/* Tags */}
-                    <div>
-                        <label className="block text-sm font-medium mb-2">Tags (comma-separated)</label>
-                        <input
-                            type="text"
-                            value={formData.tags.join(', ')}
-                            onChange={(e) => setFormData({ ...formData, tags: e.target.value.split(',').map(t => t.trim()) })}
-                            className="w-full px-4 py-2 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                            placeholder="react, javascript, tutorial"
-                        />
-                    </div>
-
-                    {/* FAQ Builder */}
-                    <div className="pt-6 border-t border-border">
-                        <FAQBuilder
-                            faqs={formData.faqs}
-                            onChange={(faqs) => setFormData({ ...formData, faqs })}
-                        />
-                    </div>
-
-                    {/* TOC Builder */}
-                    <div className="pt-6 border-t border-border">
-                        <TOCBuilder
-                            content={formData.content}
-                            tocItems={formData.tocItems}
-                            showToc={formData.showToc}
-                            onChange={(tocItems) => setFormData({ ...formData, tocItems })}
-                            onShowTocChange={(showToc) => setFormData({ ...formData, showToc })}
-                        />
-                    </div>
-
-                    {/* SEO Fields */}
-                    <div className="space-y-4 pt-6 border-t border-border">
-                        <h3 className="text-lg font-semibold">SEO Settings</h3>
-
+                        {/* Meta Title */}
                         <div>
                             <label className="block text-sm font-medium mb-2">Meta Title</label>
                             <input
@@ -282,14 +212,82 @@ export default function NewPostPage() {
                             />
                         </div>
 
+                        {/* Meta Description */}
                         <div>
                             <label className="block text-sm font-medium mb-2">Meta Description</label>
                             <textarea
                                 value={formData.metaDescription}
                                 onChange={(e) => setFormData({ ...formData, metaDescription: e.target.value })}
                                 className="w-full px-4 py-2 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-none"
-                                rows={2}
+                                rows={3}
                                 placeholder="SEO description (defaults to excerpt)"
+                            />
+                        </div>
+
+                        {/* Excerpt */}
+                        <div>
+                            <label className="block text-sm font-medium mb-2">Excerpt</label>
+                            <textarea
+                                value={formData.excerpt}
+                                onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
+                                className="w-full px-4 py-3 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+                                rows={3}
+                                placeholder="Short description for SEO and previews..."
+                            />
+                        </div>
+
+                        {/* Tags */}
+                        <div>
+                            <label className="block text-sm font-medium mb-2">Tags (comma-separated)</label>
+                            <input
+                                type="text"
+                                value={formData.tags.join(', ')}
+                                onChange={(e) => setFormData({ ...formData, tags: e.target.value.split(',').map(t => t.trim()) })}
+                                className="w-full px-4 py-2 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                                placeholder="react, javascript, tutorial"
+                            />
+                        </div>
+
+                        {/* Featured Image */}
+                        <div>
+                            <label className="block text-sm font-medium mb-2">Featured Image URL</label>
+                            <input
+                                type="url"
+                                value={formData.mainImage}
+                                onChange={(e) => setFormData({ ...formData, mainImage: e.target.value })}
+                                className="w-full px-4 py-2 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                                placeholder="https://example.com/image.jpg"
+                            />
+                            {formData.mainImage && (
+                                <div className="mt-2">
+                                    <img
+                                        src={formData.mainImage}
+                                        alt="Preview"
+                                        className="w-full rounded-lg border border-border"
+                                        onError={(e) => e.target.style.display = 'none'}
+                                    />
+                                </div>
+                            )}
+                        </div>
+
+                        {/* FAQ Builder */}
+                        <div className="pt-6 border-t border-border">
+                            <FAQBuilder
+                                faqs={formData.faqs}
+                                onChange={(faqs) => setFormData({ ...formData, faqs })}
+                            />
+                        </div>
+                    </div>
+
+                    {/* RIGHT SIDE - Rich Text Editor (70%) */}
+                    <div className="space-y-6">
+                        {/* Content Editor */}
+                        <div>
+                            <label className="block text-sm font-medium mb-2">Content *</label>
+                            <RichTextEditor
+                                content={formData.content}
+                                onChange={(content) => setFormData({ ...formData, content })}
+                                placeholder="Start writing your post..."
                             />
                         </div>
                     </div>

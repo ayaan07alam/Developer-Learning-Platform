@@ -5,6 +5,7 @@ import com.blog.backend.dto.UserDTO;
 import com.blog.backend.model.User;
 import com.blog.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +24,19 @@ public class ProfileController {
     // Get own profile
     @GetMapping
     public ResponseEntity<?> getProfile(Authentication authentication) {
-        User user = userRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Authentication required"));
+        }
+
+        // Safely cast the principal
+        Object principal = authentication.getPrincipal();
+        if (!(principal instanceof User)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Invalid authentication token"));
+        }
+
+        User user = (User) principal;
 
         UserDTO userDTO = new UserDTO(
                 user.getId(),
@@ -45,8 +57,19 @@ public class ProfileController {
             @RequestBody UpdateUserProfileRequest request,
             Authentication authentication) {
 
-        User user = userRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Authentication required"));
+        }
+
+        // Safely cast the principal
+        Object principal = authentication.getPrincipal();
+        if (!(principal instanceof User)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Invalid authentication token"));
+        }
+
+        User user = (User) principal;
 
         // Update fields if provided
         if (request.getUsername() != null && !request.getUsername().isEmpty()) {

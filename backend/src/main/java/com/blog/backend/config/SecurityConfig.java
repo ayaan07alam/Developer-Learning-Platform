@@ -45,7 +45,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/categories", "/api/categories/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/posts/*/likes/count").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/posts/*/likes/me").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/posts/**/comments").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/posts/*/comments").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/posts/*/comments/count",
                                 "/api/likes/**",
                                 "/api/comments/post/**")
@@ -53,9 +53,9 @@ public class SecurityConfig {
                         .requestMatchers("/h2-console/**").permitAll()
 
                         // Like and Comment permissions for authenticated users (BEFORE post management)
-                        .requestMatchers(HttpMethod.POST, "/api/posts/**/likes").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/api/posts/**/likes").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/api/posts/**/comments").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/posts/*/likes").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/posts/*/likes").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/posts/*/comments").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/api/comments/**").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/api/comments/**").authenticated()
 
@@ -92,4 +92,3 @@ public class SecurityConfig {
         return source;
     }
 }
-
