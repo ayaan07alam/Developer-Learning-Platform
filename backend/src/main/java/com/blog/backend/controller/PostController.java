@@ -35,6 +35,12 @@ public class PostController {
     @Autowired
     private PostViewRepository postViewRepository;
 
+    @Autowired
+    private com.blog.backend.service.PermissionService permissionService;
+
+    @Autowired
+    private PostHistoryRepository postHistoryRepository;
+
     // Get all posts (with optional filters)
     @GetMapping
     public ResponseEntity<?> getAllPosts(

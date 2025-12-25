@@ -92,6 +92,16 @@ public class Post {
     @JoinColumn(name = "last_modified_by")
     private User lastModifiedBy;
 
+    // Review workflow fields
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "reviewed_by")
+    private User reviewedBy;
+
+    private LocalDateTime reviewedAt;
+
+    @Column(columnDefinition = "TEXT")
+    private String reviewComments;
+
     @ManyToMany
     @JoinTable(name = "post_categories", joinColumns = @JoinColumn(name = "post_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories = new HashSet<>();

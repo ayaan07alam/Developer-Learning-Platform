@@ -75,6 +75,9 @@ public class SecurityConfig {
                                                                 "/api/jobs/*/applications", "/api/jobs/*/close")
                                                 .authenticated()
 
+                                                // Review workflow endpoints
+                                                .requestMatchers("/api/reviews/**").authenticated()
+
                                                 // Like and Comment permissions for authenticated users (BEFORE post
                                                 // management)
                                                 .requestMatchers(HttpMethod.POST, "/api/posts/*/likes").authenticated()

@@ -168,7 +168,21 @@ export const AuthProvider = ({ children }) => {
         loginWithGoogle,
         isAuthenticated: !!user,
         isAdmin: user?.role === 'ADMIN',
-        isEditor: user?.role === 'EDITOR' || user?.role === 'ADMIN'
+        isEditor: user?.role === 'EDITOR' || user?.role === 'ADMIN',
+        isReviewer: user?.role === 'REVIEWER' || user?.role === 'ADMIN',
+        isUser: user?.role === 'USER',
+
+        // Permission helpers
+        canEditPost: () => user?.role === 'ADMIN' || user?.role === 'EDITOR',
+        canDeletePost: () => user?.role === 'ADMIN',
+        canPublishPost: () => user?.role === 'ADMIN' || user?.role === 'EDITOR',
+        canViewAnalytics: () => user?.role === 'ADMIN',
+        canManageUsers: () => user?.role === 'ADMIN',
+        canReviewPost: () => user?.role === 'ADMIN' || user?.role === 'REVIEWER',
+        canCreatePost: () => user?.role === 'ADMIN' || user?.role === 'EDITOR',
+        canManageCategories: () => user?.role === 'ADMIN' || user?.role === 'EDITOR',
+        canViewUserList: () => user?.role === 'ADMIN' || user?.role === 'EDITOR',
+        hasDashboardAccess: () => user?.role === 'ADMIN' || user?.role === 'EDITOR' || user?.role === 'REVIEWER',
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
