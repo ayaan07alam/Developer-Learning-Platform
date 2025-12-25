@@ -1,0 +1,616 @@
+{
+  "react": [
+    {
+      "name": "React Home",
+      "path": "/learn/react/react-tutorial"
+    },
+    {
+      "name": "React Intro",
+      "path": "/learn/react/react-intro"
+    },
+    {
+      "name": "React Get Started",
+      "path": "/learn/react/react-get-started"
+    },
+    {
+      "name": "React Upgrade",
+      "path": "/learn/react/react-upgrade"
+    },
+    {
+      "name": "React ES6",
+      "path": "/learn/react/react-es6",
+      "items": [
+        {
+          "name": "React ES6",
+          "path": "/learn/react/react-es6"
+        },
+        {
+          "name": "ES6 Classes",
+          "path": "/learn/react/react-es6-classes"
+        },
+        {
+          "name": "ES6 Arrow Functions",
+          "path": "/learn/react/react-es6-arrow-functions"
+        },
+        {
+          "name": "ES6 Arrow Variables",
+          "path": "/learn/react/react-es6-arrow-variables"
+        },
+        {
+          "name": "ES6 Array Methods",
+          "path": "/learn/react/react-es6-array-methods"
+        },
+        {
+          "name": "ES6 Destructuring",
+          "path": "/learn/react/react-es6-destructuring"
+        },
+        {
+          "name": "ES6 Spread Operator",
+          "path": "/learn/react/react-es6-spread-operator"
+        },
+        {
+          "name": "ES6 Modules",
+          "path": "/learn/react/react-es6-modules"
+        },
+        {
+          "name": "ES6 Ternary Operator",
+          "path": "/learn/react/react-es6-ternary-operator"
+        }
+      ]
+    },
+    {
+      "name": "React Render HTML",
+      "path": "/learn/react/react-render-html"
+      
+    },
+    {
+      "name": "React JSX",
+      "path": "/learn/react/react-jsx"
+      
+    },
+    {
+      "name": "React Components",
+      "path": "/learn/react/react-components"
+      
+    },
+    {
+      "name": "React Class",
+      "path": "/learn/react/react-class"
+      
+    },
+    {
+      "name": "React Events",
+      "path": "/learn/react/react-events"
+      
+    },
+    {
+      "name": "React Conditionals",
+      "path": "/learn/react/react-conditionals"
+      
+    },
+    {
+      "name": "React Lists",
+      "path": "/learn/react/react-lists"
+      
+    },
+    {
+      "name": "React Forms",
+      "path": "/learn/react/react-forms"
+      
+    },
+    {
+      "name": "React Router",
+      "path": "/learn/react/react-router"
+      
+    },
+    {
+      "name": "React Memo",
+      "path": "/learn/react/react-memo"
+      
+    },
+    {
+      "name": "React CSS Styling",
+      "path": "/learn/react/react-css-styling"
+      
+    },
+    {
+      "name": "React Sass Styling",
+      "path": "/learn/react/react-sass-styling"
+      
+    }
+    
+  ],
+  "javascript": [
+    {
+      "name": "JavaScript",
+      "path": "/learn/javascript/dashboard"
+    },
+    {
+      "name": "JavaScript Transaction",
+      "path": "/learn/javascript/transaction"
+    },
+    {
+      "name": "JavaScript Payment",
+      "path": "/learn/javascript/payment"
+    },
+    {
+      "name": "JavaScript Accounts",
+      "path": "/learn/javascript/accounts"
+    },
+    {
+      "name": "JavaScript Settings",
+      "path": "/learn/javascript/settings",
+      "items": [
+        {
+          "name": "JavaScript General",
+          "path": "/learn/javascript/settings"
+        },
+        {
+          "name": "JavaScript Security",
+          "path": "/learn/javascript/security"
+        },
+        {
+          "name": "JavaScript Notifications",
+          "path": "/learn/javascript/notifications"
+        }
+      ]
+    },
+    {
+      "name": "JavaScript Help",
+      "path": "/javascript/settings/help",
+      "items": [
+        {
+          "name": "JavaScript FAQ",
+          "path": "/javascript/settings/help/faq"
+        },
+        {
+          "name": "JavaScript Contact",
+          "path": "/javascript/settings/help/contact"
+        }
+      ]
+    }
+  ],
+  "css": [
+    {
+      "name": "css Dashboard",
+      "path": "/learn/css/dashboard"
+    },
+    {
+      "name": "css Transaction",
+      "path": "/learn/css/transaction"
+    },
+    {
+      "name": "css Payment",
+      "path": "/learn/css/payment"
+    },
+    {
+      "name": "css Accounts",
+      "path": "/learn/css/accounts"
+    },
+    {
+      "name": "css Settings",
+      "path": "/learn/css/settings",
+      "items": [
+        {
+          "name": "css General",
+          "path": "/learn/css/settings"
+        },
+        {
+          "name": "css Security",
+          "path": "/learn/css/security"
+        },
+        {
+          "name": "css Notifications",
+          "path": "/learn/css/notifications"
+        }
+      ]
+    },
+    {
+      "name": "css Help",
+      "path": "/css/settings/help",
+      "items": [
+        {
+          "name": "css FAQ",
+          "path": "/css/settings/help/faq"
+        },
+        {
+          "name": "css Contact",
+          "path": "/css/settings/help/contact"
+        }
+      ]
+    }
+  ],
+  "typescript":[
+        {
+          "name": "TypeScript Introduction",
+          "path": "/learn/typescript/typescript-introduction"
+        },
+        {
+          "name": "What is TypeScript?",
+          "path": "/learn/typescript/what-is-typescript"
+        },
+        {
+          "name": "TypeScript Overview",
+          "path": "/learn/typescript/typescript-overview"
+        },
+        {
+          "name": "TypeScript vs. JavaScript",
+          "path": "/learn/typescript/typescript-vs-javascript"
+        },
+        {
+          "name": "Benefits of Using TypeScript",
+          "path": "/learn/typescript/benefits-of-using-typescript"
+        },
+        {
+          "name": "Getting Started",
+          "path": "/learn/typescript/getting-started",
+          "items": [
+            {
+              "name": "Setting Up TypeScript Environment",
+              "path": "/learn/typescript/setting-up-typescript-environment"
+            },
+            {
+              "name": "Installing TypeScript with npm",
+              "path": "/learn/typescript/installing-typescript-with-npm"
+            },
+            {
+              "name": "Your First TypeScript Program",
+              "path": "/learn/typescript/your-first-typescript-program"
+            }
+          ]
+        },
+        {
+          "name": "Basic Syntax and Types",
+          "path": "/learn/typescript/basic-syntax-and-types",
+          "items": [
+            {
+              "name": "Basic Syntax and Data Types",
+              "path": "/learn/typescript/basic-syntax-and-data-types"
+            },
+            {
+              "name": "Variables and Constants",
+              "path": "/learn/typescript/variables-and-constants"
+            },
+            {
+              "name": "Type Annotations",
+              "path": "/learn/typescript/type-annotations"
+            },
+            {
+              "name": "Type Inference",
+              "path": "/learn/typescript/type-inference"
+            },
+            {
+              "name": "Basic Types (Number, String, Boolean)",
+              "path": "/learn/typescript/basic-types"
+            },
+            {
+              "name": "Arrays and Tuples",
+              "path": "/learn/typescript/arrays-and-tuples"
+            },
+            {
+              "name": "Enums",
+              "path": "/learn/typescript/enums"
+            },
+            {
+              "name": "The Any Type",
+              "path": "/learn/typescript/the-any-type"
+            },
+            {
+              "name": "The Never Type",
+              "path": "/learn/typescript/the-never-type"
+            },
+            {
+              "name": "Union and Intersection Types",
+              "path": "/learn/typescript/union-and-intersection-types"
+            },
+            {
+              "name": "Literal Types",
+              "path": "/learn/typescript/literal-types"
+            },
+            {
+              "name": "Symbols",
+              "path": "/learn/typescript/symbols"
+            },
+            {
+              "name": "Null and Undefined",
+              "path": "/learn/typescript/null-and-undefined"
+            },
+            {
+              "name": "Type Aliases",
+              "path": "/learn/typescript/type-aliases"
+            }
+          ]
+        },
+        {
+          "name": "Control Flow and Operators",
+          "path": "/learn/typescript/control-flow-and-operators",
+          "items": [
+            {
+              "name": "Operators in TypeScript",
+              "path": "/learn/typescript/operators-in-typescript"
+            },
+            {
+              "name": "Decision Making (if, if-else, switch)",
+              "path": "/learn/typescript/decision-making"
+            },
+            {
+              "name": "Loops (for, while, do-while)",
+              "path": "/learn/typescript/loops"
+            },
+            {
+              "name": "Break and Continue",
+              "path": "/learn/typescript/break-and-continue"
+            }
+          ]
+        },
+        {
+          "name": "Functions",
+          "path": "/learn/typescript/functions",
+          "items": [
+            {
+              "name": "Declaring Functions",
+              "path": "/learn/typescript/declaring-functions"
+            },
+            {
+              "name": "Function Types",
+              "path": "/learn/typescript/function-types"
+            },
+            {
+              "name": "Optional and Default Parameters",
+              "path": "/learn/typescript/optional-and-default-parameters"
+            },
+            {
+              "name": "Rest Parameters",
+              "path": "/learn/typescript/rest-parameters"
+            },
+            {
+              "name": "Anonymous Functions and Arrow Functions",
+              "path": "/learn/typescript/anonymous-functions-and-arrow-functions"
+            },
+            {
+              "name": "Function Overloading",
+              "path": "/learn/typescript/function-overloading"
+            }
+          ]
+        },
+        {
+          "name": "Object-Oriented Programming",
+          "path": "/learn/typescript/object-oriented-programming",
+          "items": [
+            {
+              "name": "Classes and Objects",
+              "path": "/learn/typescript/classes-and-objects"
+            },
+            {
+              "name": "Constructors and Methods",
+              "path": "/learn/typescript/constructors-and-methods"
+            },
+            {
+              "name": "Inheritance",
+              "path": "/learn/typescript/inheritance"
+            },
+            {
+              "name": "Access Modifiers (public, private, protected)",
+              "path": "/learn/typescript/access-modifiers"
+            },
+            {
+              "name": "Readonly Properties",
+              "path": "/learn/typescript/readonly-properties"
+            },
+            {
+              "name": "Static Methods and Properties",
+              "path": "/learn/typescript/static-methods-and-properties"
+            },
+            {
+              "name": "Abstract Classes",
+              "path": "/learn/typescript/abstract-classes"
+            }
+          ]
+        },
+        {
+          "name": "Interfaces",
+          "path": "/learn/typescript/interfaces",
+          "items": [
+            {
+              "name": "Extending Interfaces",
+              "path": "/learn/typescript/extending-interfaces"
+            },
+            {
+              "name": "Duck Typing",
+              "path": "/learn/typescript/duck-typing"
+            }
+          ]
+        },
+        {
+          "name": "Advanced Types and Type Manipulation",
+          "path": "/learn/typescript/advanced-types-and-type-manipulation",
+          "items": [
+            {
+              "name": "Advanced Types",
+              "path": "/learn/typescript/advanced-types"
+            },
+            {
+              "name": "Type Guards",
+              "path": "/learn/typescript/type-guards"
+            },
+            {
+              "name": "Type Assertions",
+              "path": "/learn/typescript/type-assertions"
+            },
+            {
+              "name": "Conditional Types",
+              "path": "/learn/typescript/conditional-types"
+            },
+            {
+              "name": "Mapped Types",
+              "path": "/learn/typescript/mapped-types"
+            },
+            {
+              "name": "Template Literal Types",
+              "path": "/learn/typescript/template-literal-types"
+            }
+          ]
+        },
+        {
+          "name": "Generics",
+          "path": "/learn/typescript/generics",
+          "items": [
+            {
+              "name": "Introduction to Generics",
+              "path": "/learn/typescript/introduction-to-generics"
+            },
+            {
+              "name": "Generic Constraints",
+              "path": "/learn/typescript/generic-constraints"
+            },
+            {
+              "name": "Generic Interfaces",
+              "path": "/learn/typescript/generic-interfaces"
+            },
+            {
+              "name": "Generic Classes",
+              "path": "/learn/typescript/generic-classes"
+            }
+          ]
+        },
+        {
+          "name": "Modules and Namespaces",
+          "path": "/learn/typescript/modules-and-namespaces",
+          "items": [
+            {
+              "name": "Modules in TypeScript",
+              "path": "/learn/typescript/modules-in-typescript"
+            },
+            {
+              "name": "Namespaces",
+              "path": "/learn/typescript/namespaces"
+            },
+            {
+              "name": "Import and Export",
+              "path": "/learn/typescript/import-and-export"
+            }
+          ]
+        },
+        {
+          "name": "Advanced Concepts",
+          "path": "/learn/typescript/advanced-concepts",
+          "items": [
+            {
+              "name": "Triple-Slash Directives",
+              "path": "/learn/typescript/triple-slash-directives"
+            },
+            {
+              "name": "Ambient Declarations",
+              "path": "/learn/typescript/ambient-declarations"
+            },
+            {
+              "name": "Decorators",
+              "path": "/learn/typescript/decorators"
+            },
+            {
+              "name": "Type Compatibility",
+              "path": "/learn/typescript/type-compatibility"
+            },
+            {
+              "name": "Iterators and Generators",
+              "path": "/learn/typescript/iterators-and-generators"
+            },
+            {
+              "name": "Mixins",
+              "path": "/learn/typescript/mixins"
+            },
+            {
+              "name": "Utility Types",
+              "path": "/learn/typescript/utility-types"
+            },
+            {
+              "name": "tsconfig.json",
+              "path": "/learn/typescript/tsconfig-json"
+            }
+          ]
+        },
+        {
+          "name": "TypeScript with Frameworks and Libraries",
+          "path": "/learn/typescript/typescript-with-frameworks-and-libraries",
+          "items": [
+            {
+              "name": "Using TypeScript with Angular",
+              "path": "/learn/typescript/using-typescript-with-angular"
+            },
+            {
+              "name": "Using TypeScript with React",
+              "path": "/learn/typescript/using-typescript-with-react"
+            },
+            {
+              "name": "Using TypeScript with Node.js",
+              "path": "/learn/typescript/using-typescript-with-nodejs"
+            },
+            {
+              "name": "TypeScript and Vue.js",
+              "path": "/learn/typescript/typescript-and-vuejs"
+            }
+          ]
+        },
+        {
+          "name": "Tooling and Best Practices",
+          "path": "/learn/typescript/tooling-and-best-practices",
+          "items": [
+            {
+              "name": "Using ESLint and Prettier",
+              "path": "/learn/typescript/using-eslint-and-prettier"
+            },
+            {
+              "name": "Debugging TypeScript",
+              "path": "/learn/typescript/debugging-typescript"
+            },
+            {
+              "name": "Setting Up a TypeScript Project",
+              "path": "/learn/typescript/setting-up-a-typescript-project"
+            },
+            {
+              "name": "Testing with TypeScript",
+              "path": "/learn/typescript/testing-with-typescript"
+            }
+          ]
+        },
+        {
+          "name": "Practical Applications",
+          "path": "/learn/typescript/practical-applications",
+          "items": [
+            {
+              "name": "Date and Time in TypeScript",
+              "path": "/learn/typescript/date-and-time-in-typescript"
+            },
+            {
+              "name": "Working with DOM Elements",
+              "path": "/learn/typescript/working-with-dom-elements"
+            },
+            {
+              "name": "Error Handling and Exceptions",
+              "path": "/learn/typescript/error-handling-and-exceptions"
+            },
+            {
+              "name": "Working with JSON",
+              "path": "/learn/typescript/working-with-json"
+            }
+          ]
+        },
+        {
+          "name": "Additional Resources",
+          "path": "/learn/typescript/additional-resources",
+          "items": [
+            {
+              "name": "Useful Libraries and Tools",
+              "path": "/learn/typescript/useful-libraries-and-tools"
+            },
+            {
+              "name": "Further Reading and Documentation",
+              "path": "/learn/typescript/further-reading-and-documentation"
+            }
+          ]
+        }    
+  ]
+
+
+  
+}

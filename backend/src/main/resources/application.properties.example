@@ -1,0 +1,27 @@
+spring.application.name=backend
+server.port=8080
+
+spring.datasource.url=jdbc:h2:mem:blogdb
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=password
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+spring.h2.console.enabled=true
+spring.jpa.hibernate.ddl-auto=update
+
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+
+# JWT Configuration
+jwt.secret=your-secret-key-here-make-it-long-and-secure-at-least-256-bits
+jwt.expiration=2592000000
+
+# Google OAuth Configuration
+google.client.id=YOUR_GOOGLE_CLIENT_ID_HERE
+google.client.secret=YOUR_GOOGLE_CLIENT_SECRET_HERE
+
+
+spring.web.cors.allowed-origins=http://localhost:3000,http://localhost:3001,http://localhost:3002
+spring.web.cors.allowed-methods=GET,POST,PUT,DELETE,OPTIONS
+spring.web.cors.allowed-headers=*
+spring.web.cors.allow-credentials=true

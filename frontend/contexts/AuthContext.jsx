@@ -1,0 +1,175 @@
+"use client";
+import React, { createContext, useContext, useState, useEffect } from 'react';
+
+const AuthContext = createContext(null);
+
+export const useAuth = () => {
+    const context = useContext(AuthContext);
+    if (!context) {
+        throw new Error('useAuth must be used within AuthProvider');
+    }
+    return context;
+};
+
+export const AuthProvider = ({ children }) => {
+    const [user, setUser] = useState(null);
+    const [token, setToken] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        // Check for stored token on mount
+        const storedToken = localStorage.getItem('token');
+        if (storedToken) {
+            setToken(storedToken);
+            fetchCurrentUser(storedToken);
+        } else {
+            setLoading(false);
+        }
+    }, []);
+
+    const fetchCurrentUser = async (authToken) => {
+        try {
+            const response = await fetch('http://localhost:8080/api/auth/me', {
+                headers: {
+                    'Authorization': `Bearer ${authToken}`
+                }
+            });
+
+            if (response.ok) {
+                const userData = await response.json();
+                setUser(userData);
+            } else {
+                // Token invalid, clear it
+                logout();
+            }
+        } catch (error) {
+            console.error('Error fetching user:', error);
+            logout();
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const login = async (email, password) => {
+        try {
+            const response = await fetch('http://localhost:8080/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || 'Login failed');
+            }
+
+            const data = await response.json();
+            setToken(data.token);
+            setUser(data.user);
+            localStorage.setItem('token', data.token);
+            return { success: true };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    };
+
+    const register = async (email, password, username) => {
+        try {
+            const response = await fetch('http://localhost:8080/api/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password, username })
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || 'Registration failed');
+            }
+
+            const data = await response.json();
+            setToken(data.token);
+            setUser(data.user);
+            localStorage.setItem('token', data.token);
+            return { success: true };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    };
+
+    const logout = () => {
+        setUser(null);
+        setToken(null);
+        localStorage.removeItem('token');
+    };
+
+    const updateUsername = async (newUsername) => {
+        try {
+            const response = await fetch('http://localhost:8080/api/auth/update-username', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ username: newUsername })
+            });
+
+            if (response.ok) {
+                const updatedUser = await response.json();
+                setUser(updatedUser);
+                return { success: true };
+            } else {
+                const error = await response.json();
+                return { success: false, error: error.error || 'Failed to update username' };
+            }
+        } catch (error) {
+            console.error('Error updating username:', error);
+            return { success: false, error: 'Network error' };
+        }
+    };
+
+    const loginWithGoogle = async (credential) => {
+        try {
+            const response = await fetch('http://localhost:8080/api/auth/google', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ credential })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setToken(data.token);
+                setUser(data.user);
+                localStorage.setItem('token', data.token);
+                return { success: true };
+            } else {
+                const error = await response.json();
+                return { success: false, error: error.error || 'Google authentication failed' };
+            }
+        } catch (error) {
+            console.error('Error with Google auth:', error);
+            return { success: false, error: 'Network error' };
+        }
+    };
+
+    const value = {
+        user,
+        token,
+        loading,
+        login,
+        register,
+        logout,
+        updateUsername,
+        loginWithGoogle,
+        isAuthenticated: !!user,
+        isAdmin: user?.role === 'ADMIN',
+        isEditor: user?.role === 'EDITOR' || user?.role === 'ADMIN'
+    };
+
+    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};

@@ -1,0 +1,167 @@
+{
+  "react": [
+    {
+      "name": "React Home",
+      "path": "learn/react/"
+    },
+    {
+      "name": "React Intro",
+      "path": "learn/react/react-intro"
+    },
+    {
+      "name": "React Get Started",
+      "path": "/learn/react/react-get-started"
+    },
+    {
+      "name": "React Upgrade",
+      "path": "/learn/react/react-upgrade"
+    },
+    {
+      "name": "React ES6",
+      "path": "/learn/react/react-es6",
+      "items": [
+        {
+          "name": "React ES6",
+          "path": "/learn/react/react-es6"
+        },
+        {
+          "name": "ES6 Classes",
+          "path": "/learn/react/react-es6-classes"
+        },
+        {
+          "name": "ES6 Arrow Functions",
+          "path": "/learn/react/react-es6-arrow-functions"
+        },
+        {
+          "name": "ES6 Arrow Variables",
+          "path": "/learn/react/react-es6-variables"
+        },
+        {
+          "name": "ES6 Array Methods",
+          "path": "/learn/react/react-es6-array-methods"
+        },
+        {
+          "name": "ES6 Destructuring",
+          "path": "/learn/react/react-es6-destructuring"
+        },
+        {
+          "name": "ES6 Spread Operator",
+          "path": "/learn/react/react-es6-spread-operator"
+        },
+        {
+          "name": "ES6 Modules",
+          "path": "/learn/react/react-es6-modules"
+        },
+        {
+          "name": "ES6 Ternary Operator",
+          "path": "/learn/react/react-es6-ternary-operator"
+        }
+      ]
+    },
+    {
+      "name": "React Render HTML",
+      "path": "/react/"
+      
+    }
+  ],
+  "javascript": [
+    {
+      "name": "JavaScript",
+      "path": "/learn/javascript/dashboard"
+    },
+    {
+      "name": "JavaScript Transaction",
+      "path": "/learn/javascript/transaction"
+    },
+    {
+      "name": "JavaScript Payment",
+      "path": "/learn/javascript/payment"
+    },
+    {
+      "name": "JavaScript Accounts",
+      "path": "/learn/javascript/accounts"
+    },
+    {
+      "name": "JavaScript Settings",
+      "path": "/learn/javascript/settings",
+      "items": [
+        {
+          "name": "JavaScript General",
+          "path": "/learn/javascript/settings"
+        },
+        {
+          "name": "JavaScript Security",
+          "path": "/learn/javascript/security"
+        },
+        {
+          "name": "JavaScript Notifications",
+          "path": "/learn/javascript/notifications"
+        }
+      ]
+    },
+    {
+      "name": "JavaScript Help",
+      "path": "/javascript/settings/help",
+      "items": [
+        {
+          "name": "JavaScript FAQ",
+          "path": "/javascript/settings/help/faq"
+        },
+        {
+          "name": "JavaScript Contact",
+          "path": "/javascript/settings/help/contact"
+        }
+      ]
+    }
+  ],
+  "css": [
+    {
+      "name": "css Dashboard",
+      "path": "/learn/css/dashboard"
+    },
+    {
+      "name": "css Transaction",
+      "path": "/learn/css/transaction"
+    },
+    {
+      "name": "css Payment",
+      "path": "/learn/css/payment"
+    },
+    {
+      "name": "css Accounts",
+      "path": "/learn/css/accounts"
+    },
+    {
+      "name": "css Settings",
+      "path": "/learn/css/settings",
+      "items": [
+        {
+          "name": "css General",
+          "path": "/learn/css/settings"
+        },
+        {
+          "name": "css Security",
+          "path": "/learn/css/security"
+        },
+        {
+          "name": "css Notifications",
+          "path": "/learn/css/notifications"
+        }
+      ]
+    },
+    {
+      "name": "css Help",
+      "path": "/css/settings/help",
+      "items": [
+        {
+          "name": "css FAQ",
+          "path": "/css/settings/help/faq"
+        },
+        {
+          "name": "css Contact",
+          "path": "/css/settings/help/contact"
+        }
+      ]
+    }
+  ]
+}

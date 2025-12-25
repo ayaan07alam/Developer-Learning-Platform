@@ -1,0 +1,115 @@
+@tailwind base;
+  @tailwind components;
+  @tailwind utilities;
+  @import 'highlight.js/styles/github-dark.css';
+
+  @layer base {
+    :root {
+      /* Clean Tech (Light Mode) - Keeping it but sharpening it */
+      --background: 210 40% 98%; /* Ultra light blue-grey */
+      --foreground: 222 47% 11%;
+      
+      --card: 0 0% 100%;
+      --card-foreground: 222 47% 11%;
+ 
+      --popover: 0 0% 100%;
+      --popover-foreground: 222 47% 11%;
+ 
+      --primary: 190 100% 45%; /* Electric Cyan */
+      --primary-foreground: 210 40% 98%;
+ 
+      --secondary: 260 100% 65%; /* Vivid Violet */
+      --secondary-foreground: 210 40% 98%;
+ 
+      --muted: 210 40% 96.1%;
+      --muted-foreground: 215.4 16.3% 46.9%;
+ 
+      --accent: 190 100% 45%;
+      --accent-foreground: 222 47% 11%;
+ 
+      --destructive: 0 84.2% 60.2%;
+      --destructive-foreground: 210 40% 98%;
+
+      --border: 214.3 31.8% 91.4%;
+      --input: 214.3 31.8% 91.4%;
+      --ring: 190 100% 45%;
+ 
+      --radius: 0.5rem;
+    }
+
+    .dark {
+      /* Nebula (Dark Mode) - Obsidian & Neon */
+      --background: 240 10% 3%; /* #07070b - Deep Obsidian */
+      --foreground: 210 40% 98%;
+ 
+      --card: 240 10% 5%; /* Slightly lighter obsidian */
+      --card-foreground: 210 40% 98%;
+ 
+      --popover: 240 10% 5%;
+      --popover-foreground: 210 40% 98%;
+ 
+      --primary: 190 100% 50%; /* #00f3ff - Cyber Cyan */
+      --primary-foreground: 222 47% 11%;
+ 
+      --secondary: 270 100% 60%; /* #9d00ff - Hyper Violet */
+      --secondary-foreground: 210 40% 98%;
+ 
+      --muted: 217.2 32.6% 12%;
+      --muted-foreground: 215 20.2% 65.1%;
+ 
+      --accent: 270 100% 60%;
+      --accent-foreground: 210 40% 98%;
+ 
+      --destructive: 0 62.8% 30.6%;
+      --destructive-foreground: 210 40% 98%;
+ 
+      --border: 240 10% 15%; /* Subtle border */
+      --input: 240 10% 15%;
+      --ring: 190 100% 50%;
+    }
+  }
+
+  @layer base {
+    * {
+      @apply border-border;
+    }
+    body {
+      @apply bg-background text-foreground;
+      /* Mesh Gradient Background for standard body */
+      background-image: 
+        radial-gradient(circle at 50% 0%, hsla(var(--primary), 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 0% 50%, hsla(var(--secondary), 0.1) 0%, transparent 30%),
+        radial-gradient(circle at 100% 50%, hsla(var(--accent), 0.1) 0%, transparent 30%);
+      background-attachment: fixed;
+    }
+  }
+
+  @layer utilities {
+    .glass {
+      @apply bg-white/10 backdrop-blur-lg border border-white/20 shadow-xl;
+    }
+    .dark .glass {
+      @apply bg-black/20 backdrop-blur-lg border border-white/10 shadow-xl;
+    }
+    .text-gradient {
+      @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-500 to-accent;
+    }
+  }
+  
+  /* Custom Scrollbar Styles */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent; 
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/30 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/50;
+  }
