@@ -2,30 +2,29 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
-import { CheckCircle, XCircle, Clock, Eye, FileText, Calendar } from 'lucide-react';
+import { FileEdit, Clock, CheckCircle } from 'lucide-react';
 import PostStatusBadge from '@/components/PostStatusBadge';
 import Link from 'next/link';
 
 export default function ReviewerDashboard() {
     const router = useRouter();
-    const { user, canReviewPost } = useAuth();
-    const [pendingPosts, setPendingPosts] = useState([]);
+    const { user, isReviewer, isAdmin } = useAuth();
+    const [drafts, setDrafts] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [selectedPost, setSelectedPost] = useState(null);
-    const [reviewComments, setReviewComments] = useState('');
-    const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
-        if (!canReviewPost()) {
+        if (!isReviewer && !isAdmin) {
             router.push('/dashboard');
             return;
         }
-        fetchPendingReviews();
-    }, []);
+        fetchDrafts();
+    }, [isReviewer, isAdmin, router]);
 
-    const fetchPendingReviews = async () => {
+    const fetchDrafts = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/reviews/pending', {
+            // Fetch all posts and filter client-side for DRAFT and REJECTED
+            // This ensures reviewers can see posts returned to them.
+            const response = await fetch('http://localhost:8080/api/posts', {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 },
@@ -33,80 +32,13 @@ export default function ReviewerDashboard() {
 
             if (response.ok) {
                 const data = await response.json();
-                setPendingPosts(data);
+                const availablePosts = data.filter(p => p.status === 'DRAFT' || p.status === 'REJECTED');
+                setDrafts(availablePosts);
             }
         } catch (error) {
-            console.error('Error fetching pending reviews:', error);
+            console.error('Error fetching drafts:', error);
         } finally {
             setLoading(false);
-        }
-    };
-
-    const handleApprove = async (postId) => {
-        if (!reviewComments.trim()) {
-            alert('Please add review comments');
-            return;
-        }
-
-        setSubmitting(true);
-        try {
-            const response = await fetch(`http://localhost:8080/api/reviews/${postId}/approve`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                },
-                body: JSON.stringify({ comments: reviewComments }),
-            });
-
-            if (response.ok) {
-                alert('Post approved successfully!');
-                setSelectedPost(null);
-                setReviewComments('');
-                fetchPendingReviews();
-            } else {
-                const error = await response.json();
-                alert(error.error || 'Failed to approve post');
-            }
-        } catch (error) {
-            console.error('Error approving post:', error);
-            alert('Error approving post');
-        } finally {
-            setSubmitting(false);
-        }
-    };
-
-    const handleReject = async (postId) => {
-        if (!reviewComments.trim()) {
-            alert('Please add review comments explaining the rejection');
-            return;
-        }
-
-        setSubmitting(true);
-        try {
-            const response = await fetch(`http://localhost:8080/api/reviews/${postId}/reject`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                },
-                body: JSON.stringify({ comments: reviewComments }),
-            });
-
-            if (response.ok) {
-                alert('Post rejected');
-                setSelectedPost(null);
-                setReviewComments('');
-                fetchPendingReviews();
-            } else {
-                const error = await response.json();
-                alert(error.error || 'Failed to reject post');
-            }
-        } catch (error) {
-            console.error('Error rejecting post:', error);
-            alert('Error rejecting post');
-        } finally {
-            setSubmitting(false);
         }
     };
 
@@ -124,111 +56,70 @@ export default function ReviewerDashboard() {
                 {/* Header */}
                 <div className="mb-8">
                     <h1 className="text-4xl font-bold mb-2">Reviewer Dashboard</h1>
-                    <p className="text-muted-foreground">Review and approve posts for publication</p>
+                    <p className="text-muted-foreground">Pick up drafts to edit and submit for approval.</p>
                 </div>
 
                 {/* Stats */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div className="p-6 rounded-xl bg-gradient-to-br from-blue-500/10 to-blue-500/5 border border-blue-500/20">
+                    <div className="p-6 rounded-xl bg-card border border-border">
                         <div className="flex items-center justify-between mb-2">
-                            <span className="text-sm text-muted-foreground">Pending Reviews</span>
-                            <Clock className="w-5 h-5 text-blue-500" />
+                            <span className="text-sm text-muted-foreground">Available Drafts</span>
+                            <FileEdit className="w-5 h-5 text-primary" />
                         </div>
-                        <p className="text-3xl font-bold text-blue-500">{pendingPosts.length}</p>
+                        <p className="text-3xl font-bold">{drafts.length}</p>
                     </div>
                 </div>
 
-                {/* Pending Posts */}
-                {pendingPosts.length === 0 ? (
-                    <div className="text-center py-16 border-2 border-dashed border-border rounded-xl">
-                        <CheckCircle className="w-16 h-16 text-muted-foreground mx-auto mb-4 opacity-50" />
-                        <h3 className="text-xl font-semibold mb-2">All caught up!</h3>
-                        <p className="text-muted-foreground">No posts pending review at the moment</p>
+                {/* Available Drafts */}
+                <div className="bg-card border border-border rounded-xl overflow-hidden">
+                    <div className="p-6 border-b border-border">
+                        <h3 className="text-xl font-bold">Drafts Available for Editing</h3>
                     </div>
-                ) : (
-                    <div className="space-y-4">
-                        <h2 className="text-2xl font-bold mb-4">Posts Awaiting Review</h2>
-                        {pendingPosts.map((post) => (
-                            <div
-                                key={post.id}
-                                className="p-6 rounded-xl bg-secondary/5 border border-border hover:border-primary/30 transition-all"
-                            >
-                                <div className="flex items-start justify-between mb-4">
-                                    <div className="flex-1">
-                                        <div className="flex items-center gap-3 mb-2">
-                                            <h3 className="text-xl font-bold">{post.title}</h3>
-                                            <PostStatusBadge status={post.status} />
-                                        </div>
-                                        <p className="text-sm text-muted-foreground mb-3">
-                                            By {post.createdBy?.username || 'Unknown'} • {new Date(post.createdAt).toLocaleDateString()}
-                                        </p>
-                                        {post.excerpt && (
-                                            <p className="text-muted-foreground line-clamp-2 mb-4">{post.excerpt}</p>
-                                        )}
-                                    </div>
-                                </div>
-
-                                {selectedPost?.id === post.id ? (
-                                    <div className="mt-4 p-4 bg-background rounded-lg border border-border">
-                                        <h4 className="font-semibold mb-3">Review Comments</h4>
-                                        <textarea
-                                            value={reviewComments}
-                                            onChange={(e) => setReviewComments(e.target.value)}
-                                            placeholder="Add your review comments here..."
-                                            className="w-full px-4 py-3 rounded-lg bg-secondary/10 border border-border focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20 mb-4"
-                                            rows={4}
-                                        />
-                                        <div className="flex gap-3">
-                                            <button
-                                                onClick={() => handleApprove(post.id)}
-                                                disabled={submitting}
-                                                className="px-6 py-2 rounded-lg bg-green-500 text-white font-semibold hover:bg-green-600 transition-colors disabled:opacity-50 flex items-center gap-2"
-                                            >
-                                                <CheckCircle className="w-4 h-4" />
-                                                {submitting ? 'Approving...' : 'Approve'}
-                                            </button>
-                                            <button
-                                                onClick={() => handleReject(post.id)}
-                                                disabled={submitting}
-                                                className="px-6 py-2 rounded-lg bg-red-500 text-white font-semibold hover:bg-red-600 transition-colors disabled:opacity-50 flex items-center gap-2"
-                                            >
-                                                <XCircle className="w-4 h-4" />
-                                                {submitting ? 'Rejecting...' : 'Reject'}
-                                            </button>
-                                            <button
-                                                onClick={() => {
-                                                    setSelectedPost(null);
-                                                    setReviewComments('');
-                                                }}
-                                                className="px-6 py-2 rounded-lg border border-border hover:bg-secondary/10 transition-colors"
-                                            >
-                                                Cancel
-                                            </button>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className="flex gap-3">
-                                        <Link
-                                            href={`/blogs/${post.slug}`}
-                                            target="_blank"
-                                            className="px-4 py-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors text-sm font-medium flex items-center gap-2"
-                                        >
-                                            <Eye className="w-4 h-4" />
-                                            Preview
-                                        </Link>
-                                        <button
-                                            onClick={() => setSelectedPost(post)}
-                                            className="px-4 py-2 rounded-lg bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 transition-colors text-sm font-medium flex items-center gap-2"
-                                        >
-                                            <FileText className="w-4 h-4" />
-                                            Review
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-                        ))}
-                    </div>
-                )}
+                    {drafts.length === 0 ? (
+                        <div className="p-12 text-center text-muted-foreground">
+                            No drafts available at the moment.
+                        </div>
+                    ) : (
+                        <div className="overflow-x-auto">
+                            <table className="w-full">
+                                <thead className="bg-secondary/20">
+                                    <tr>
+                                        <th className="px-6 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">Title</th>
+                                        <th className="px-6 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">Author</th>
+                                        <th className="px-6 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">Created</th>
+                                        <th className="px-6 py-3 text-right text-xs font-semibold text-muted-foreground uppercase">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-border">
+                                    {drafts.map((post) => (
+                                        <tr key={post.id} className="hover:bg-secondary/5">
+                                            <td className="px-6 py-4">
+                                                <div className="font-medium text-foreground">{post.title}</div>
+                                                {post.excerpt && (
+                                                    <div className="text-xs text-muted-foreground mt-1 line-clamp-1">{post.excerpt}</div>
+                                                )}
+                                            </td>
+                                            <td className="px-6 py-4 text-sm text-muted-foreground">
+                                                {post.author?.name || post.createdBy?.username || 'Unknown'}
+                                            </td>
+                                            <td className="px-6 py-4 text-sm text-muted-foreground">
+                                                {new Date(post.createdAt).toLocaleDateString()}
+                                            </td>
+                                            <td className="px-6 py-4 text-right">
+                                                <Link
+                                                    href={`/dashboard/posts/edit/${post.id}`}
+                                                    className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 py-2"
+                                                >
+                                                    Edit & Submit
+                                                </Link>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );

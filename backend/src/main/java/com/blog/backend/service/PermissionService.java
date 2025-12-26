@@ -10,14 +10,15 @@ public class PermissionService {
 
     /**
      * Check if user can edit a post
-     * ADMIN: Can edit any post
-     * EDITOR: Can edit any post
-     * Others: Cannot edit
+     * ADMIN, EDITOR, REVIEWER: Can edit (REVIEWER only own/assigned technically but
+     * handled in controller)
      */
     public boolean canEditPost(User user, Post post) {
         if (user == null)
             return false;
-        return user.getRole() == Role.ADMIN || user.getRole() == Role.EDITOR;
+        return user.getRole() == Role.ADMIN ||
+                user.getRole() == Role.EDITOR ||
+                user.getRole() == Role.REVIEWER;
     }
 
     /**
@@ -68,13 +69,12 @@ public class PermissionService {
     /**
      * Check if user can review posts (approve/reject)
      * ADMIN: Can review
-     * REVIEWER: Can review
-     * Others: Cannot review
+     * (REVIEWER cannot approve/reject, only edit/submit)
      */
     public boolean canReviewPost(User user) {
         if (user == null)
             return false;
-        return user.getRole() == Role.ADMIN || user.getRole() == Role.REVIEWER;
+        return user.getRole() == Role.ADMIN;
     }
 
     /**

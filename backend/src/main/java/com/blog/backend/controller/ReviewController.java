@@ -37,8 +37,96 @@ public class ReviewController {
     @Autowired
     private PermissionService permissionService;
 
+    @Autowired
+    private com.blog.backend.repository.InternalCommentRepository internalCommentRepository;
+
+    /**
+     * Add internal comment to a post
+     * Accessible by: ADMIN, EDITOR, REVIEWER
+     */
+    @PostMapping("/{id}/chat")
+    public ResponseEntity<?> addInternalComment(@PathVariable Long id,
+            @RequestBody Map<String, String> request,
+            Authentication authentication) {
+        if (authentication == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Authentication required"));
+        }
+
+        try {
+            String email = authentication.getName();
+            Optional<User> userOpt = userRepository.findByEmail(email);
+            Optional<Post> postOpt = postRepository.findById(id);
+
+            if (userOpt.isEmpty() || postOpt.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("error", "User or post not found"));
+            }
+
+            User user = userOpt.get();
+            Post post = postOpt.get();
+
+            if (!permissionService.canEditPost(user, post)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of("error", "You don't have permission to comment on this post"));
+            }
+
+            String content = request.get("content");
+            if (content == null || content.trim().isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Comment content cannot be empty"));
+            }
+
+            PostInternalComment comment = new PostInternalComment();
+            comment.setPost(post);
+            comment.setUser(user);
+            comment.setContent(content);
+            internalCommentRepository.save(comment);
+
+            return ResponseEntity.ok(Map.of("message", "Internal comment added successfully", "comment", comment));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to add comment: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * Get internal comments for a post
+     * Accessible by: ADMIN, EDITOR, REVIEWER
+     */
+    @GetMapping("/{id}/chat")
+    public ResponseEntity<?> getInternalComments(@PathVariable Long id, Authentication authentication) {
+        if (authentication == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Authentication required"));
+        }
+
+        try {
+            String email = authentication.getName();
+            Optional<User> userOpt = userRepository.findByEmail(email);
+
+            if (userOpt.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("error", "User not found"));
+            }
+
+            User user = userOpt.get();
+
+            if (!permissionService.hasDashboardAccess(user)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of("error", "You don't have permission to view internal comments"));
+            }
+
+            List<PostInternalComment> comments = internalCommentRepository.findByPostIdOrderByCreatedAtDesc(id);
+            return ResponseEntity.ok(comments);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to get comments: " + e.getMessage()));
+        }
+    }
+
     /**
      * Get all posts pending review
+     * 
      * Accessible by: ADMIN, REVIEWER
      */
     @GetMapping("/pending")

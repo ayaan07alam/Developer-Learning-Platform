@@ -7,11 +7,12 @@ import FAQBuilder from '@/components/FAQBuilder';
 import { Button } from '@/components/ui/button';
 import { Save, Eye, Trash2, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import InternalAuditChat from '@/components/InternalAuditChat';
 
 export default function EditPostPage() {
     const router = useRouter();
     const params = useParams();
-    const { user, token, isAuthenticated, isEditor } = useAuth();
+    const { user, token, isAuthenticated, isEditor, isReviewer, isAdmin } = useAuth();
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState('');
@@ -31,14 +32,15 @@ export default function EditPostPage() {
         status: 'DRAFT'
     });
 
+    // Auth check
     useEffect(() => {
-        if (!isAuthenticated || !isEditor) {
+        if (!isAuthenticated || (!isEditor && !isAdmin && !isReviewer)) {
             router.push('/login');
             return;
         }
         fetchPost();
         fetchCategories();
-    }, [isAuthenticated, isEditor, router, params.id]);
+    }, [isAuthenticated, isEditor, isReviewer, isAdmin, router, params.id]);
 
     const fetchCategories = async () => {
         try {
@@ -110,7 +112,12 @@ export default function EditPostPage() {
                 throw new Error(errorData.error || 'Failed to update post');
             }
 
-            router.push('/dashboard/posts');
+            // Redirect based on role
+            if (isReviewer) {
+                router.push('/dashboard/reviewer');
+            } else {
+                router.push('/dashboard/posts');
+            }
         } catch (err) {
             setError(err.message);
         } finally {
@@ -118,7 +125,7 @@ export default function EditPostPage() {
         }
     };
 
-    if (!isAuthenticated || !isEditor) {
+    if (!isAuthenticated || (!isEditor && !isAdmin && !isReviewer)) {
         return null;
     }
 
@@ -140,48 +147,60 @@ export default function EditPostPage() {
                 <div className="container mx-auto px-6 max-w-full py-4">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
-                            <Link href="/dashboard/posts" className="inline-flex items-center text-sm text-muted-foreground hover:text-primary">
+                            <Link href={isReviewer ? "/dashboard/reviewer" : "/dashboard/posts"} className="inline-flex items-center text-sm text-muted-foreground hover:text-primary">
                                 <ArrowLeft className="w-4 h-4 mr-1" />
                                 Back
                             </Link>
                             <h1 className="text-xl font-bold">Edit Post</h1>
+                            <span className={`text-xs px-2 py-1 rounded-full ${formData.status === 'PUBLISHED' ? 'bg-green-500/10 text-green-500' :
+                                formData.status === 'UNDER_REVIEW' ? 'bg-blue-500/10 text-blue-500' :
+                                    'bg-gray-500/10 text-gray-500'
+                                }`}>
+                                {formData.status.replace('_', ' ')}
+                            </span>
                         </div>
                         <div className="flex gap-3">
                             <Button
-                                onClick={() => handleSubmit('DRAFT')}
+                                onClick={() => handleSubmit(formData.status)} // Keep current status
                                 disabled={saving || !formData.title || !formData.content}
                                 variant="outline"
                                 size="sm"
                             >
-                                {saving ? (
-                                    <>
-                                        <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"></div>
-                                        <span>Saving...</span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <Save className="w-4 h-4" />
-                                        <span>Save Draft</span>
-                                    </>
-                                )}
+                                {saving ? 'Saving...' : 'Save Changes'}
                             </Button>
-                            <Button
-                                onClick={() => handleSubmit('PUBLISHED')}
-                                disabled={saving || !formData.title || !formData.content}
-                                size="sm"
-                            >
-                                {saving ? (
-                                    <>
-                                        <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
-                                        <span>Updating...</span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <Eye className="w-4 h-4" />
-                                        <span>{formData.status === 'PUBLISHED' ? 'Update' : 'Publish'}</span>
-                                    </>
-                                )}
-                            </Button>
+
+                            {/* Role-based Action Buttons */}
+                            {isReviewer ? (
+                                <Button
+                                    onClick={() => handleSubmit('UNDER_REVIEW')}
+                                    disabled={saving || !formData.title || !formData.content}
+                                    size="sm"
+                                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                                >
+                                    Submit for Approval
+                                </Button>
+                            ) : (
+                                <>
+                                    {formData.status === 'UNDER_REVIEW' && (
+                                        <Button
+                                            onClick={() => handleSubmit('REJECTED')}
+                                            disabled={saving}
+                                            variant="destructive"
+                                            size="sm"
+                                            className="bg-red-500 hover:bg-red-600 text-white"
+                                        >
+                                            Reject
+                                        </Button>
+                                    )}
+                                    <Button
+                                        onClick={() => handleSubmit('PUBLISHED')}
+                                        disabled={saving || !formData.title || !formData.content}
+                                        size="sm"
+                                    >
+                                        {formData.status === 'PUBLISHED' ? 'Update & Publish' : 'Publish'}
+                                    </Button>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -199,6 +218,9 @@ export default function EditPostPage() {
                 <div className="grid grid-cols-[30%_70%] gap-6">
                     {/* LEFT SIDEBAR - Metadata Fields (30%) */}
                     <div className="space-y-6">
+                        {/* Internal Audit Chat */}
+                        <InternalAuditChat postId={params.id} />
+
                         {/* Title */}
                         <div>
                             <label className="block text-sm font-medium mb-2">Title *</label>

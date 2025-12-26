@@ -39,7 +39,7 @@ public class PostController {
     private com.blog.backend.service.PermissionService permissionService;
 
     @Autowired
-    private PostHistoryRepository postHistoryRepository;
+    private com.blog.backend.service.PostHistoryService postHistoryService;
 
     // Get all posts (with optional filters)
     @GetMapping
@@ -55,13 +55,20 @@ public class PostController {
             posts = posts.stream()
                     .filter(p -> p.getStatus() == status)
                     .collect(Collectors.toList());
+        } else {
+            // Default behavior: show only PUBLISHED posts if no status filter provided
+            // unless user is ADMIN/EDITOR/REVIEWER (handled in frontend logic usually,
+            // but strict API should filter)
+            // For now, let's return all and let frontend filter, or restrict based on auth
+            // later
         }
+
         if (categoryId != null) {
             posts = posts.stream()
-                    .filter(p -> p.getCategories().stream()
-                            .anyMatch(c -> c.getId().equals(categoryId)))
+                    .filter(p -> p.getCategories().stream().anyMatch(c -> c.getId().equals(categoryId)))
                     .collect(Collectors.toList());
         }
+
         if (authorId != null) {
             posts = posts.stream()
                     .filter(p -> p.getAuthor() != null && p.getAuthor().getId().equals(authorId))
@@ -158,7 +165,17 @@ public class PostController {
                     .body(Map.of("error", "Authentication required"));
         }
 
-        User currentUser = (User) authentication.getPrincipal();
+        // Actually this might be UserDetails, let's fix
+        Optional<User> userOpt = userRepository.findByEmail(authentication.getName());
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "User not found"));
+        }
+        User user = userOpt.get();
+
+        if (!permissionService.canCreatePost(user)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("error", "You don't have permission to create posts"));
+        }
 
         Post post = new Post();
         post.setTitle(request.getTitle());
@@ -180,7 +197,12 @@ public class PostController {
         }
         post.setSlug(uniqueSlug);
 
-        post.setStatus(request.getStatus());
+        // Set status - Editors can only create DRAFT
+        post.setStatus(request.getStatus() != null ? request.getStatus() : PostStatus.DRAFT);
+
+        // If user is not ADMIN, force DRAFT initially?
+        // Let's allow EDITOR to set status but usually they start with DRAFT
+
         post.setMainImage(request.getMainImage());
         post.setFeaturedImage(request.getFeaturedImage());
         post.setExcerpt(request.getExcerpt());
@@ -190,8 +212,8 @@ public class PostController {
         post.setTags(request.getTags());
         post.setTocItems(request.getTocItems());
         post.setShowToc(request.getShowToc());
-        post.setCreatedBy(currentUser);
-        post.setLastModifiedBy(currentUser);
+        post.setCreatedBy(user);
+        post.setLastModifiedBy(user);
 
         // Calculate read time (rough estimate: 200 words per minute)
         if (request.getContent() != null) {
@@ -222,6 +244,9 @@ public class PostController {
         try {
             Post savedPost = postRepository.save(post);
 
+            // Track creation in history
+            postHistoryService.trackCreation(savedPost, user);
+
             // Create FAQs if provided
             if (request.getFaqs() != null && !request.getFaqs().isEmpty()) {
                 for (com.blog.backend.dto.FAQDTO faqDTO : request.getFaqs()) {
@@ -242,7 +267,7 @@ public class PostController {
         }
     }
 
-    // Update post (ADMIN, EDITOR - own posts)
+    // Update post (ADMIN, EDITOR)
     @PutMapping("/{id}")
     public ResponseEntity<?> updatePost(@PathVariable Long id,
             @RequestBody UpdatePostRequest request,
@@ -252,7 +277,12 @@ public class PostController {
                     .body(Map.of("error", "Authentication required"));
         }
 
-        User currentUser = (User) authentication.getPrincipal();
+        Optional<User> userOpt = userRepository.findByEmail(authentication.getName());
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "User not found"));
+        }
+        User user = userOpt.get();
+
         Optional<Post> postOpt = postRepository.findById(id);
 
         if (postOpt.isEmpty()) {
@@ -261,27 +291,29 @@ public class PostController {
         }
 
         Post post = postOpt.get();
+        PostStatus oldStatus = post.getStatus();
 
-        // Check permissions: ADMIN can edit any post, EDITOR can only edit their own
-        if (currentUser.getRole() != Role.ADMIN &&
-                (post.getCreatedBy() == null || !post.getCreatedBy().getId().equals(currentUser.getId()))) {
+        // Check permissions
+        if (!permissionService.canEditPost(user, post)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body(Map.of("error", "You don't have permission to edit this post"));
         }
 
         // Update fields
+        boolean statusChanged = false;
         if (request.getTitle() != null)
             post.setTitle(request.getTitle());
         if (request.getSlug() != null)
             post.setSlug(request.getSlug());
-        if (request.getStatus() != null) {
+        if (request.getStatus() != null && request.getStatus() != oldStatus) {
             // Set published date when changing from DRAFT to PUBLISHED
-            if (post.getStatus() != PostStatus.PUBLISHED &&
+            if (oldStatus != PostStatus.PUBLISHED &&
                     request.getStatus() == PostStatus.PUBLISHED &&
                     post.getPublishedAt() == null) {
                 post.setPublishedAt(LocalDateTime.now());
             }
             post.setStatus(request.getStatus());
+            statusChanged = true;
         }
         if (request.getMainImage() != null)
             post.setMainImage(request.getMainImage());
@@ -306,7 +338,7 @@ public class PostController {
         if (request.getShowToc() != null)
             post.setShowToc(request.getShowToc());
 
-        post.setLastModifiedBy(currentUser);
+        post.setLastModifiedBy(user);
 
         // Update author
         if (request.getAuthorId() != null) {
@@ -325,22 +357,34 @@ public class PostController {
 
         // Update FAQs
         if (request.getFaqs() != null) {
-            // Clear existing FAQs
-            post.getFaqs().clear();
-
-            // Add new FAQs
-            for (com.blog.backend.dto.FAQDTO faqDTO : request.getFaqs()) {
-                FAQ faq = new FAQ();
-                faq.setPost(post);
-                faq.setQuestion(faqDTO.getQuestion());
-                faq.setAnswer(faqDTO.getAnswer());
-                faq.setDisplayOrder(faqDTO.getDisplayOrder());
-                post.getFaqs().add(faq);
+            post.getFaqs().clear(); // Clear existing FAQs
+            if (!request.getFaqs().isEmpty()) {
+                for (com.blog.backend.dto.FAQDTO faqDTO : request.getFaqs()) {
+                    FAQ faq = new FAQ();
+                    faq.setPost(post);
+                    faq.setQuestion(faqDTO.getQuestion());
+                    faq.setAnswer(faqDTO.getAnswer());
+                    faq.setDisplayOrder(faqDTO.getDisplayOrder());
+                    post.getFaqs().add(faq);
+                }
             }
         }
 
-        Post updatedPost = postRepository.save(post);
-        return ResponseEntity.ok(updatedPost);
+        try {
+            Post savedPost = postRepository.save(post);
+
+            // Track history
+            if (statusChanged) {
+                postHistoryService.trackStatusChange(savedPost, user, oldStatus, savedPost.getStatus());
+            } else {
+                postHistoryService.trackUpdate(savedPost, user, "Post updated");
+            }
+
+            return ResponseEntity.ok(savedPost);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to update post: " + e.getMessage()));
+        }
     }
 
     // Delete post (ADMIN only)

@@ -118,20 +118,23 @@ const Header = () => {
                   className="rounded-full px-6 font-semibold border-primary/20 hover:bg-primary/10 flex items-center gap-2"
                 >
                   <User className="w-4 h-4" />
-                  {user?.username || user?.email?.split('@')[0] || 'Menu'}
+                  <span className="flex flex-col items-start leading-tight">
+                    <span>{user?.username || user?.email?.split('@')[0]}</span>
+                    {user?.role && user.role !== 'USER' && (
+                      <span className="text-[10px] text-primary font-bold">{user.role}</span>
+                    )}
+                  </span>
                   <ChevronDown className="w-4 h-4" />
                 </Button>
 
                 {/* Dropdown Menu */}
                 <div className="absolute right-0 mt-2 w-56 bg-card border border-border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                   <div className="py-2">
-                    {/* Dashboard Link */}
-                    {(user?.role === 'ADMIN' || user?.role === 'EDITOR') && (
-                      <Link href="/dashboard/posts" className="flex items-center gap-3 px-4 py-2 hover:bg-muted transition-colors">
-                        <LayoutDashboard className="w-4 h-4" />
-                        <span>Dashboard</span>
-                      </Link>
-                    )}
+                    {/* Dashboard Link - Visible to all, logic handled by page */}
+                    <Link href="/dashboard" className="flex items-center gap-3 px-4 py-2 hover:bg-muted transition-colors">
+                      <LayoutDashboard className="w-4 h-4" />
+                      <span>Dashboard</span>
+                    </Link>
 
                     {/* Admin Links */}
                     {user?.role === 'ADMIN' && (
