@@ -79,14 +79,20 @@ public class PermissionService {
 
     /**
      * Check if user can create new posts
-     * ADMIN: Can create
-     * EDITOR: Can create
-     * Others: Cannot create
+     * All authenticated users can create posts (viewer = writer)
+     * USER: Can create (submit for approval)
+     * WRITER: Can create (submit for approval)
+     * EDITOR: Can create and publish
+     * ADMIN: Can create and publish
      */
     public boolean canCreatePost(User user) {
         if (user == null)
             return false;
-        return user.getRole() == Role.ADMIN || user.getRole() == Role.EDITOR;
+        // Allow all authenticated users to create posts
+        return user.getRole() == Role.USER ||
+                user.getRole() == Role.WRITER ||
+                user.getRole() == Role.EDITOR ||
+                user.getRole() == Role.ADMIN;
     }
 
     /**
