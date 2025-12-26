@@ -439,10 +439,10 @@ const Home = () => {
                 {/* Quote Text */}
                 <motion.div
                   key={currentQuote}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.5 }}
+                  initial={{ opacity: 0, x: 100 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -100 }}
+                  transition={{ duration: 0.6, ease: "easeInOut" }}
                   className="min-h-[160px]"
                 >
                   <blockquote className="text-2xl md:text-3xl font-bold mb-6 leading-relaxed">
@@ -466,8 +466,8 @@ const Home = () => {
                         key={index}
                         onClick={() => setCurrentQuote(index)}
                         className={`h-2 rounded-full transition-all duration-300 ${index === currentQuote
-                            ? 'w-8 bg-primary'
-                            : 'w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50'
+                          ? 'w-8 bg-primary'
+                          : 'w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50'
                           }`}
                         aria-label={`Go to quote ${index + 1}`}
                       />
