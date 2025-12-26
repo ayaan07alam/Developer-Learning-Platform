@@ -89,27 +89,27 @@ const Home = () => {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
                 </span>
-                V2.0 NEBULA ONLINE
+                COMPLETE DEVELOPER ECOSYSTEM
               </div>
 
               <h1 className="text-6xl lg:text-8xl font-black tracking-tighter leading-[0.9] mb-6">
-                FUTURE <br />
+                YOUR <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-white to-secondary animate-shimmer bg-[length:200%_auto]">
-                  ENGINEER.
-                </span>
+                  COMPLETE
+                </span><br />
+                PLATFORM.
               </h1>
 
               <p className="text-xl text-muted-foreground max-w-lg leading-relaxed mb-10">
-                Master modern tech stacks with our premium, interactive roadmaps.
-                Stop consuming. Start building.
+                Write · Build · Learn · Connect — Everything developers need in one ecosystem.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="h-14 px-8 text-lg rounded-none border border-primary bg-primary/10 hover:bg-primary text-primary hover:text-black transition-all font-mono uppercase tracking-widest">
-                  Start Learning
+                <Button size="lg" className="h-14 px-8 text-lg rounded-none border border-primary bg-primary/10 hover:bg-primary text-primary hover:text-black transition-all font-mono uppercase tracking-widest" asChild>
+                  <Link href="/blogs">Explore Blog</Link>
                 </Button>
-                <Button size="lg" variant="outline" className="h-14 px-8 text-lg rounded-none border-white/20 hover:border-white hover:bg-white/5 transition-all font-mono uppercase tracking-widest text-muted-foreground hover:text-foreground">
-                  View Roadmaps
+                <Button size="lg" variant="outline" className="h-14 px-8 text-lg rounded-none border-white/20 hover:border-white hover:bg-white/5 transition-all font-mono uppercase tracking-widest text-muted-foreground hover:text-foreground" asChild>
+                  <Link href="/tools">Browse Tools</Link>
                 </Button>
               </div>
             </motion.div>
@@ -155,6 +155,120 @@ const Home = () => {
               <div className="absolute inset-0 z-0 bg-transparent bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] mask-image-[radial-gradient(ellipse_at_center,black,transparent)]" />
             </motion.div>
 
+          </div>
+        </div>
+      </section>
+
+      {/* PLATFORM OVERVIEW - 4 Pillars */}
+      <section className="py-20 border-t border-border">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold mb-4 font-mono uppercase tracking-tighter">
+              Your <span className="text-primary">Complete</span> Ecosystem
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Everything you need to grow as a developer — all in one platform.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Blog Platform */}
+            <Link href="/blogs" className="group relative overflow-hidden rounded-2xl border border-border bg-card p-8 hover:border-primary/50 transition-all">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-purple-500/10 rounded-full blur-3xl group-hover:bg-purple-500/20 transition-all"></div>
+              <div className="relative z-10">
+                <div className="w-12 h-12 rounded-lg bg-purple-500/10 flex items-center justify-center mb-4">
+                  <BookOpen className="w-6 h-6 text-purple-400" />
+                </div>
+                <h3 className="text-xl font-bold mb-2">Blog Platform</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Share your expertise and build your audience
+                </p>
+                <div className="text-primary text-sm font-semibold">Write →</div>
+              </div>
+            </Link>
+
+            {/* Developer Tools */}
+            <Link href="/tools" className="group relative overflow-hidden rounded-2xl border border-border bg-card p-8 hover:border-primary/50 transition-all">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-green-500/10 rounded-full blur-3xl group-hover:bg-green-500/20 transition-all"></div>
+              <div className="relative z-10">
+                <div className="w-12 h-12 rounded-lg bg-green-500/10 flex items-center justify-center mb-4">
+                  <Code className="w-6 h-6 text-green-400" />
+                </div>
+                <h3 className="text-xl font-bold mb-2">40+ Free Tools</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Utilities for everyday development work
+                </p>
+                <div className="text-primary text-sm font-semibold">Browse →</div>
+              </div>
+            </Link>
+
+            {/* Learning Platform */}
+            <Link href="/react" className="group relative overflow-hidden rounded-2xl border border-border bg-card p-8 hover:border-primary/50 transition-all">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/10 rounded-full blur-3xl group-hover:bg-blue-500/20 transition-all"></div>
+              <div className="relative z-10">
+                <div className="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center mb-4">
+                  <Sparkles className="w-6 h-6 text-blue-400" />
+                </div>
+                <h3 className="text-xl font-bold mb-2">Interactive Learning</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Tutorials on modern tech stacks
+                </p>
+                <div className="text-primary text-sm font-semibold">Start →</div>
+              </div>
+            </Link>
+
+            {/* Jobs Platform */}
+            <Link href="/jobs" className="group relative overflow-hidden rounded-2xl border border-border bg-card p-8 hover:border-primary/50 transition-all">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-orange-500/10 rounded-full blur-3xl group-hover:bg-orange-500/20 transition-all"></div>
+              <div className="relative z-10">
+                <div className="w-12 h-12 rounded-lg bg-orange-500/10 flex items-center justify-center mb-4">
+                  <Users className="w-6 h-6 text-orange-400" />
+                </div>
+                <h3 className="text-xl font-bold mb-2">Job Board</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Connecting talent with opportunities
+                </p>
+                <div className="text-primary text-sm font-semibold">Explore →</div>
+              </div>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* POPULAR TOOLS SHOWCASE */}
+      <section className="py-20 bg-muted/20 border-t border-border">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col md:flex-row items-end justify-between mb-12 gap-6">
+            <div>
+              <h2 className="text-3xl md:text-5xl font-bold mb-4">Popular Developer Tools</h2>
+              <p className="text-muted-foreground">Free utilities — no signup required.</p>
+            </div>
+            <Link href="/tools" className="text-primary font-semibold hover:underline decoration-2 underline-offset-4 flex items-center gap-1">
+              View All 40+ Tools <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <Link href="/tools/pdf" className="p-6 rounded-xl border border-border bg-card hover:border-primary/50 transition-all group">
+              <div className="text-4xl mb-3">📄</div>
+              <h3 className="font-bold mb-1">PDF Tools</h3>
+              <p className="text-xs text-muted-foreground">Merge, split, compress</p>
+            </Link>
+            <Link href="/tools/images" className="p-6 rounded-xl border border-border bg-card hover:border-primary/50 transition-all group">
+              <div className="text-4xl mb-3">🖼️</div>
+              <h3 className="font-bold mb-1">Image Tools</h3>
+              <p className="text-xs text-muted-foreground">Resize, convert, optimize</p>
+            </Link>
+            <Link href="/tools/developer" className="p-6 rounded-xl border border-border bg-card hover:border-primary/50 transition-all group">
+              <div className="text-4xl mb-3">💻</div>
+              <h3 className="font-bold mb-1">Code Tools</h3>
+              <p className="text-xs text-muted-foreground">Format, validate, test</p>
+            </Link>
+            <Link href="/tools" className="p-6 rounded-xl border border-border bg-card hover:border-primary/50 transition-all group">
+              <div className="text-4xl mb-3">✨</div>
+              <h3 className="font-bold mb-1">+ 35 More</h3>
+              <p className="text-xs text-muted-foreground">Word, Excel, PPT & more</p>
+            </Link>
           </div>
         </div>
       </section>
@@ -223,15 +337,15 @@ const Home = () => {
         </div>
       </section>
 
-      {/* LATEST ARTICLES */}
+      {/* LATEST ARTICLES - Priority Section for SEO */}
       <section className="py-24 container mx-auto px-6">
         <div className="flex flex-col md:flex-row items-end justify-between mb-12 gap-6">
           <div>
-            <h2 className="text-3xl md:text-5xl font-bold mb-4">Latest Articles</h2>
-            <p className="text-muted-foreground">Fresh content from our blog.</p>
+            <h2 className="text-3xl md:text-5xl font-bold mb-4">From Our Developer Community</h2>
+            <p className="text-muted-foreground">Fresh insights, tutorials, and experiences from developers worldwide.</p>
           </div>
           <Link href="/blogs" className="text-primary font-semibold hover:underline decoration-2 underline-offset-4 flex items-center gap-1">
-            View All <ArrowRight className="w-4 h-4" />
+            Browse All Posts <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
@@ -294,6 +408,41 @@ const Home = () => {
             ))}
           </div>
         )}
+      </section>
+
+      {/* MULTI-PATH CTA */}
+      <section className="py-20 border-t border-border bg-gradient-to-b from-background to-muted/20">
+        <div className="container mx-auto px-6 text-center">
+          <h2 className="text-3xl md:text-5xl font-bold mb-6">
+            Ready to Get Started?
+          </h2>
+          <p className="text-muted-foreground text-lg mb-10 max-w-2xl mx-auto">
+            Choose your path and join thousands of developers building, learning, and connecting.
+          </p>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+            <Link href="/react" className="p-6 rounded-xl border border-border bg-card hover:border-primary hover:bg-primary/5 transition-all group">
+              <div className="text-3xl mb-2">📚</div>
+              <div className="font-bold mb-1">Learn</div>
+              <div className="text-xs text-muted-foreground">Start tutorials</div>
+            </Link>
+            <Link href="/tools" className="p-6 rounded-xl border border-border bg-card hover:border-primary hover:bg-primary/5 transition-all group">
+              <div className="text-3xl mb-2">🛠️</div>
+              <div className="font-bold mb-1">Use Tools</div>
+              <div className="text-xs text-muted-foreground">Free utilities</div>
+            </Link>
+            <Link href="/blogs" className="p-6 rounded-xl border border-border bg-card hover:border-primary hover:bg-primary/5 transition-all group">
+              <div className="text-3xl mb-2">✍️</div>
+              <div className="font-bold mb-1">Write</div>
+              <div className="text-xs text-muted-foreground">Share knowledge</div>
+            </Link>
+            <Link href="/jobs" className="p-6 rounded-xl border border-border bg-card hover:border-primary hover:bg-primary/5 transition-all group">
+              <div className="text-3xl mb-2">💼</div>
+              <div className="font-bold mb-1">Find Jobs</div>
+              <div className="text-xs text-muted-foreground">Hire or get hired</div>
+            </Link>
+          </div>
+        </div>
       </section>
 
     </div>
