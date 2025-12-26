@@ -219,39 +219,60 @@ const Home = () => {
                   <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
                     Utilities for everyday development work
                   </p>
-                  <div className="text-primary text-sm font-semibold">Browse →</div>
+                  <div className="text-green-400 text-sm font-semibold flex items-center gap-1 group-hover:gap-2 transition-all">
+                    Browse <ArrowRight className="w-4 h-4" />
+                  </div>
                 </div>
               </Link>
+            </motion.div>
 
-              {/* Learning Platform */}
-              <Link href="/react" className="group relative overflow-hidden rounded-2xl border border-border bg-card p-8 hover:border-primary/50 transition-all">
-                <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/10 rounded-full blur-3xl group-hover:bg-blue-500/20 transition-all"></div>
+            {/* Learning Platform */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+              <Link href="/react" className="group relative overflow-hidden rounded-2xl border border-border bg-card p-8 hover:border-blue-500/50 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 block h-full">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl group-hover:bg-blue-500/20 group-hover:scale-150 transition-all duration-500"></div>
                 <div className="relative z-10">
-                  <div className="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center mb-4">
-                    <Sparkles className="w-6 h-6 text-blue-400" />
+                  <div className="w-14 h-14 rounded-xl bg-blue-500/10 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-blue-500/20 transition-all duration-300">
+                    <Sparkles className="w-7 h-7 text-blue-400 group-hover:text-blue-300 transition-colors" />
                   </div>
-                  <h3 className="text-xl font-bold mb-2">Interactive Learning</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
+                  <h3 className="text-xl font-bold mb-2 group-hover:text-blue-400 transition-colors">Interactive Learning</h3>
+                  <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
                     Tutorials on modern tech stacks
                   </p>
-                  <div className="text-primary text-sm font-semibold">Start →</div>
+                  <div className="text-blue-400 text-sm font-semibold flex items-center gap-1 group-hover:gap-2 transition-all">
+                    Start <ArrowRight className="w-4 h-4" />
+                  </div>
                 </div>
               </Link>
+            </motion.div>
 
-              {/* Jobs Platform */}
-              <Link href="/jobs" className="group relative overflow-hidden rounded-2xl border border-border bg-card p-8 hover:border-primary/50 transition-all">
-                <div className="absolute top-0 right-0 w-24 h-24 bg-orange-500/10 rounded-full blur-3xl group-hover:bg-orange-500/20 transition-all"></div>
+            {/* Jobs Platform */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              <Link href="/jobs" className="group relative overflow-hidden rounded-2xl border border-border bg-card p-8 hover:border-orange-500/50 hover:shadow-xl hover:shadow-orange-500/10 transition-all duration-300 block h-full">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/10 rounded-full blur-3xl group-hover:bg-orange-500/20 group-hover:scale-150 transition-all duration-500"></div>
                 <div className="relative z-10">
-                  <div className="w-12 h-12 rounded-lg bg-orange-500/10 flex items-center justify-center mb-4">
-                    <Users className="w-6 h-6 text-orange-400" />
+                  <div className="w-14 h-14 rounded-xl bg-orange-500/10 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-orange-500/20 transition-all duration-300">
+                    <Users className="w-7 h-7 text-orange-400 group-hover:text-orange-300 transition-colors" />
                   </div>
-                  <h3 className="text-xl font-bold mb-2">Job Board</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
+                  <h3 className="text-xl font-bold mb-2 group-hover:text-orange-400 transition-colors">Job Board</h3>
+                  <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
                     Connecting talent with opportunities
                   </p>
-                  <div className="text-primary text-sm font-semibold">Explore →</div>
+                  <div className="text-orange-400 text-sm font-semibold flex items-center gap-1 group-hover:gap-2 transition-all">
+                    Explore <ArrowRight className="w-4 h-4" />
+                  </div>
                 </div>
               </Link>
+            </motion.div>
           </div>
         </div>
       </section>
