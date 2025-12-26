@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Moon, Sun, Menu, X, Terminal, LogOut, User, Search, ChevronDown, LayoutDashboard, Users, MessageSquare, Folder } from "lucide-react";
+import { Moon, Sun, Menu, X, Terminal, LogOut, User, Search, ChevronDown, LayoutDashboard, Users, MessageSquare, Folder, PenTool } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -100,6 +100,16 @@ const Header = () => {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           </form>
 
+          {/* Write Button - Shown for authenticated WRITER+ users */}
+          {isAuthenticated && user?.role && ['WRITER', 'EDITOR', 'ADMIN'].includes(user.role) && (
+            <Link href="/dashboard/write">
+              <Button className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white rounded-full px-6 font-semibold shadow-lg shadow-primary/20 flex items-center gap-2">
+                <PenTool className="w-4 h-4" />
+                Write
+              </Button>
+            </Link>
+          )}
+
           <Button
             variant="ghost"
             size="icon"
@@ -175,11 +185,19 @@ const Header = () => {
               </div>
             </>
           ) : (
-            <Link href="/login">
-              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-6 font-semibold shadow-lg shadow-primary/20">
-                Login
-              </Button>
-            </Link>
+            <>
+              <Link href="/login?redirect=/dashboard/write">
+                <Button variant="outline" className="border-primary/30 hover:bg-primary/10 rounded-full px-6 font-semibold flex items-center gap-2">
+                  <PenTool className="w-4 h-4" />
+                  Write
+                </Button>
+              </Link>
+              <Link href="/login">
+                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-6 font-semibold shadow-lg shadow-primary/20">
+                  Login
+                </Button>
+              </Link>
+            </>
           )}
         </div>
 
