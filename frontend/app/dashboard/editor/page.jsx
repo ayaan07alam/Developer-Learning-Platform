@@ -2,6 +2,9 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
+import Sidebar from "@/components/Sidebar";
+import ImprovementDraftsSection from "@/components/ImprovementDraftsSection";
+import ContentManagementSection from "@/components/ContentManagementSection";
 import { FileText, Users, FolderOpen, Plus, Edit, Eye, Clock } from 'lucide-react';
 import PostStatusBadge from '@/components/PostStatusBadge';
 import Link from 'next/link';
