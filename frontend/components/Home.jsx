@@ -421,8 +421,8 @@ const Home = () => {
                   onClick={prevSlide}
                   disabled={!canGoPrev}
                   className={`p-2 rounded-lg border border-border transition-all ${canGoPrev
-                      ? 'hover:bg-secondary/10 hover:border-primary cursor-pointer'
-                      : 'opacity-30 cursor-not-allowed'
+                    ? 'hover:bg-secondary/10 hover:border-primary cursor-pointer'
+                    : 'opacity-30 cursor-not-allowed'
                     }`}
                   aria-label="Previous posts"
                 >
@@ -435,8 +435,8 @@ const Home = () => {
                   onClick={nextSlide}
                   disabled={!canGoNext}
                   className={`p-2 rounded-lg border border-border transition-all ${canGoNext
-                      ? 'hover:bg-secondary/10 hover:border-primary cursor-pointer'
-                      : 'opacity-30 cursor-not-allowed'
+                    ? 'hover:bg-secondary/10 hover:border-primary cursor-pointer'
+                    : 'opacity-30 cursor-not-allowed'
                     }`}
                   aria-label="Next posts"
                 >
@@ -512,43 +512,44 @@ const Home = () => {
                 </Link>
               ))}
             </div>
+          </div>
         )}
-          </section>
+      </section>
 
       {/* MULTI-PATH CTA */}
-        <section className="py-20 border-t border-border bg-gradient-to-b from-background to-muted/20">
-          <div className="container mx-auto px-6 text-center">
-            <h2 className="text-3xl md:text-5xl font-bold mb-6">
-              Ready to Get Started?
-            </h2>
-            <p className="text-muted-foreground text-lg mb-10 max-w-2xl mx-auto">
-              Choose your path and join thousands of developers building, learning, and connecting.
-            </p>
+      <section className="py-20 border-t border-border bg-gradient-to-b from-background to-muted/20">
+        <div className="container mx-auto px-6 text-center">
+          <h2 className="text-3xl md:text-5xl font-bold mb-6">
+            Ready to Get Started?
+          </h2>
+          <p className="text-muted-foreground text-lg mb-10 max-w-2xl mx-auto">
+            Choose your path and join thousands of developers building, learning, and connecting.
+          </p>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-              <Link href="/react" className="p-6 rounded-xl border border-border bg-card hover:border-primary hover:bg-primary/5 transition-all group">
-                <div className="text-3xl mb-2">📚</div>
-                <div className="font-bold mb-1">Learn</div>
-                <div className="text-xs text-muted-foreground">Start tutorials</div>
-              </Link>
-              <Link href="/tools" className="p-6 rounded-xl border border-border bg-card hover:border-primary hover:bg-primary/5 transition-all group">
-                <div className="text-3xl mb-2">🛠️</div>
-                <div className="font-bold mb-1">Use Tools</div>
-                <div className="text-xs text-muted-foreground">Free utilities</div>
-              </Link>
-              <Link href="/blogs" className="p-6 rounded-xl border border-border bg-card hover:border-primary hover:bg-primary/5 transition-all group">
-                <div className="text-3xl mb-2">✍️</div>
-                <div className="font-bold mb-1">Write</div>
-                <div className="text-xs text-muted-foreground">Share knowledge</div>
-              </Link>
-              <Link href="/jobs" className="p-6 rounded-xl border border-border bg-card hover:border-primary hover:bg-primary/5 transition-all group">
-                <div className="text-3xl mb-2">💼</div>
-                <div className="font-bold mb-1">Find Jobs</div>
-                <div className="text-xs text-muted-foreground">Hire or get hired</div>
-              </Link>
-            </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+            <Link href="/react" className="p-6 rounded-xl border border-border bg-card hover:border-primary hover:bg-primary/5 transition-all group">
+              <div className="text-3xl mb-2">📚</div>
+              <div className="font-bold mb-1">Learn</div>
+              <div className="text-xs text-muted-foreground">Start tutorials</div>
+            </Link>
+            <Link href="/tools" className="p-6 rounded-xl border border-border bg-card hover:border-primary hover:bg-primary/5 transition-all group">
+              <div className="text-3xl mb-2">🛠️</div>
+              <div className="font-bold mb-1">Use Tools</div>
+              <div className="text-xs text-muted-foreground">Free utilities</div>
+            </Link>
+            <Link href="/blogs" className="p-6 rounded-xl border border-border bg-card hover:border-primary hover:bg-primary/5 transition-all group">
+              <div className="text-3xl mb-2">✍️</div>
+              <div className="font-bold mb-1">Write</div>
+              <div className="text-xs text-muted-foreground">Share knowledge</div>
+            </Link>
+            <Link href="/jobs" className="p-6 rounded-xl border border-border bg-card hover:border-primary hover:bg-primary/5 transition-all group">
+              <div className="text-3xl mb-2">💼</div>
+              <div className="font-bold mb-1">Find Jobs</div>
+              <div className="text-xs text-muted-foreground">Hire or get hired</div>
+            </Link>
           </div>
-        </section>
+        </div>
+      </section>
 
     </div>
   );
