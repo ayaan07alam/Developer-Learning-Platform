@@ -1,9 +1,8 @@
-```javascript
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import Sidebar from "@/components/Sidebar";
 import { PenTool, FileText, TrendingUp, FileEdit, FolderOpen } from "lucide-react";
 import ImprovementDraftsSection from "@/components/ImprovementDraftsSection";
@@ -39,7 +38,7 @@ export default function DashboardPage() {
         try {
             const response = await fetch('http://localhost:8080/api/content/stats', {
                 headers: {
-                    'Authorization': `Bearer ${ localStorage.getItem('token') } `
+                    'Authorization': `Bearer ${localStorage.getItem('token')} `
                 }
             });
             if (response.ok) {
@@ -83,11 +82,10 @@ export default function DashboardPage() {
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
-                                className={`px - 4 py - 3 font - medium transition - colors flex items - center gap - 2 border - b - 2 ${
-    activeTab === tab.id
-    ? 'border-primary text-primary'
-    : 'border-transparent text-muted-foreground hover:text-foreground'
-} `}
+                                className={`px - 4 py - 3 font - medium transition - colors flex items - center gap - 2 border - b - 2 ${activeTab === tab.id
+                                        ? 'border-primary text-primary'
+                                        : 'border-transparent text-muted-foreground hover:text-foreground'
+                                    } `}
                             >
                                 <tab.icon className="w-4 h-4" />
                                 {tab.label}
