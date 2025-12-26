@@ -33,10 +33,16 @@ export default function NewPostPage() {
     });
 
     useEffect(() => {
-        if (!isAuthenticated || !isEditor) {
+        if (!isAuthenticated) {
             router.push('/login');
+            return;
         }
-    }, [isAuthenticated, isEditor, router]);
+        // Allow WRITER, EDITOR, and ADMIN to create posts
+        if (!user?.role || !['WRITER', 'EDITOR', 'ADMIN'].includes(user.role)) {
+            router.push('/dashboard');
+            return;
+        }
+    }, [isAuthenticated, user, router]);
 
     useEffect(() => {
         fetchCategories();
@@ -159,7 +165,7 @@ export default function NewPostPage() {
         });
     };
 
-    if (!isAuthenticated || !isEditor) {
+    if (!isAuthenticated || !user?.role || !['WRITER', 'EDITOR', 'ADMIN'].includes(user.role)) {
         return null;
     }
 
