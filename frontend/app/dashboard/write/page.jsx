@@ -23,8 +23,8 @@ export default function WriterDashboardPage() {
                 return;
             }
 
-            // Check if user has WRITER+ role
-            if (!user?.role || !['WRITER', 'EDITOR', 'ADMIN'].includes(user.role)) {
+            // Check if user has write permissions (USER/WRITER/EDITOR/ADMIN can all write)
+            if (!user?.role || !['USER', 'WRITER', 'EDITOR', 'ADMIN'].includes(user.role)) {
                 router.push('/dashboard');
                 return;
             }

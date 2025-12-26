@@ -100,8 +100,8 @@ const Header = () => {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           </form>
 
-          {/* Write Button - Shown for authenticated WRITER+ users */}
-          {isAuthenticated && user?.role && ['WRITER', 'EDITOR', 'ADMIN'].includes(user.role) && (
+          {/* Write Button - Shown for authenticated users (all can write) */}
+          {isAuthenticated && user?.role && (
             <Link href="/dashboard/write">
               <Button className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white rounded-full px-6 font-semibold shadow-lg shadow-primary/20 flex items-center gap-2">
                 <PenTool className="w-4 h-4" />

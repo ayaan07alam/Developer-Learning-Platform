@@ -37,8 +37,8 @@ export default function NewPostPage() {
             router.push('/login');
             return;
         }
-        // Allow WRITER, EDITOR, and ADMIN to create posts
-        if (!user?.role || !['WRITER', 'EDITOR', 'ADMIN'].includes(user.role)) {
+        // Allow all authenticated users to create posts (USER, WRITER, EDITOR, ADMIN)
+        if (!user?.role || !['USER', 'WRITER', 'EDITOR', 'ADMIN'].includes(user.role)) {
             router.push('/dashboard');
             return;
         }
@@ -165,7 +165,7 @@ export default function NewPostPage() {
         });
     };
 
-    if (!isAuthenticated || !user?.role || !['WRITER', 'EDITOR', 'ADMIN'].includes(user.role)) {
+    if (!isAuthenticated || !user?.role || !['USER', 'WRITER', 'EDITOR', 'ADMIN'].includes(user.role)) {
         return null;
     }
 
