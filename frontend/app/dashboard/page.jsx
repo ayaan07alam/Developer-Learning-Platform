@@ -1,7 +1,9 @@
+```javascript
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
+import { Button } from '@/components/ui/button';
 import Sidebar from "@/components/Sidebar";
 import { PenTool, FileText, TrendingUp, FileEdit, FolderOpen } from "lucide-react";
 import ImprovementDraftsSection from "@/components/ImprovementDraftsSection";
@@ -37,7 +39,7 @@ export default function DashboardPage() {
         try {
             const response = await fetch('http://localhost:8080/api/content/stats', {
                 headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${ localStorage.getItem('token') } `
                 }
             });
             if (response.ok) {
@@ -81,10 +83,11 @@ export default function DashboardPage() {
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
-                                className={`px-4 py-3 font-medium transition-colors flex items-center gap-2 border-b-2 ${activeTab === tab.id
-                                        ? 'border-primary text-primary'
-                                        : 'border-transparent text-muted-foreground hover:text-foreground'
-                                    }`}
+                                className={`px - 4 py - 3 font - medium transition - colors flex items - center gap - 2 border - b - 2 ${
+    activeTab === tab.id
+    ? 'border-primary text-primary'
+    : 'border-transparent text-muted-foreground hover:text-foreground'
+} `}
                             >
                                 <tab.icon className="w-4 h-4" />
                                 {tab.label}
@@ -140,12 +143,12 @@ export default function DashboardPage() {
                             <div className="p-6 rounded-xl bg-secondary/5 border border-border">
                                 <h2 className="text-xl font-bold mb-4">Quick Actions</h2>
                                 <div className="flex gap-4">
-                                    <button
-                                        onClick={() => router.push('/dashboard/posts/create')}
-                                        className="px-6 py-3 rounded-lg bg-primary text-white hover:bg-primary/90 transition-colors font-medium"
+                                    <Button
+                                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
+                                        onClick={() => router.push('/dashboard/posts/new')}
                                     >
-                                        Create New Post
-                                    </button>
+                                        Create Post
+                                    </Button>
                                     <button
                                         onClick={() => setActiveTab('drafts')}
                                         className="px-6 py-3 rounded-lg border border-border hover:bg-secondary/10 transition-colors font-medium"
