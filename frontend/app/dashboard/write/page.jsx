@@ -241,7 +241,7 @@ export default function WriterDashboardPage() {
                                     <div className="flex items-center gap-2">
                                         {post.status === 'DRAFT' && (
                                             <>
-                                                <Link href={`/dashboard/posts/${post.id}`}>
+                                                <Link href={`/dashboard/posts/edit/${post.id}`}>
                                                     <button className="p-2 rounded-lg border border-border hover:bg-secondary/20 hover:border-primary/50 transition-all" title="Edit">
                                                         <Edit className="w-4 h-4" />
                                                     </button>
