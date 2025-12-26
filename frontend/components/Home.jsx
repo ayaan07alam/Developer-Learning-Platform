@@ -41,10 +41,21 @@ const testimonials = [
   }
 ];
 
+const quotes = [
+  { text: "Code is like humor. When you have to explain it, it's bad.", author: "Cory House", type: "tech" },
+  { text: "The best way to predict the future is to invent it.", author: "Alan Kay", type: "tech" },
+  { text: "Simplicity is the soul of efficiency.", author: "Austin Freeman", type: "general" },
+  { text: "First, solve the problem. Then, write the code.", author: "John Johnson", type: "tech" },
+  { text: "Excellence is not a destination; it is a continuous journey.", author: "Brian Tracy", type: "general" },
+  { text: "Any fool can write code that a computer can understand. Good programmers write code that humans can understand.", author: "Martin Fowler", type: "tech" }
+];
+
 const Home = () => {
   const [latestPosts, setLatestPosts] = useState([]);
+  const [trendingPosts, setTrendingPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [currentQuote, setCurrentQuote] = useState(0);
   const postsPerSlide = 3;
 
   useEffect(() => {
@@ -58,6 +69,8 @@ const Home = () => {
         const posts = await response.json();
         // Get all published posts for carousel
         setLatestPosts(posts);
+        // Get latest 6 posts for trending section
+        setTrendingPosts(posts.slice(0, 6));
       }
     } catch (error) {
       console.error('Error fetching posts:', error);
@@ -65,6 +78,14 @@ const Home = () => {
       setLoading(false);
     }
   };
+
+  // Auto-slide quotes every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentQuote((prev) => (prev + 1) % quotes.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   const totalSlides = Math.ceil(latestPosts.length / postsPerSlide);
   const canGoPrev = currentSlide > 0;
@@ -338,67 +359,141 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 
-         BENTO GRID FEATURES
-         Cyber-Minimalist: Strict borders, layout variety, tech icons
-      */}
+      {/* TRENDING BLOGS SECTION */}
       <section className="py-24 bg-muted/30 border-t border-border">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-bold mb-4 font-mono uppercase tracking-tighter">
-              System <span className="text-primary">Capabilities</span>
+              Trending <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Now</span>
             </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Engineered for maximum efficiency. Our platform provides the tools you need to scale your skills.
+            <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
+              Latest insights and tutorials making waves in the developer community
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 grid-rows-2 gap-4 h-auto md:h-[600px]">
-            {/* Card 1: Large Left */}
-            <div className="md:col-span-2 row-span-2 relative group overflow-hidden rounded-2xl border border-border bg-card p-8 flex flex-col justify-end">
-              <div className="absolute top-0 right-0 p-8 opacity-20 group-hover:opacity-100 transition-opacity duration-500">
-                <Globe className="w-32 h-32 text-primary" />
-              </div>
-              <div className="relative z-10">
-                <h3 className="text-2xl font-bold mb-2">Global Tech Ecosystem</h3>
-                <p className="text-muted-foreground">Comprehensive coverage of the entire development landscape, from frontend frameworks to backend systems.</p>
-              </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-80" />
+          {loading ? (
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
             </div>
-
-            {/* Card 2: Top Right */}
-            <div className="relative group overflow-hidden rounded-2xl border border-border bg-card p-8 hover:bg-accent/10 transition-colors">
-              <Code2 className="w-10 h-10 text-secondary mb-4" />
-              <h3 className="text-xl font-bold mb-2">Live Code Labs</h3>
-              <p className="text-sm text-muted-foreground">Practice in real-time environments.</p>
+          ) : trendingPosts.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">No trending posts yet</p>
             </div>
-
-            {/* Card 3: Bottom Right */}
-            <div className="relative group overflow-hidden rounded-2xl border border-border bg-card p-8 hover:bg-accent/10 transition-colors">
-              <Cpu className="w-10 h-10 text-accent mb-4" />
-              <h3 className="text-xl font-bold mb-2">AI-Powered Paths</h3>
-              <p className="text-sm text-muted-foreground">Adaptive learning algorithms.</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {trendingPosts.map((post) => (
+                <Link
+                  href={`/blogs/${post.slug}`}
+                  key={post.id}
+                  className="group relative overflow-hidden rounded-xl border border-border bg-card hover:border-primary/50 hover:shadow-xl transition-all duration-300"
+                >
+                  <div className="relative h-48 overflow-hidden">
+                    {post.mainImage ? (
+                      <Image
+                        src={post.mainImage}
+                        alt={post.title}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
+                        <BookOpen className="w-12 h-12 text-muted-foreground" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-5">
+                    <h3 className="text-lg font-bold mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+                      {post.title}
+                    </h3>
+                    {post.excerpt && (
+                      <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
+                        {post.excerpt}
+                      </p>
+                    )}
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                      <span>{post.readTime || 5} min read</span>
+                      <span className="text-primary font-semibold">Read →</span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
             </div>
-          </div>
+          )}
         </div>
       </section>
 
-      {/* 
-          STATS / TRUST / FOOTER PREVIEW 
-      */}
-      <section className="py-20 border-t border-border bg-muted/20 flex items-center justify-center">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center container mx-auto px-6">
-          {[
-            { number: "10K+", label: "Developers" },
-            { number: "500+", label: "Tutorials" },
-            { number: "99%", label: "Satisfaction" },
-            { number: "24/7", label: "Uptime" },
-          ].map((stat, i) => (
-            <div key={i}>
-              <div className="text-4xl font-bold mb-2 font-mono">{stat.number}</div>
-              <div className="text-sm text-muted-foreground uppercase tracking-widest">{stat.label}</div>
+      {/* INSPIRATIONAL QUOTES CAROUSEL */}
+      <section className="py-20 border-t border-border bg-gradient-to-b from-muted/20 to-background">
+        <div className="container mx-auto px-6">
+          <div className="max-w-4xl mx-auto">
+            <div className="relative bg-card border border-border rounded-2xl p-12 md:p-16 overflow-hidden">
+              {/* Background decoration */}
+              <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
+
+              <div className="relative z-10">
+                {/* Quote Icon */}
+                <div className="mb-8">
+                  <Sparkles className="w-12 h-12 text-primary" />
+                </div>
+
+                {/* Quote Text */}
+                <motion.div
+                  key={currentQuote}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.5 }}
+                  className="min-h-[160px]"
+                >
+                  <blockquote className="text-2xl md:text-3xl font-bold mb-6 leading-relaxed">
+                    "{quotes[currentQuote].text}"
+                  </blockquote>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-lg font-semibold text-primary">— {quotes[currentQuote].author}</p>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {quotes[currentQuote].type === 'tech' ? '💻 Tech' : '✨ Life'}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Navigation Controls */}
+                <div className="flex items-center justify-between mt-8 pt-8 border-t border-border">
+                  <div className="flex items-center gap-2">
+                    {quotes.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setCurrentQuote(index)}
+                        className={`h-2 rounded-full transition-all duration-300 ${index === currentQuote
+                            ? 'w-8 bg-primary'
+                            : 'w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50'
+                          }`}
+                        aria-label={`Go to quote ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setCurrentQuote((prev) => (prev - 1 + quotes.length) % quotes.length)}
+                      className="p-2 rounded-lg border border-border hover:bg-secondary/10 hover:border-primary transition-all"
+                      aria-label="Previous quote"
+                    >
+                      <ArrowRight className="w-5 h-5 rotate-180" />
+                    </button>
+                    <button
+                      onClick={() => setCurrentQuote((prev) => (prev + 1) % quotes.length)}
+                      className="p-2 rounded-lg border border-border hover:bg-secondary/10 hover:border-primary transition-all"
+                      aria-label="Next quote"
+                    >
+                      <ArrowRight className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
-          ))}
+          </div>
         </div>
       </section>
 
