@@ -22,8 +22,10 @@ export default function ReviewerDashboard() {
 
     const fetchDrafts = async () => {
         try {
-            // Fetch all posts and filter client-side for DRAFT and REJECTED
-            // This ensures reviewers can see posts returned to them.
+            // Fetch all posts and filter client-side for DRAFT, REJECTED, and UNDER_REVIEW
+            // DRAFT: Available to pick up
+            // REJECTED: Returned for revision
+            // UNDER_REVIEW: Submitted and pending approval (for reference)
             const response = await fetch('http://localhost:8080/api/posts', {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -32,7 +34,11 @@ export default function ReviewerDashboard() {
 
             if (response.ok) {
                 const data = await response.json();
-                const availablePosts = data.filter(p => p.status === 'DRAFT' || p.status === 'REJECTED');
+                const availablePosts = data.filter(p =>
+                    p.status === 'DRAFT' ||
+                    p.status === 'REJECTED' ||
+                    p.status === 'UNDER_REVIEW'
+                );
                 setDrafts(availablePosts);
             }
         } catch (error) {

@@ -16,8 +16,14 @@ export default function EditPostPage() {
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
     const [categories, setCategories] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
+
+    // Revision tracking
+    const [originalPost, setOriginalPost] = useState(null);
+    const [revisionId, setRevisionId] = useState(null);
+    const [isEditingPublished, setIsEditingPublished] = useState(false);
 
     const [formData, setFormData] = useState({
         title: '',
@@ -65,21 +71,14 @@ export default function EditPostPage() {
             }
 
             const post = await response.json();
-            setFormData({
-                title: post.title || '',
-                slug: post.slug || '',
-                excerpt: post.excerpt || '',
-                content: post.content || '',
-                mainImage: post.mainImage || '',
-                metaTitle: post.metaTitle || '',
-                metaDescription: post.metaDescription || '',
-                tags: post.tags || [],
-                faqs: post.faqs || [],
-                status: post.status || 'DRAFT'
-            });
-            // Set selected categories
-            if (post.categories && post.categories.length > 0) {
-                setSelectedCategories(post.categories.map(cat => cat.id));
+            setOriginalPost(post);
+
+            // If post is PUBLISHED, check for active draft revision
+            if (post.status === 'PUBLISHED' && !isReviewer) {
+                await fetchOrCreateRevision(post);
+            } else {
+                // For non-published posts or reviewers, edit directly
+                loadPostData(post);
             }
         } catch (err) {
             setError(err.message);
@@ -88,40 +87,176 @@ export default function EditPostPage() {
         }
     };
 
-    const handleSubmit = async (status) => {
-        setSaving(true);
-        setError('');
-
+    const fetchOrCreateRevision = async (post) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/posts/${params.id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    ...formData,
-                    status,
-                    tags: formData.tags.filter(t => t.trim()),
-                    categoryIds: selectedCategories
-                })
+            // Check if there's an active draft
+            const revisionRes = await fetch(`http://localhost:8080/api/revisions/posts/${post.id}/active`, {
+                headers: { 'Authorization': `Bearer ${token}` }
             });
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Failed to update post');
+            if (revisionRes.ok) {
+                // Load existing revision
+                const revision = await revisionRes.json();
+                setRevisionId(revision.id);
+                setIsEditingPublished(true);
+                loadRevisionData(revision);
+            } else {
+                // Create new revision
+                const createRes = await fetch(`http://localhost:8080/api/revisions/posts/${post.id}`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (createRes.ok) {
+                    const revision = await createRes.json();
+                    setRevisionId(revision.id);
+                    setIsEditingPublished(true);
+                    loadRevisionData(revision);
+                } else {
+                    // Fall back to editing post directly
+                    loadPostData(post);
+                }
+            }
+        } catch (err) {
+            console.error('Error with revision:', err);
+            loadPostData(post);
+        }
+    };
+
+    const loadPostData = (post) => {
+        setFormData({
+            title: post.title || '',
+            slug: post.slug || '',
+            excerpt: post.excerpt || '',
+            content: post.content || '',
+            mainImage: post.mainImage || '',
+            metaTitle: post.metaTitle || '',
+            metaDescription: post.metaDescription || '',
+            tags: post.tags || [],
+            faqs: post.faqs || [],
+            status: post.status || 'DRAFT'
+        });
+        if (post.categories && post.categories.length > 0) {
+            setSelectedCategories(post.categories.map(cat => cat.id));
+        }
+    };
+
+    const loadRevisionData = (revision) => {
+        setFormData({
+            title: revision.title || '',
+            slug: revision.slug || '',
+            excerpt: revision.excerpt || '',
+            content: revision.content || '',
+            mainImage: revision.mainImage || '',
+            metaTitle: revision.metaTitle || '',
+            metaDescription: revision.metaDescription || '',
+            tags: revision.tags || [],
+            faqs: revision.faqs || [],
+            status: 'DRAFT' // Revisions are always drafts
+        });
+        if (revision.categories && revision.categories.length > 0) {
+            setSelectedCategories(revision.categories.map(cat => cat.id));
+        }
+    };
+
+    const handleSubmit = async (targetAction) => {
+        setSaving(true);
+        setError('');
+        setSuccessMessage('');
+
+        try {
+            if (isEditingPublished && revisionId) {
+                // Working with a revision
+                if (targetAction === 'PUBLISHED') {
+                    // Publish the revision (apply changes to live post)
+                    const response = await fetch(`http://localhost:8080/api/revisions/${revisionId}/publish`, {
+                        method: 'POST',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to publish revision');
+                    }
+
+                    setSuccessMessage('🎉 Post published successfully!');
+                    setIsEditingPublished(false);
+                    setRevisionId(null);
+                } else {
+                    // Save revision draft
+                    const response = await fetch(`http://localhost:8080/api/revisions/${revisionId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({
+                            ...formData,
+                            tags: formData.tags.filter(t => t.trim()),
+                            categoryIds: selectedCategories
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to save revision');
+                    }
+
+                    setSuccessMessage('✅ Draft saved successfully!');
+                }
+            } else {
+                // Normal post update
+                const response = await fetch(`http://localhost:8080/api/posts/${params.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        ...formData,
+                        status: targetAction,
+                        tags: formData.tags.filter(t => t.trim()),
+                        categoryIds: selectedCategories
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Failed to update post');
+                }
+
+                if (targetAction === 'PUBLISHED') {
+                    setSuccessMessage('🎉 Post published successfully!');
+                } else if (targetAction === 'UNDER_REVIEW') {
+                    setSuccessMessage('📝 Post submitted for review!');
+                } else {
+                    setSuccessMessage('✅ Changes saved successfully!');
+                }
             }
 
-            // Redirect based on role
-            if (isReviewer) {
-                router.push('/dashboard/reviewer');
-            } else {
-                router.push('/dashboard/posts');
-            }
+            // Auto-hide success message after 5 seconds
+            setTimeout(() => setSuccessMessage(''), 5000);
         } catch (err) {
             setError(err.message);
         } finally {
             setSaving(false);
+        }
+    };
+
+    const handleDiscardDraft = async () => {
+        if (!revisionId) return;
+
+        if (!confirm('Discard all changes and keep the published version?')) return;
+
+        try {
+            const response = await fetch(`http://localhost:8080/api/revisions/${revisionId}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (response.ok) {
+                router.push('/dashboard/posts');
+            }
+        } catch (err) {
+            setError('Failed to discard draft');
         }
     };
 
@@ -169,8 +304,22 @@ export default function EditPostPage() {
                                 {saving ? 'Saving...' : 'Save Changes'}
                             </Button>
 
+                            {/* Discard Draft Button (for revisions only) */}
+                            {isEditingPublished && revisionId && (
+                                <Button
+                                    onClick={handleDiscardDraft}
+                                    disabled={saving}
+                                    variant="outline"
+                                    size="sm"
+                                    className="text-red-500 hover:text-red-600"
+                                >
+                                    Discard Draft
+                                </Button>
+                            )}
+
                             {/* Role-based Action Buttons */}
                             {isReviewer ? (
+                                // Reviewers can only submit for approval
                                 <Button
                                     onClick={() => handleSubmit('UNDER_REVIEW')}
                                     disabled={saving || !formData.title || !formData.content}
@@ -180,8 +329,9 @@ export default function EditPostPage() {
                                     Submit for Approval
                                 </Button>
                             ) : (
+                                // Editors and Admins can publish directly
                                 <>
-                                    {formData.status === 'UNDER_REVIEW' && (
+                                    {formData.status === 'UNDER_REVIEW' && !isEditingPublished && (
                                         <Button
                                             onClick={() => handleSubmit('REJECTED')}
                                             disabled={saving}
@@ -196,8 +346,9 @@ export default function EditPostPage() {
                                         onClick={() => handleSubmit('PUBLISHED')}
                                         disabled={saving || !formData.title || !formData.content}
                                         size="sm"
+                                        className="bg-primary hover:bg-primary/90 text-white"
                                     >
-                                        {formData.status === 'PUBLISHED' ? 'Update & Publish' : 'Publish'}
+                                        {isEditingPublished ? 'Publish Changes' : formData.status === 'PUBLISHED' ? 'Update & Publish' : 'Publish'}
                                     </Button>
                                 </>
                             )}
@@ -207,6 +358,45 @@ export default function EditPostPage() {
             </div>
 
             <div className="container mx-auto px-6 max-w-full mt-6">
+
+                {/* Draft Revision Banner */}
+                {isEditingPublished && (
+                    <div className="mb-6 p-4 bg-blue-50 border-l-4 border-blue-500 rounded-r-lg">
+                        <div className="flex items-start">
+                            <div className="flex-shrink-0">
+                                <svg className="h-5 w-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                                </svg>
+                            </div>
+                            <div className="ml-3">
+                                <p className="text-sm text-blue-700 font-medium">
+                                    📝 Editing Draft - The live version remains published
+                                </p>
+                                <p className="mt-1 text-xs text-blue-600">
+                                    Your changes are saved as a draft. Click "Publish Changes" to make them live, or "Discard Draft" to abandon your edits.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Success Message */}
+                {successMessage && (
+                    <div className="mb-6 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg animate-in fade-in slide-in-from-top-2 duration-300">
+                        <div className="flex items-start">
+                            <div className="flex-shrink-0">
+                                <svg className="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                </svg>
+                            </div>
+                            <div className="ml-3">
+                                <p className="text-sm text-green-700 font-medium">
+                                    {successMessage}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 {error && (
                     <div className="mb-6 p-4 bg-red-500/10 border border-red-500/50 rounded-lg text-red-500">

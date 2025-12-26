@@ -13,6 +13,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -135,4 +136,29 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties("post")
     private List<PostInternalComment> internalComments = new ArrayList<>();
+
+    // Revisions - drafts of this post when editing published content
+    @OneToMany(mappedBy = "originalPost", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore // Prevent circular serialization with PostRevision
+    private List<PostRevision> revisions = new ArrayList<>();
+
+    // Helper method to check if there's an active draft revision
+    @Transient
+    public boolean hasActiveDraft() {
+        return revisions != null && revisions.stream()
+                .anyMatch(r -> r.getStatus() == RevisionStatus.DRAFT ||
+                        r.getStatus() == RevisionStatus.PENDING_REVIEW);
+    }
+
+    // Helper method to get the active draft revision
+    @Transient
+    public PostRevision getActiveDraft() {
+        if (revisions == null)
+            return null;
+        return revisions.stream()
+                .filter(r -> r.getStatus() == RevisionStatus.DRAFT ||
+                        r.getStatus() == RevisionStatus.PENDING_REVIEW)
+                .findFirst()
+                .orElse(null);
+    }
 }

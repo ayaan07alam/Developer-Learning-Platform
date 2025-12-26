@@ -169,7 +169,7 @@ export const AuthProvider = ({ children }) => {
         isAuthenticated: !!user,
         isAdmin: user?.role === 'ADMIN',
         isEditor: user?.role === 'EDITOR' || user?.role === 'ADMIN',
-        isReviewer: user?.role === 'REVIEWER' || user?.role === 'ADMIN',
+        isReviewer: user?.role === 'REVIEWER', // Fixed: ADMIN should NOT be treated as reviewer
         isUser: user?.role === 'USER',
 
         // Permission helpers

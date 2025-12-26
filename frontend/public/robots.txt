@@ -1,5 +1,19 @@
-User-Agent: *
+User-agent: *
 Allow: /
-Disallow: /studio/
 
-Sitemap: https://geeksforgeeks.dev/sitemap.xml
+# Disallow admin and private areas
+Disallow: /api/
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /apply/
+Disallow: /login/
+Disallow: /register/
+Disallow: /reset-password/
+Disallow: /verify-email/
+
+# Allow specific API endpoints (sitemaps, RSS)
+Allow: /api/seo/
+
+# Sitemap location
+Sitemap: https://yourwebsite.com/api/seo/sitemap-index.xml
+Sitemap: https://yourwebsite.com/sitemap.xml
