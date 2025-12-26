@@ -426,7 +426,14 @@ const Home = () => {
       <section className="py-20 border-t border-border bg-gradient-to-b from-muted/20 to-background">
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto">
-            <div className="relative bg-card border border-border rounded-2xl p-12 md:p-16 overflow-hidden">
+            <motion.div
+              key={currentQuote}
+              initial={{ opacity: 0, x: -150, scale: 0.9 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              exit={{ opacity: 0, x: 150, scale: 0.9 }}
+              transition={{ duration: 0.7, ease: "easeInOut" }}
+              className="relative bg-card border border-border rounded-2xl p-12 md:p-16 overflow-hidden"
+            >
               {/* Background decoration */}
               <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
 
@@ -437,14 +444,7 @@ const Home = () => {
                 </div>
 
                 {/* Quote Text */}
-                <motion.div
-                  key={currentQuote}
-                  initial={{ opacity: 0, x: 100 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -100 }}
-                  transition={{ duration: 0.6, ease: "easeInOut" }}
-                  className="min-h-[160px]"
-                >
+                <div className="min-h-[160px]">
                   <blockquote className="text-2xl md:text-3xl font-bold mb-6 leading-relaxed">
                     "{quotes[currentQuote].text}"
                   </blockquote>
@@ -456,7 +456,7 @@ const Home = () => {
                       </p>
                     </div>
                   </div>
-                </motion.div>
+                </div>
 
                 {/* Navigation Controls */}
                 <div className="flex items-center justify-between mt-8 pt-8 border-t border-border">
@@ -491,162 +491,164 @@ const Home = () => {
                     </button>
                   </div>
                 </div>
-              </div>
-            </div>
+            </motion.div>
           </div>
         </div>
-      </section>
+    </div>
+      </section >
 
-      {/* LATEST ARTICLES - Priority Section for SEO */}
-      <section className="py-24 container mx-auto px-6">
-        <div className="flex flex-col md:flex-row items-end justify-between mb-12 gap-6">
-          <div>
-            <h2 className="text-3xl md:text-5xl font-bold mb-4">From Our Developer Community</h2>
-            <p className="text-muted-foreground">Fresh insights, tutorials, and experiences from developers worldwide.</p>
-          </div>
-          <div className="flex items-center gap-4">
-            <Link href="/blogs" className="text-primary font-semibold hover:underline decoration-2 underline-offset-4 flex items-center gap-1">
-              Browse All Posts <ArrowRight className="w-4 h-4" />
-            </Link>
+  {/* LATEST ARTICLES - Priority Section for SEO */ }
+  < section className = "py-24 container mx-auto px-6" >
+    <div className="flex flex-col md:flex-row items-end justify-between mb-12 gap-6">
+      <div>
+        <h2 className="text-3xl md:text-5xl font-bold mb-4">From Our Developer Community</h2>
+        <p className="text-muted-foreground">Fresh insights, tutorials, and experiences from developers worldwide.</p>
+      </div>
+      <div className="flex items-center gap-4">
+        <Link href="/blogs" className="text-primary font-semibold hover:underline decoration-2 underline-offset-4 flex items-center gap-1">
+          Browse All Posts <ArrowRight className="w-4 h-4" />
+        </Link>
 
-            {/* Carousel Navigation */}
-            {latestPosts.length > postsPerSlide && (
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={prevSlide}
-                  disabled={!canGoPrev}
-                  className={`p-2 rounded-lg border border-border transition-all ${canGoPrev
-                    ? 'hover:bg-secondary/10 hover:border-primary cursor-pointer'
-                    : 'opacity-30 cursor-not-allowed'
-                    }`}
-                  aria-label="Previous posts"
-                >
-                  <ArrowRight className="w-5 h-5 rotate-180" />
-                </button>
-                <span className="text-sm text-muted-foreground font-mono">
-                  {currentSlide + 1} / {totalSlides}
-                </span>
-                <button
-                  onClick={nextSlide}
-                  disabled={!canGoNext}
-                  className={`p-2 rounded-lg border border-border transition-all ${canGoNext
-                    ? 'hover:bg-secondary/10 hover:border-primary cursor-pointer'
-                    : 'opacity-30 cursor-not-allowed'
-                    }`}
-                  aria-label="Next posts"
-                >
-                  <ArrowRight className="w-5 h-5" />
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {loading ? (
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-            <p className="text-muted-foreground mt-4">Loading articles...</p>
-          </div>
-        ) : latestPosts.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">No published articles yet. Check back soon!</p>
-          </div>
-        ) : (
-          <div className="relative overflow-hidden">
-            <div
-              className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 transition-all duration-500 ease-in-out"
-              style={{
-                transform: `translateX(-${currentSlide * 100}%)`,
-                display: 'grid'
-              }}
+        {/* Carousel Navigation */}
+        {latestPosts.length > postsPerSlide && (
+          <div className="flex items-center gap-2">
+            <button
+              onClick={prevSlide}
+              disabled={!canGoPrev}
+              className={`p-2 rounded-lg border border-border transition-all ${canGoPrev
+                ? 'hover:bg-secondary/10 hover:border-primary cursor-pointer'
+                : 'opacity-30 cursor-not-allowed'
+                }`}
+              aria-label="Previous posts"
             >
-              {visiblePosts.map((post) => (
-                <Link href={`/blogs/${post.slug}`} key={post.id} className="group">
-                  <div className="rounded-3xl overflow-hidden border border-border/50 bg-card shadow-lg hover:shadow-2xl transition-all duration-300 h-full flex flex-col">
-                    <div className="relative h-60 overflow-hidden">
-                      {post.mainImage ? (
-                        <Image
-                          src={post.mainImage}
-                          alt={post.title}
-                          fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
-                          <BookOpen className="w-16 h-16 text-muted-foreground" />
-                        </div>
-                      )}
-                      {post.categories && post.categories[0] && (
-                        <div className="absolute top-4 left-4">
-                          <span className="px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-xs font-semibold border border-white/10">
-                            {post.categories[0].name}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="p-6 flex flex-col flex-grow">
-                      {post.tags && post.tags.length > 0 && (
-                        <div className="flex gap-2 mb-4 flex-wrap">
-                          {post.tags.slice(0, 3).map(tag => (
-                            <span key={tag} className="text-xs font-medium text-muted-foreground bg-secondary/10 px-2 py-1 rounded">#{tag}</span>
-                          ))}
-                        </div>
-                      )}
-                      <h3 className="text-xl font-bold mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary transition-all">
-                        {post.title}
-                      </h3>
-                      {post.excerpt && (
-                        <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{post.excerpt}</p>
-                      )}
-                      <div className="mt-auto pt-4 flex items-center justify-between text-sm text-muted-foreground border-t border-border/50">
-                        <span className="flex items-center gap-1"><BookOpen className="w-4 h-4" /> {post.readTime || 5} min read</span>
-                        <span>Read Article →</span>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
+              <ArrowRight className="w-5 h-5 rotate-180" />
+            </button>
+            <span className="text-sm text-muted-foreground font-mono">
+              {currentSlide + 1} / {totalSlides}
+            </span>
+            <button
+              onClick={nextSlide}
+              disabled={!canGoNext}
+              className={`p-2 rounded-lg border border-border transition-all ${canGoNext
+                ? 'hover:bg-secondary/10 hover:border-primary cursor-pointer'
+                : 'opacity-30 cursor-not-allowed'
+                }`}
+              aria-label="Next posts"
+            >
+              <ArrowRight className="w-5 h-5" />
+            </button>
           </div>
         )}
-      </section>
-
-      {/* MULTI-PATH CTA */}
-      <section className="py-20 border-t border-border bg-gradient-to-b from-background to-muted/20">
-        <div className="container mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-5xl font-bold mb-6">
-            Ready to Get Started?
-          </h2>
-          <p className="text-muted-foreground text-lg mb-10 max-w-2xl mx-auto">
-            Choose your path and join thousands of developers building, learning, and connecting.
-          </p>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-            <Link href="/react" className="p-6 rounded-xl border border-border bg-card hover:border-primary hover:bg-primary/5 transition-all group">
-              <div className="text-3xl mb-2">📚</div>
-              <div className="font-bold mb-1">Learn</div>
-              <div className="text-xs text-muted-foreground">Start tutorials</div>
-            </Link>
-            <Link href="/tools" className="p-6 rounded-xl border border-border bg-card hover:border-primary hover:bg-primary/5 transition-all group">
-              <div className="text-3xl mb-2">🛠️</div>
-              <div className="font-bold mb-1">Use Tools</div>
-              <div className="text-xs text-muted-foreground">Free utilities</div>
-            </Link>
-            <Link href="/blogs" className="p-6 rounded-xl border border-border bg-card hover:border-primary hover:bg-primary/5 transition-all group">
-              <div className="text-3xl mb-2">✍️</div>
-              <div className="font-bold mb-1">Write</div>
-              <div className="text-xs text-muted-foreground">Share knowledge</div>
-            </Link>
-            <Link href="/jobs" className="p-6 rounded-xl border border-border bg-card hover:border-primary hover:bg-primary/5 transition-all group">
-              <div className="text-3xl mb-2">💼</div>
-              <div className="font-bold mb-1">Find Jobs</div>
-              <div className="text-xs text-muted-foreground">Hire or get hired</div>
-            </Link>
-          </div>
-        </div>
-      </section>
-
+      </div>
     </div>
+
+{
+  loading ? (
+    <div className="text-center py-12">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+      <p className="text-muted-foreground mt-4">Loading articles...</p>
+    </div>
+  ) : latestPosts.length === 0 ? (
+    <div className="text-center py-12">
+      <p className="text-muted-foreground">No published articles yet. Check back soon!</p>
+    </div>
+  ) : (
+    <div className="relative overflow-hidden">
+      <div
+        className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 transition-all duration-500 ease-in-out"
+        style={{
+          transform: `translateX(-${currentSlide * 100}%)`,
+          display: 'grid'
+        }}
+      >
+        {visiblePosts.map((post) => (
+          <Link href={`/blogs/${post.slug}`} key={post.id} className="group">
+            <div className="rounded-3xl overflow-hidden border border-border/50 bg-card shadow-lg hover:shadow-2xl transition-all duration-300 h-full flex flex-col">
+              <div className="relative h-60 overflow-hidden">
+                {post.mainImage ? (
+                  <Image
+                    src={post.mainImage}
+                    alt={post.title}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
+                    <BookOpen className="w-16 h-16 text-muted-foreground" />
+                  </div>
+                )}
+                {post.categories && post.categories[0] && (
+                  <div className="absolute top-4 left-4">
+                    <span className="px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-xs font-semibold border border-white/10">
+                      {post.categories[0].name}
+                    </span>
+                  </div>
+                )}
+              </div>
+              <div className="p-6 flex flex-col flex-grow">
+                {post.tags && post.tags.length > 0 && (
+                  <div className="flex gap-2 mb-4 flex-wrap">
+                    {post.tags.slice(0, 3).map(tag => (
+                      <span key={tag} className="text-xs font-medium text-muted-foreground bg-secondary/10 px-2 py-1 rounded">#{tag}</span>
+                    ))}
+                  </div>
+                )}
+                <h3 className="text-xl font-bold mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary transition-all">
+                  {post.title}
+                </h3>
+                {post.excerpt && (
+                  <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{post.excerpt}</p>
+                )}
+                <div className="mt-auto pt-4 flex items-center justify-between text-sm text-muted-foreground border-t border-border/50">
+                  <span className="flex items-center gap-1"><BookOpen className="w-4 h-4" /> {post.readTime || 5} min read</span>
+                  <span>Read Article →</span>
+                </div>
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </div>
+  )
+}
+      </section >
+
+  {/* MULTI-PATH CTA */ }
+  < section className = "py-20 border-t border-border bg-gradient-to-b from-background to-muted/20" >
+    <div className="container mx-auto px-6 text-center">
+      <h2 className="text-3xl md:text-5xl font-bold mb-6">
+        Ready to Get Started?
+      </h2>
+      <p className="text-muted-foreground text-lg mb-10 max-w-2xl mx-auto">
+        Choose your path and join thousands of developers building, learning, and connecting.
+      </p>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+        <Link href="/react" className="p-6 rounded-xl border border-border bg-card hover:border-primary hover:bg-primary/5 transition-all group">
+          <div className="text-3xl mb-2">📚</div>
+          <div className="font-bold mb-1">Learn</div>
+          <div className="text-xs text-muted-foreground">Start tutorials</div>
+        </Link>
+        <Link href="/tools" className="p-6 rounded-xl border border-border bg-card hover:border-primary hover:bg-primary/5 transition-all group">
+          <div className="text-3xl mb-2">🛠️</div>
+          <div className="font-bold mb-1">Use Tools</div>
+          <div className="text-xs text-muted-foreground">Free utilities</div>
+        </Link>
+        <Link href="/blogs" className="p-6 rounded-xl border border-border bg-card hover:border-primary hover:bg-primary/5 transition-all group">
+          <div className="text-3xl mb-2">✍️</div>
+          <div className="font-bold mb-1">Write</div>
+          <div className="text-xs text-muted-foreground">Share knowledge</div>
+        </Link>
+        <Link href="/jobs" className="p-6 rounded-xl border border-border bg-card hover:border-primary hover:bg-primary/5 transition-all group">
+          <div className="text-3xl mb-2">💼</div>
+          <div className="font-bold mb-1">Find Jobs</div>
+          <div className="text-xs text-muted-foreground">Hire or get hired</div>
+        </Link>
+      </div>
+    </div>
+      </section >
+
+    </div >
   );
 };
 
