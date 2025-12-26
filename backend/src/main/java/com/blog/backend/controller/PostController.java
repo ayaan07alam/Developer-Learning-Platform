@@ -484,4 +484,237 @@ public class PostController {
                 .replaceAll("-+", "-")
                 .replaceAll("^-|-$", "");
     }
+
+    // ==================== WRITER SUBMISSION ENDPOINTS ====================
+
+    // Get my submissions (WRITER+)
+    @GetMapping("/my-submissions")
+    public ResponseEntity<?> getMySubmissions(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Authentication required"));
+        }
+
+        Optional<User> userOpt = userRepository.findByEmail(authentication.getName());
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "User not found"));
+        }
+
+        User user = userOpt.get();
+        List<Post> submissions = postRepository.findByCreatedByOrderByCreatedAtDesc(user);
+
+        // Include submission stats
+        long draftCount = postRepository.countByCreatedByAndStatus(user, PostStatus.DRAFT);
+        long underReviewCount = postRepository.countByCreatedByAndStatus(user, PostStatus.UNDER_REVIEW);
+        long publishedCount = postRepository.countByCreatedByAndStatus(user, PostStatus.PUBLISHED);
+        long totalCount = submissions.size();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("submissions", submissions);
+        response.put("stats", Map.of(
+                "total", totalCount,
+                "draft", draftCount,
+                "pendingApproval", underReviewCount,
+                "published", publishedCount));
+
+        return ResponseEntity.ok(response);
+    }
+
+    // Submit post for approval (WRITER+)
+    @PostMapping("/{id}/submit")
+    public ResponseEntity<?> submitForApproval(@PathVariable Long id, Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Authentication required"));
+        }
+
+        Optional<User> userOpt = userRepository.findByEmail(authentication.getName());
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "User not found"));
+        }
+
+        User user = userOpt.get();
+
+        Optional<Post> postOpt = postRepository.findById(id);
+        if (postOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Post not found"));
+        }
+
+        Post post = postOpt.get();
+
+        // Verify ownership
+        if (!post.getCreatedBy().getId().equals(user.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("error", "You can only submit your own posts"));
+        }
+
+        // Only DRAFT posts can be submitted
+        if (post.getStatus() != PostStatus.DRAFT) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", "Only draft posts can be submitted for approval"));
+        }
+
+        // Update status and timestamp
+        post.setStatus(PostStatus.UNDER_REVIEW);
+        post.setSubmittedAt(LocalDateTime.now());
+
+        try {
+            Post updatedPost = postRepository.save(post);
+            postHistoryService.trackStatusChange(updatedPost, user, PostStatus.DRAFT, PostStatus.UNDER_REVIEW);
+
+            return ResponseEntity.ok(Map.of(
+                    "message", "Post submitted for approval successfully",
+                    "post", updatedPost));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to submit post: " + e.getMessage()));
+        }
+    }
+
+    // Approve post (EDITOR/ADMIN only)
+    @PostMapping("/{id}/approve")
+    public ResponseEntity<?> approvePost(@PathVariable Long id, Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Authentication required"));
+        }
+
+        Optional<User> userOpt = userRepository.findByEmail(authentication.getName());
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "User not found"));
+        }
+
+        User user = userOpt.get();
+
+        // Check permissions - only EDITOR or ADMIN can approve
+        if (user.getRole() != Role.EDITOR && user.getRole() != Role.ADMIN) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("error", "Only editors and admins can approve posts"));
+        }
+
+        Optional<Post> postOpt = postRepository.findById(id);
+        if (postOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Post not found"));
+        }
+
+        Post post = postOpt.get();
+
+        // Post must be in UNDER_REVIEW status
+        if (post.getStatus() != PostStatus.UNDER_REVIEW) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", "Only pending posts can be approved"));
+        }
+
+        // Approve and publish
+        post.setStatus(PostStatus.PUBLISHED);
+        post.setApprovedBy(user);
+        post.setApprovedAt(LocalDateTime.now());
+        if (post.getPublishedAt() == null) {
+            post.setPublishedAt(LocalDateTime.now());
+        }
+
+        try {
+            Post updatedPost = postRepository.save(post);
+            postHistoryService.trackStatusChange(updatedPost, user, PostStatus.UNDER_REVIEW, PostStatus.PUBLISHED);
+
+            return ResponseEntity.ok(Map.of(
+                    "message", "Post approved and published successfully",
+                    "post", updatedPost));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to approve post: " + e.getMessage()));
+        }
+    }
+
+    // Reject post (EDITOR/ADMIN only)
+    @PostMapping("/{id}/reject")
+    public ResponseEntity<?> rejectPost(@PathVariable Long id,
+            @RequestBody(required = false) Map<String, String> requestBody,
+            Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Authentication required"));
+        }
+
+        Optional<User> userOpt = userRepository.findByEmail(authentication.getName());
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "User not found"));
+        }
+
+        User user = userOpt.get();
+
+        // Check permissions
+        if (user.getRole() != Role.EDITOR && user.getRole() != Role.ADMIN) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("error", "Only editors and admins can reject posts"));
+        }
+
+        Optional<Post> postOpt = postRepository.findById(id);
+        if (postOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Post not found"));
+        }
+
+        Post post = postOpt.get();
+
+        if (post.getStatus() != PostStatus.UNDER_REVIEW) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", "Only pending posts can be rejected"));
+        }
+
+        // Reject and send back to draft with comments
+        post.setStatus(PostStatus.REJECTED);
+        if (requestBody != null && requestBody.containsKey("reason")) {
+            post.setReviewComments(requestBody.get("reason"));
+        }
+        post.setReviewedBy(user);
+        post.setReviewedAt(LocalDateTime.now());
+
+        try {
+            Post updatedPost = postRepository.save(post);
+            postHistoryService.trackStatusChange(updatedPost, user, PostStatus.UNDER_REVIEW, PostStatus.REJECTED);
+
+            return ResponseEntity.ok(Map.of(
+                    "message", "Post rejected successfully",
+                    "post", updatedPost));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to reject post: " + e.getMessage()));
+        }
+    }
+
+    // Get pending approvals (EDITOR/ADMIN only)
+    @GetMapping("/pending-approvals")
+    public ResponseEntity<?> getPendingApprovals(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Authentication required"));
+        }
+
+        Optional<User> userOpt = userRepository.findByEmail(authentication.getName());
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "User not found"));
+        }
+
+        User user = userOpt.get();
+
+        // Check permissions
+        if (user.getRole() != Role.EDITOR && user.getRole() != Role.ADMIN) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("error", "Only editors and admins can view pending approvals"));
+        }
+
+        List<Post> pendingPosts = postRepository.findByStatus(PostStatus.UNDER_REVIEW);
+
+        return ResponseEntity.ok(Map.of(
+                "pendingApprovals", pendingPosts,
+                "count", pendingPosts.size()));
+    }
 }

@@ -107,6 +107,15 @@ public class Post {
     @Column(columnDefinition = "TEXT")
     private String reviewComments;
 
+    // Submission/Approval workflow fields for Writer system
+    private LocalDateTime submittedAt; // When writer submitted for approval
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "approved_by")
+    private User approvedBy; // Editor/Admin who approved
+
+    private LocalDateTime approvedAt; // When post was approved for publishing
+
     @ManyToMany
     @JoinTable(name = "post_categories", joinColumns = @JoinColumn(name = "post_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories = new HashSet<>();
