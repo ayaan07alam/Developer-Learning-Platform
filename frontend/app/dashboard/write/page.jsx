@@ -189,7 +189,7 @@ export default function WriterDashboardPage() {
 
                     {/* New Post Button */}
                     <div className="mt-8">
-                        <Link href="/dashboard/editor/new">
+                        <Link href="/dashboard/posts/new">
                             <button className="bg-primary hover:bg-primary/90 text-white font-semibold px-6 py-3 rounded-lg flex items-center gap-2 transition-all shadow-lg shadow-primary/20">
                                 <PenTool className="w-5 h-5" />
                                 Create New Post
@@ -205,7 +205,7 @@ export default function WriterDashboardPage() {
                             <FileText className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
                             <h3 className="text-xl font-bold mb-2">No submissions yet</h3>
                             <p className="text-muted-foreground mb-6">Start writing your first blog post!</p>
-                            <Link href="/dashboard/editor/new">
+                            <Link href="/dashboard/posts/new">
                                 <button className="bg-primary hover:bg-primary/90 text-white font-semibold px-6 py-3 rounded-lg">
                                     Write Your First Post
                                 </button>
@@ -241,7 +241,7 @@ export default function WriterDashboardPage() {
                                     <div className="flex items-center gap-2">
                                         {post.status === 'DRAFT' && (
                                             <>
-                                                <Link href={`/dashboard/editor/${post.id}`}>
+                                                <Link href={`/dashboard/posts/${post.id}`}>
                                                     <button className="p-2 rounded-lg border border-border hover:bg-secondary/20 hover:border-primary/50 transition-all" title="Edit">
                                                         <Edit className="w-4 h-4" />
                                                     </button>
