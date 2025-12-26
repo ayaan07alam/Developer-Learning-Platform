@@ -160,77 +160,98 @@ const Home = () => {
       </section>
 
       {/* PLATFORM OVERVIEW - 4 Pillars */}
-      <section className="py-20 border-t border-border">
+      <section className="py-24 border-t border-border overflow-hidden">
         <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
             <h2 className="text-3xl md:text-5xl font-bold mb-4 font-mono uppercase tracking-tighter">
-              Your <span className="text-primary">Complete</span> Ecosystem
+              Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Complete</span> Ecosystem
             </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
               Everything you need to grow as a developer — all in one platform.
             </p>
-          </div>
+          </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Blog Platform */}
-            <Link href="/blogs" className="group relative overflow-hidden rounded-2xl border border-border bg-card p-8 hover:border-primary/50 transition-all">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-purple-500/10 rounded-full blur-3xl group-hover:bg-purple-500/20 transition-all"></div>
-              <div className="relative z-10">
-                <div className="w-12 h-12 rounded-lg bg-purple-500/10 flex items-center justify-center mb-4">
-                  <BookOpen className="w-6 h-6 text-purple-400" />
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
+              <Link href="/blogs" className="group relative overflow-hidden rounded-2xl border border-border bg-card p-8 hover:border-purple-500/50 hover:shadow-xl hover:shadow-purple-500/10 transition-all duration-300 block h-full">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-3xl group-hover:bg-purple-500/20 group-hover:scale-150 transition-all duration-500"></div>
+                <div className="relative z-10">
+                  <div className="w-14 h-14 rounded-xl bg-purple-500/10 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-purple-500/20 transition-all duration-300">
+                    <BookOpen className="w-7 h-7 text-purple-400 group-hover:text-purple-300 transition-colors" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2 group-hover:text-purple-400 transition-colors">Blog Platform</h3>
+                  <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
+                    Share your expertise and build your audience
+                  </p>
+                  <div className="text-purple-400 text-sm font-semibold flex items-center gap-1 group-hover:gap-2 transition-all">
+                    Write <ArrowRight className="w-4 h-4" />
+                  </div>
                 </div>
-                <h3 className="text-xl font-bold mb-2">Blog Platform</h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Share your expertise and build your audience
-                </p>
-                <div className="text-primary text-sm font-semibold">Write →</div>
-              </div>
-            </Link>
+              </Link>
+            </motion.div>
 
             {/* Developer Tools */}
-            <Link href="/tools" className="group relative overflow-hidden rounded-2xl border border-border bg-card p-8 hover:border-primary/50 transition-all">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-green-500/10 rounded-full blur-3xl group-hover:bg-green-500/20 transition-all"></div>
-              <div className="relative z-10">
-                <div className="w-12 h-12 rounded-lg bg-green-500/10 flex items-center justify-center mb-4">
-                  <Code className="w-6 h-6 text-green-400" />
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <Link href="/tools" className="group relative overflow-hidden rounded-2xl border border-border bg-card p-8 hover:border-green-500/50 hover:shadow-xl hover:shadow-green-500/10 transition-all duration-300 block h-full">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/10 rounded-full blur-3xl group-hover:bg-green-500/20 group-hover:scale-150 transition-all duration-500"></div>
+                <div className="relative z-10">
+                  <div className="w-14 h-14 rounded-xl bg-green-500/10 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-green-500/20 transition-all duration-300">
+                    <Code className="w-7 h-7 text-green-400 group-hover:text-green-300 transition-colors" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2 group-hover:text-green-400 transition-colors">40+ Free Tools</h3>
+                  <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
+                    Utilities for everyday development work
+                  </p>
+                  <div className="text-primary text-sm font-semibold">Browse →</div>
                 </div>
-                <h3 className="text-xl font-bold mb-2">40+ Free Tools</h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Utilities for everyday development work
-                </p>
-                <div className="text-primary text-sm font-semibold">Browse →</div>
-              </div>
-            </Link>
+              </Link>
 
-            {/* Learning Platform */}
-            <Link href="/react" className="group relative overflow-hidden rounded-2xl border border-border bg-card p-8 hover:border-primary/50 transition-all">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/10 rounded-full blur-3xl group-hover:bg-blue-500/20 transition-all"></div>
-              <div className="relative z-10">
-                <div className="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center mb-4">
-                  <Sparkles className="w-6 h-6 text-blue-400" />
+              {/* Learning Platform */}
+              <Link href="/react" className="group relative overflow-hidden rounded-2xl border border-border bg-card p-8 hover:border-primary/50 transition-all">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/10 rounded-full blur-3xl group-hover:bg-blue-500/20 transition-all"></div>
+                <div className="relative z-10">
+                  <div className="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center mb-4">
+                    <Sparkles className="w-6 h-6 text-blue-400" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">Interactive Learning</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Tutorials on modern tech stacks
+                  </p>
+                  <div className="text-primary text-sm font-semibold">Start →</div>
                 </div>
-                <h3 className="text-xl font-bold mb-2">Interactive Learning</h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Tutorials on modern tech stacks
-                </p>
-                <div className="text-primary text-sm font-semibold">Start →</div>
-              </div>
-            </Link>
+              </Link>
 
-            {/* Jobs Platform */}
-            <Link href="/jobs" className="group relative overflow-hidden rounded-2xl border border-border bg-card p-8 hover:border-primary/50 transition-all">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-orange-500/10 rounded-full blur-3xl group-hover:bg-orange-500/20 transition-all"></div>
-              <div className="relative z-10">
-                <div className="w-12 h-12 rounded-lg bg-orange-500/10 flex items-center justify-center mb-4">
-                  <Users className="w-6 h-6 text-orange-400" />
+              {/* Jobs Platform */}
+              <Link href="/jobs" className="group relative overflow-hidden rounded-2xl border border-border bg-card p-8 hover:border-primary/50 transition-all">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-orange-500/10 rounded-full blur-3xl group-hover:bg-orange-500/20 transition-all"></div>
+                <div className="relative z-10">
+                  <div className="w-12 h-12 rounded-lg bg-orange-500/10 flex items-center justify-center mb-4">
+                    <Users className="w-6 h-6 text-orange-400" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">Job Board</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Connecting talent with opportunities
+                  </p>
+                  <div className="text-primary text-sm font-semibold">Explore →</div>
                 </div>
-                <h3 className="text-xl font-bold mb-2">Job Board</h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Connecting talent with opportunities
-                </p>
-                <div className="text-primary text-sm font-semibold">Explore →</div>
-              </div>
-            </Link>
+              </Link>
           </div>
         </div>
       </section>
