@@ -215,31 +215,11 @@ public class DashboardContentController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Error fetching all content: " + e.getMessage()));
         }
-    }
+    }}catch(
 
-    /**
-     * Get content statistics for dashboard
-     */
-    @GetMapping("/stats")
-    public ResponseEntity<?> getContentStats() {
-        try {
-            User currentUser = getCurrentUser();
-
-            long totalPosts = postRepository.countByCreatedBy(currentUser);
-            long publishedPosts = postRepository.countByCreatedByAndStatus(currentUser, PostStatus.PUBLISHED);
-            long draftPosts = postRepository.countByCreatedByAndStatus(currentUser, PostStatus.DRAFT);
-            long pendingPosts = postRepository.countByCreatedByAndStatus(currentUser, PostStatus.PENDING_REVIEW);
-
-            Map<String, Long> stats = new HashMap<>();
-            stats.put("total", totalPosts);
-            stats.put("published", publishedPosts);
-            stats.put("drafts", draftPosts);
-            stats.put("pending", pendingPosts);
-
-            return ResponseEntity.ok(stats);
-        } catch (Exception e) {
+    Exception e)
+    {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Error fetching stats: " + e.getMessage()));
         }
-    }
-}
+}}
