@@ -13,33 +13,37 @@ import java.util.Optional;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
-    Optional<Post> findBySlug(String slug);
+        Optional<Post> findBySlug(String slug);
 
-    List<Post> findByStatus(PostStatus status);
+        List<Post> findByStatus(PostStatus status);
 
-    // Pagination support
-    Page<Post> findByStatus(PostStatus status, Pageable pageable);
+        // Pagination support
+        Page<Post> findByStatus(PostStatus status, Pageable pageable);
 
-    Page<Post> findByCreatedBy(User user, Pageable pageable);
+        // Count posts by status
+        long countByStatus(PostStatus status);
 
-    Page<Post> findByCreatedByAndStatus(User user, PostStatus status, Pageable pageable);
+        // Count posts for a specific user by status
+        long countByCreatedByAndStatus(User user, PostStatus status);
 
-    Page<Post> findByCreatedByAndTitleContainingIgnoreCase(User user, String title, Pageable pageable);
+        Page<Post> findByCreatedBy(User user, Pageable pageable);
 
-    Page<Post> findByCreatedByAndStatusAndTitleContainingIgnoreCase(User user, PostStatus status, String title,
-            Pageable pageable);
+        Page<Post> findByCreatedByAndStatus(User user, PostStatus status, Pageable pageable);
 
-    Page<Post> findByTitleContainingIgnoreCase(String title, Pageable pageable);
+        Page<Post> findByCreatedByAndTitleContainingIgnoreCase(User user, String title, Pageable pageable);
 
-    Page<Post> findByStatusAndTitleContainingIgnoreCase(PostStatus status, String title, Pageable pageable);
+        Page<Post> findByCreatedByAndStatusAndTitleContainingIgnoreCase(User user, PostStatus status, String title,
+                        Pageable pageable);
 
-    Page<Post> findByStatusAndCreatedBy(PostStatus status, User user, Pageable pageable);
+        Page<Post> findByTitleContainingIgnoreCase(String title, Pageable pageable);
 
-    Page<Post> findByStatusAndCreatedByAndTitleContainingIgnoreCase(PostStatus status, User user, String title,
-            Pageable pageable);
+        Page<Post> findByStatusAndTitleContainingIgnoreCase(PostStatus status, String title, Pageable pageable);
 
-    // Count methods for statistics
-    long countByCreatedBy(User user);
+        Page<Post> findByStatusAndCreatedBy(PostStatus status, User user, Pageable pageable);
 
-    long countByCreatedByAndStatus(User user, PostStatus status);
+        Page<Post> findByStatusAndCreatedByAndTitleContainingIgnoreCase(PostStatus status, User user, String title,
+                        Pageable pageable);
+
+        // Count methods for statistics
+        long countByCreatedBy(User user);
 }

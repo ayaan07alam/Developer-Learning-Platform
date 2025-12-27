@@ -102,7 +102,7 @@ const BlogPost = () => {
                             {/* Author Byline */}
                             {post.createdBy && (
                                 <p className="text-lg text-muted-foreground mb-6">
-                                    by <span className="font-medium text-foreground">{post.createdBy.username || post.createdBy.email}</span>
+                                    by <span className="font-medium text-foreground">{post.createdBy.displayName || 'Anonymous'}</span>
                                 </p>
                             )}
 

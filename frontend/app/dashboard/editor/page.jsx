@@ -157,7 +157,7 @@ export default function EditorDashboard() {
                                                 <div className="font-medium text-foreground">{post.title}</div>
                                             </td>
                                             <td className="px-6 py-4 text-sm text-foreground">
-                                                {post.author?.name || post.createdBy?.username || 'Unknown'}
+                                                {post.author?.name || post.createdBy?.displayName || 'Unknown'}
                                             </td>
                                             <td className="px-6 py-4 text-sm text-foreground">
                                                 {new Date(post.updatedAt).toLocaleDateString()}

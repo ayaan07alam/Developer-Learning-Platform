@@ -45,17 +45,17 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
         }
 
-        // Check if username already exists
-        if (userRepository.existsByUsername(request.getUsername())) {
+        // Check if displayName already exists
+        if (userRepository.existsByDisplayName(request.getDisplayName())) {
             Map<String, String> error = new HashMap<>();
-            error.put("error", "Username already taken");
+            error.put("error", "Display name already taken");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
         }
 
         // Create new user
         User user = new User();
         user.setEmail(request.getEmail());
-        user.setUsername(request.getUsername());
+        user.setDisplayName(request.getDisplayName());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(Role.VIEWER); // Default role for new users
         user.setActive(true);
@@ -112,7 +112,7 @@ public class AuthController {
         UserDTO userDTO = new UserDTO(
                 user.getId(),
                 user.getEmail(),
-                user.getUsername(),
+                user.getDisplayName(),
                 user.getRole().name(),
                 user.getOauthProvider(),
                 user.getCreatedAt(),
@@ -234,7 +234,7 @@ public class AuthController {
             // Create new user
             User newUser = new User();
             newUser.setEmail(email);
-            newUser.setUsername(name != null ? name : email.split("@")[0]);
+            newUser.setDisplayName(name != null ? name : email.split("@")[0]);
             newUser.setPassword(""); // No password for OAuth users
             newUser.setOauthProvider("GOOGLE");
             newUser.setOauthId(payload.getSubject());

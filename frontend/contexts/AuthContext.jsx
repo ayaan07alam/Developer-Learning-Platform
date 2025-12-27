@@ -75,14 +75,14 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const register = async (email, password, username) => {
+    const register = async (email, password, displayName) => {
         try {
             const response = await fetch('http://localhost:8080/api/auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ email, password, username })
+                body: JSON.stringify({ email, password, displayName })
             });
 
             if (!response.ok) {
@@ -114,7 +114,7 @@ export const AuthProvider = ({ children }) => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({ username: newUsername })
+                body: JSON.stringify({ displayName: newDisplayName })
             });
 
             if (response.ok) {

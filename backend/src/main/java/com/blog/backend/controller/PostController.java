@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -40,6 +41,12 @@ public class PostController {
 
     @Autowired
     private com.blog.backend.service.PostHistoryService postHistoryService;
+
+    @Autowired
+    private com.blog.backend.repository.PostHistoryRepository postHistoryRepository;
+
+    @Autowired
+    private PostDeletionRequestRepository deletionRequestRepository;
 
     // Get all posts (with optional filters)
     @GetMapping
@@ -387,41 +394,127 @@ public class PostController {
         }
     }
 
-    // Delete post (ADMIN only)
+    // Delete post (Users can delete their own DRAFT/UNDER_REVIEW posts, Admins can
+    // delete any post)
     @DeleteMapping("/{id}")
+    @Transactional
     public ResponseEntity<?> deletePost(@PathVariable Long id, Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("error", "Authentication required"));
         }
 
-        User currentUser = (User) authentication.getPrincipal();
-        if (currentUser.getRole() != Role.ADMIN) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(Map.of("error", "Only admins can delete posts"));
-        }
-
-        Optional<Post> postOptional = postRepository.findById(id);
-        if (postOptional.isEmpty()) {
+        String email = authentication.getName();
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        if (userOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error", "Post not found"));
+                    .body(Map.of("error", "User not found"));
+        }
+        User currentUser = userOpt.get();
+
+        Optional<Post> postOpt = postRepository.findById(id);
+        if (postOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Post not found or already deleted"));
+        }
+        Post post = postOpt.get();
+
+        // Check permissions
+        boolean isAdmin = currentUser.getRole() == Role.ADMIN;
+        boolean isEditor = currentUser.getRole() == Role.EDITOR;
+        boolean isOwner = post.getCreatedBy().getId().equals(currentUser.getId());
+        boolean isUnpublished = post.getStatus() == PostStatus.DRAFT || post.getStatus() == PostStatus.UNDER_REVIEW;
+
+        // Admin and Editor can delete ANY post
+        // Regular users can only delete their own UNPUBLISHED posts
+        if (!isAdmin && !isEditor) {
+            if (!isOwner) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of("error", "You can only delete your own posts"));
+            }
+            if (!isUnpublished) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of("error",
+                                "Published posts cannot be deleted directly. Please request deletion instead."));
+            }
         }
 
         try {
-            Post post = postOptional.get();
-
-            // Clear relationships before deleting
+            // Clear all relationships before deleting to avoid constraint violations
             post.setCategories(new HashSet<>());
             post.setTags(new ArrayList<>());
-            postRepository.save(post);
+            post.getFaqs().clear(); // Clear FAQs
+            postRepository.save(post); // Save to update relationships
 
-            // Now delete the post (FAQs and views should cascade)
+            // Delete associated views
+            postViewRepository.deleteByPostId(id);
+
+            // Delete post history records
+            postHistoryRepository.deleteByPostId(id);
+
+            // Now safe to delete the post
             postRepository.deleteById(id);
 
             return ResponseEntity.ok(Map.of("message", "Post deleted successfully"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Failed to delete post: " + e.getMessage()));
+        }
+    }
+
+    // Request deletion of a published post
+    @PostMapping("/{id}/request-deletion")
+    public ResponseEntity<?> requestDeletion(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> requestBody,
+            Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Authentication required"));
+        }
+
+        Optional<User> userOpt = userRepository.findByEmail(authentication.getName());
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "User not found"));
+        }
+
+        User currentUser = userOpt.get();
+        Optional<Post> postOpt = postRepository.findById(id);
+        if (postOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Post not found"));
+        }
+
+        Post post = postOpt.get();
+
+        // Only allow post owner to request deletion
+        if (!post.getCreatedBy().getId().equals(currentUser.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("error", "You can only request deletion of your own posts"));
+        }
+
+        // Check if already has pending request
+        Optional<PostDeletionRequest> existingRequest = deletionRequestRepository
+                .findByPostIdAndStatus(id, DeletionRequestStatus.PENDING);
+        if (existingRequest.isPresent()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", "A deletion request for this post is already pending"));
+        }
+
+        try {
+            PostDeletionRequest deletionRequest = new PostDeletionRequest();
+            deletionRequest.setPost(post);
+            deletionRequest.setRequestedBy(currentUser);
+            deletionRequest.setReason(requestBody.get("reason"));
+            deletionRequest.setStatus(DeletionRequestStatus.PENDING);
+
+            deletionRequestRepository.save(deletionRequest);
+
+            return ResponseEntity.ok(Map.of("message", "Deletion request submitted successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to submit deletion request: " + e.getMessage()));
         }
     }
 
@@ -686,6 +779,59 @@ public class PostController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Failed to reject post: " + e.getMessage()));
+        }
+    }
+
+    // Unsubmit post - Writer retracts submission back to DRAFT
+    @PostMapping("/{id}/unsubmit")
+    public ResponseEntity<?> unsubmitPost(@PathVariable Long id, Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Authentication required"));
+        }
+
+        Optional<User> userOpt = userRepository.findByEmail(authentication.getName());
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "User not found"));
+        }
+
+        User user = userOpt.get();
+        Optional<Post> postOpt = postRepository.findById(id);
+        if (postOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Post not found"));
+        }
+
+        Post post = postOpt.get();
+
+        // Verify user owns the post
+        if (!post.getCreatedBy().getId().equals(user.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("error", "You can only unsubmit your own posts"));
+        }
+
+        // Verify post is under review
+        if (post.getStatus() != PostStatus.UNDER_REVIEW) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", "Only posts under review can be unsubmitted"));
+        }
+
+        try {
+            // Retract to draft
+            post.setStatus(PostStatus.DRAFT);
+            post.setSubmittedAt(null);
+            post.setLastModifiedBy(user);
+            Post updatedPost = postRepository.save(post);
+
+            postHistoryService.trackStatusChange(updatedPost, user, PostStatus.UNDER_REVIEW, PostStatus.DRAFT);
+
+            return ResponseEntity.ok(Map.of(
+                    "message", "Post retracted to draft successfully",
+                    "post", updatedPost));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to unsubmit post: " + e.getMessage()));
         }
     }
 

@@ -149,11 +149,11 @@ export default function UsersPage() {
                                             <div className="flex items-center gap-3">
                                                 <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                                                     <span className="text-primary font-semibold">
-                                                        {u.username?.charAt(0).toUpperCase()}
+                                                        {u.displayName?.charAt(0).toUpperCase()}
                                                     </span>
                                                 </div>
                                                 <div>
-                                                    <div className="font-medium">{u.username}</div>
+                                                    <div className="font-medium">{u.displayName}</div>
                                                     {u.id === user?.id && (
                                                         <span className="text-xs text-muted-foreground">(You)</span>
                                                     )}

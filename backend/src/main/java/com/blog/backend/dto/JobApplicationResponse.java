@@ -28,7 +28,7 @@ public class JobApplicationResponse {
     @AllArgsConstructor
     public static class ApplicantInfo {
         private Long id;
-        private String username;
+        private String displayName;
         private String email;
     }
 
@@ -40,7 +40,7 @@ public class JobApplicationResponse {
 
         ApplicantInfo applicantInfo = new ApplicantInfo();
         applicantInfo.setId(application.getApplicant().getId());
-        applicantInfo.setUsername(application.getApplicant().getUsername());
+        applicantInfo.setDisplayName(application.getApplicant().getDisplayName());
         applicantInfo.setEmail(application.getApplicant().getEmail());
         response.setApplicant(applicantInfo);
 

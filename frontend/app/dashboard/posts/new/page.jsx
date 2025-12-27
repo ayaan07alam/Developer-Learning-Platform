@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
@@ -11,13 +11,21 @@ import { Save, Eye, Trash2 } from 'lucide-react';
 export default function NewPostPage() {
     const router = useRouter();
     const { user, token, isAuthenticated, isEditor } = useAuth();
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false); // General loading for form
+    const [savingDraft, setSavingDraft] = useState(false); // Specific to Save Draft button
+    const [submitting, setSubmitting] = useState(false); // Specific to Submit button
     const [error, setError] = useState('');
     const [showPreview, setShowPreview] = useState(false);
     const [categories, setCategories] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [hasChanges, setHasChanges] = useState(true); // Track if form has unsaved changes
     const [lastSubmittedData, setLastSubmittedData] = useState(null); // Track last submitted state
+
+    // Track if a post has been created (to switch from POST to PUT)
+    const [createdPostId, setCreatedPostId] = useState(null);
+
+    // Ref for blocking duplicate submissions
+    const isSubmitting = useRef(false);
 
     const [formData, setFormData] = useState({
         title: '',
@@ -37,8 +45,8 @@ export default function NewPostPage() {
             router.push('/login');
             return;
         }
-        // Allow all authenticated users to create posts (USER, WRITER, EDITOR, ADMIN)
-        if (!user?.role || !['USER', 'WRITER', 'EDITOR', 'ADMIN'].includes(user.role)) {
+        // Allow all authenticated users to create posts (VIEWER = writer per requirement)
+        if (!user?.role || !['USER', 'VIEWER', 'WRITER', 'EDITOR', 'ADMIN'].includes(user.role)) {
             router.push('/dashboard');
             return;
         }
@@ -94,15 +102,31 @@ export default function NewPostPage() {
     };
 
     const handleSubmit = async (status) => {
-        setLoading(true);
+        // Generate unique request ID
+        const requestId = `${Date.now()}-${Math.random()}`;
+        const isUpdate = createdPostId !== null; // Check if we're updating an existing post
+
+        console.log(`[handleSubmit] Starting request ${requestId} with status: ${status}, isUpdate: ${isUpdate}, postId: ${createdPostId}`);
+
+        // Set specific loading state based on action
+        if (status === 'DRAFT') {
+            setSavingDraft(true);
+        } else {
+            setSubmitting(true);
+        }
         setError('');
 
         try {
-            // Add a small delay for better UX feedback
-            await new Promise(resolve => setTimeout(resolve, 800));
+            // Use PUT for updates, POST for creation
+            const method = isUpdate ? 'PUT' : 'POST';
+            const url = isUpdate
+                ? `http://localhost:8080/api/posts/${createdPostId}`
+                : 'http://localhost:8080/api/posts';
 
-            const response = await fetch('http://localhost:8080/api/posts', {
-                method: 'POST',
+            console.log(`[${requestId}] Sending ${method} to ${url}`);
+
+            const response = await fetch(url, {
+                method: method,
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -110,40 +134,94 @@ export default function NewPostPage() {
                 body: JSON.stringify({
                     ...formData,
                     status,
-                    tags: formData.tags.filter(t => t.trim()),
                     categoryIds: selectedCategories
                 })
             });
 
+            console.log(`[${requestId}] Response status: ${response.status}`);
+
             if (!response.ok) {
-                const errorData = await response.json().catch(() => ({ error: 'Failed to create post' }));
-                console.error('Backend error:', errorData);
-                throw new Error(errorData.error || errorData.message || 'Failed to create post');
+                const errorData = await response.json();
+                throw new Error(errorData.error || errorData.message || 'Failed to save post');
             }
 
-            const post = await response.json();
+            const data = await response.json();
+            console.log(`[${requestId}] ${isUpdate ? 'Post updated' : 'Post created'} successfully:`, data.id);
 
-            // Mark as saved - disable buttons until next change
-            setHasChanges(false);
+            // Store post ID after first creation
+            if (!isUpdate && data.id) {
+                setCreatedPostId(data.id);
+                console.log(`[${requestId}] Stored post ID for future updates: ${data.id}`);
+            }
+
             setLastSubmittedData({
                 ...formData,
                 status,
                 categoryIds: selectedCategories
             });
 
-            // Only redirect to dashboard if publishing
-            if (status === 'PUBLISHED') {
-                await new Promise(resolve => setTimeout(resolve, 500));
-                router.push(`/dashboard/posts`);
-            } else {
-                // For draft, just show success message and stay on page
-                setError(''); // Clear any previous errors
-                // You could add a success toast here
+            // Show success and redirect based on status
+            if (status === 'DRAFT') {
+                alert(isUpdate ? 'Draft updated!' : 'Post saved as draft!');
+                setHasChanges(false); // CRITICAL: Reset to prevent re-saves
+                // Stay on page for drafts
+            } else if (status === 'UNDER_REVIEW') {
+                alert('Post submitted for review!');
+                setHasChanges(false);
+                router.push('/dashboard/write');
+            } else if (status === 'PUBLISHED') {
+                alert('Post published successfully!');
+                setHasChanges(false);
+                router.push('/dashboard/posts');
             }
         } catch (err) {
-            setError(err.message);
+            console.error(`[${requestId}] Error:`, err);
+            setError(err.message || 'Failed to save post');
+            setHasChanges(true); // Keep changes on error
         } finally {
-            setLoading(false);
+            // Reset specific loading states
+            setSavingDraft(false);
+            setSubmitting(false);
+        }
+    };
+
+    // Separate handlers for each button to prevent cross-triggering
+    const handleSaveDraft = async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        // BLOCK HERE - before any async operations
+        if (isSubmitting.current || savingDraft || submitting) {
+            console.log('Save Draft: Already submitting, blocked');
+            return;
+        }
+        isSubmitting.current = true;
+
+        console.log('Save Draft clicked');
+        try {
+            await handleSubmit('DRAFT');
+        } finally {
+            isSubmitting.current = false;
+        }
+    };
+
+    const handleSubmitForReview = async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        // BLOCK HERE - before any async operations
+        if (isSubmitting.current || savingDraft || submitting) {
+            console.log('Submit for Review: Already submitting, blocked');
+            return;
+        }
+        isSubmitting.current = true;
+
+        console.log('Submit for Review clicked');
+        try {
+            const canPublish = user?.role && ['EDITOR', 'ADMIN'].includes(user.role);
+            await handleSubmit(canPublish ? 'PUBLISHED' : 'UNDER_REVIEW');
+        } finally {
+            isSubmitting.current = false;
         }
     };
 
@@ -165,7 +243,7 @@ export default function NewPostPage() {
         });
     };
 
-    if (!isAuthenticated || !user?.role || !['USER', 'WRITER', 'EDITOR', 'ADMIN'].includes(user.role)) {
+    if (!isAuthenticated || !user?.role || !['USER', 'VIEWER', 'WRITER', 'EDITOR', 'ADMIN'].includes(user.role)) {
         return null;
     }
 
@@ -179,15 +257,20 @@ export default function NewPostPage() {
                             <h1 className="text-xl font-bold">Create New Post</h1>
                             <p className="text-xs text-muted-foreground">Write and publish your blog post</p>
                         </div>
+                        {error && (
+                            <div className="px-4 py-2 rounded-lg bg-red-500/20 border border-red-500/50 text-red-600 dark:text-red-400 text-sm font-medium">
+                                {error}
+                            </div>
+                        )}
                         <div className="flex items-center gap-3">
                             <Button
                                 type="button"
                                 variant="outline"
-                                onClick={() => handleSubmit('DRAFT')}
-                                disabled={loading || !formData.title || !formData.content || !hasChanges}
-                                className="gap-2"
+                                onClick={handleSaveDraft}
+                                disabled={savingDraft || submitting || !formData.title || !formData.content || !hasChanges}
+                                className={`gap-2 border-2 hover:bg-secondary/20 shadow-md transition-all ${(savingDraft || submitting) ? 'pointer-events-none opacity-50' : 'hover:scale-105'}`}
                             >
-                                {loading ? (
+                                {savingDraft ? (
                                     <>
                                         <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
                                         <span>Saving...</span>
@@ -213,19 +296,19 @@ export default function NewPostPage() {
                             )}
                             <Button
                                 type="button"
-                                onClick={() => handleSubmit('PUBLISHED')}
-                                disabled={loading || !formData.title || !formData.content || !hasChanges}
-                                className="gap-2 bg-primary hover:bg-primary/90"
+                                onClick={handleSubmitForReview}
+                                disabled={savingDraft || submitting || !formData.title || !formData.content}
+                                className={`gap-2 bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white shadow-lg shadow-primary/30 transition-all ${(savingDraft || submitting) ? 'pointer-events-none opacity-50' : 'hover:scale-105'}`}
                             >
-                                {loading ? (
+                                {submitting ? (
                                     <>
                                         <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
-                                        <span>Publishing...</span>
+                                        <span>{user?.role && ['EDITOR', 'ADMIN'].includes(user.role) ? 'Publishing...' : 'Submitting...'}</span>
                                     </>
                                 ) : (
                                     <>
                                         <Eye className="w-4 h-4" />
-                                        <span>Publish</span>
+                                        <span>{user?.role && ['EDITOR', 'ADMIN'].includes(user.role) ? 'Publish' : 'Submit for Review'}</span>
                                     </>
                                 )}
                             </Button>
@@ -458,6 +541,6 @@ export default function NewPostPage() {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

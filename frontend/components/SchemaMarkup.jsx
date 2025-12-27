@@ -13,7 +13,7 @@ export default function SchemaMarkup({ post, faqs = [] }) {
         "dateModified": post.updatedAt,
         "author": {
             "@type": "Person",
-            "name": post.author?.name || post.createdBy?.username || "Anonymous",
+            "name": post.author?.name || post.createdBy?.displayName || "Anonymous",
             "email": post.author?.email || post.createdBy?.email
         },
         "publisher": {

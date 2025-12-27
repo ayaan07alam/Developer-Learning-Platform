@@ -11,14 +11,14 @@ export default function AuthorCard({ author }) {
     return (
         <div className="mt-12 p-6 bg-card border border-border rounded-lg">
             <h3 className="text-xl font-bold mb-4">About the Author</h3>
-            <div className="flex gap-4">
+            <div className="flex items-center gap-4">
                 {/* Avatar / Profile Photo */}
                 <div className="flex-shrink-0">
                     {hasProfilePhoto ? (
                         <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-primary">
                             <Image
                                 src={author.profilePhoto}
-                                alt={author.username || 'Author'}
+                                alt={author.displayName || 'Author'}
                                 width={64}
                                 height={64}
                                 className="w-full h-full object-cover"
@@ -33,11 +33,7 @@ export default function AuthorCard({ author }) {
 
                 {/* Info */}
                 <div className="flex-1">
-                    <h4 className="text-lg font-semibold mb-1">{author.username || author.email}</h4>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
-                        <Mail className="w-4 h-4" />
-                        <span>{author.email}</span>
-                    </div>
+                    <h4 className="text-lg font-semibold mb-1">{author.displayName || 'Anonymous'}</h4>
                     {hasBio && (
                         <p className="text-muted-foreground text-sm whitespace-pre-wrap">
                             {author.bio}

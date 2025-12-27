@@ -41,7 +41,7 @@ public class AdminUserController {
                 .map(user -> new UserDTO(
                         user.getId(),
                         user.getEmail(),
-                        user.getUsername(),
+                        user.getDisplayName(),
                         user.getRole().name(),
                         user.getOauthProvider(),
                         user.getCreatedAt(),
@@ -71,7 +71,7 @@ public class AdminUserController {
         UserDTO userDTO = new UserDTO(
                 user.getId(),
                 user.getEmail(),
-                user.getUsername(),
+                user.getDisplayName(),
                 user.getRole().name(),
                 user.getOauthProvider(),
                 user.getCreatedAt(),
@@ -102,14 +102,14 @@ public class AdminUserController {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         // Update fields if provided
-        if (request.getUsername() != null && !request.getUsername().isEmpty()) {
-            if (userRepository.existsByUsername(request.getUsername()) &&
-                    !user.getUsername().equals(request.getUsername())) {
+        if (request.getDisplayName() != null && !request.getDisplayName().isEmpty()) {
+            if (userRepository.existsByDisplayName(request.getDisplayName()) &&
+                    !user.getDisplayName().equals(request.getDisplayName())) {
                 Map<String, String> error = new HashMap<>();
-                error.put("error", "Username already taken");
+                error.put("error", "Display name already taken");
                 return ResponseEntity.badRequest().body(error);
             }
-            user.setUsername(request.getUsername());
+            user.setDisplayName(request.getDisplayName());
         }
 
         if (request.getBio() != null) {
@@ -125,7 +125,7 @@ public class AdminUserController {
         UserDTO userDTO = new UserDTO(
                 updatedUser.getId(),
                 updatedUser.getEmail(),
-                updatedUser.getUsername(),
+                updatedUser.getDisplayName(),
                 updatedUser.getRole().name(),
                 updatedUser.getOauthProvider(),
                 updatedUser.getCreatedAt(),

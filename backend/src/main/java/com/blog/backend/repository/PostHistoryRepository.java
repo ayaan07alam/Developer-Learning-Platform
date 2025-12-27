@@ -12,4 +12,6 @@ public interface PostHistoryRepository extends JpaRepository<PostHistory, Long> 
     List<PostHistory> findByPostOrderByCreatedAtDesc(Post post);
 
     List<PostHistory> findByPostIdOrderByCreatedAtDesc(Long postId);
+
+    void deleteByPostId(Long postId);
 }

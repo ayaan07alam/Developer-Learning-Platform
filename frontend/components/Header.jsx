@@ -46,22 +46,22 @@ const Header = () => {
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b",
         scrolled
-          ? "bg-background/80 backdrop-blur-md border-border/50 py-3"
-          : "bg-transparent border-transparent py-5"
+          ? "bg-background/80 backdrop-blur-md border-border/50 py-2 md:py-3"
+          : "bg-transparent border-transparent py-3 md:py-5"
       )}
     >
-      <div className="container mx-auto px-6 flex items-center justify-between">
+      <div className="container mx-auto px-3 md:px-6 max-w-screen-2xl flex items-center justify-between gap-2 md:gap-4">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="relative flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 border border-primary/30 group-hover:border-primary/60 transition-all duration-300 group-hover:scale-110">
-            <Terminal className="w-6 h-6 text-primary group-hover:rotate-12 transition-transform duration-300" />
+        <Link href="/" className="flex items-center gap-2 md:gap-3 group shrink-0">
+          <div className="relative flex items-center justify-center w-9 h-9 md:w-11 md:h-11 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 border border-primary/30 group-hover:border-primary/60 transition-all duration-300 group-hover:scale-110">
+            <Terminal className="w-5 h-5 md:w-6 md:h-6 text-primary group-hover:rotate-12 transition-transform duration-300" />
             <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-accent/30 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </div>
           <div className="flex flex-col">
-            <span className="text-2xl font-bold tracking-tight leading-none bg-clip-text text-transparent bg-gradient-to-r from-foreground via-primary to-accent bg-[length:200%_auto] animate-gradient">
+            <span className="text-lg md:text-2xl font-bold tracking-tight leading-none bg-clip-text text-transparent bg-gradient-to-r from-foreground via-primary to-accent bg-[length:200%_auto] animate-gradient">
               Intel<span className="font-extrabold">for</span>Geeks
             </span>
-            <span className="text-[10px] text-muted-foreground tracking-wider uppercase">Tech Excellence</span>
+            <span className="hidden md:block text-[10px] text-muted-foreground tracking-wider uppercase">Tech Excellence</span>
           </div>
         </Link>
 
@@ -95,17 +95,20 @@ const Header = () => {
               placeholder="Search blogs..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 py-2 w-64 rounded-full bg-secondary/10 border border-border/50 focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm transition-all"
+              className="pl-10 pr-4 py-2 w-48 rounded-full bg-secondary/10 border border-border/50 focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm transition-all"
             />
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           </form>
 
-          {/* Write Button - Shown for authenticated users (all can write) */}
-          {isAuthenticated && user?.role && (
-            <Link href="/dashboard/write">
-              <Button className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white rounded-full px-6 font-semibold shadow-lg shadow-primary/20 flex items-center gap-2">
+          {/* Write Button - Only show for authenticated users */}
+          {isAuthenticated && (
+            <Link href="/dashboard/posts/new">
+              <Button
+                size="sm"
+                className="gap-2 bg-primary hover:bg-primary/90 text-white font-medium px-4 py-2 rounded-full shadow-lg shadow-primary/20"
+              >
                 <PenTool className="w-4 h-4" />
-                Write
+                <span className="hidden lg:inline">Write</span>
               </Button>
             </Link>
           )}
@@ -121,25 +124,30 @@ const Header = () => {
 
           {isAuthenticated ? (
             <>
-              {/* User Menu Dropdown */}
+              {/* User Menu Dropdown - Icon Only */}
               <div className="relative group">
                 <Button
-                  variant="outline"
-                  className="rounded-full px-6 font-semibold border-primary/20 hover:bg-primary/10 flex items-center gap-2"
+                  variant="ghost"
+                  size="icon"
+                  className="rounded-full hover:bg-primary/10 hover:text-primary border border-border/50"
                 >
-                  <User className="w-4 h-4" />
-                  <span className="flex flex-col items-start leading-tight">
-                    <span>{user?.username || user?.email?.split('@')[0]}</span>
-                    {user?.role && user.role !== 'USER' && (
-                      <span className="text-[10px] text-primary font-bold">{user.role}</span>
-                    )}
-                  </span>
-                  <ChevronDown className="w-4 h-4" />
+                  <User className="w-5 h-5" />
                 </Button>
 
                 {/* Dropdown Menu */}
                 <div className="absolute right-0 mt-2 w-56 bg-card border border-border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                   <div className="py-2">
+                    {/* User Info Header */}
+                    <div className="px-4 py-2 border-b border-border">
+                      <p className="font-semibold text-sm truncate">{user?.displayName || user?.email?.split('@')[0]}</p>
+                      <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
+                      {user?.role && user.role !== 'VIEWER' && user.role !== 'USER' && (
+                        <span className="inline-block mt-1 text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-bold">
+                          {user.role}
+                        </span>
+                      )}
+                    </div>
+
                     {/* Dashboard Link - Visible to all, logic handled by page */}
                     <Link href="/dashboard" className="flex items-center gap-3 px-4 py-2 hover:bg-muted transition-colors">
                       <LayoutDashboard className="w-4 h-4" />

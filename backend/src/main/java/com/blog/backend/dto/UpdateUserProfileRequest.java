@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateUserProfileRequest {
-    private String username;
+    private String displayName;
     private String bio;
     private String profilePhoto; // Base64 encoded image
 }

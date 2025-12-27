@@ -1,6 +1,7 @@
 package com.blog.backend.service;
 
 import com.blog.backend.model.Post;
+import com.blog.backend.model.PostStatus;
 import com.blog.backend.model.Role;
 import com.blog.backend.model.User;
 import org.springframework.stereotype.Service;
@@ -10,15 +11,26 @@ public class PermissionService {
 
     /**
      * Check if user can edit a post
-     * ADMIN, EDITOR, REVIEWER: Can edit (REVIEWER only own/assigned technically but
-     * handled in controller)
+     * ADMIN, EDITOR, REVIEWER: Can edit any post
+     * Regular users: Can edit their own DRAFT posts
      */
     public boolean canEditPost(User user, Post post) {
-        if (user == null)
+        if (user == null || post == null)
             return false;
-        return user.getRole() == Role.ADMIN ||
+
+        // ADMIN, EDITOR, REVIEWER can edit any post
+        if (user.getRole() == Role.ADMIN ||
                 user.getRole() == Role.EDITOR ||
-                user.getRole() == Role.REVIEWER;
+                user.getRole() == Role.REVIEWER) {
+            return true;
+        }
+
+        // Regular users can edit their own DRAFT posts
+        boolean isOwner = post.getCreatedBy() != null &&
+                post.getCreatedBy().getId().equals(user.getId());
+        boolean isDraft = post.getStatus() == PostStatus.DRAFT;
+
+        return isOwner && isDraft;
     }
 
     /**
@@ -88,8 +100,9 @@ public class PermissionService {
     public boolean canCreatePost(User user) {
         if (user == null)
             return false;
-        // Allow all authenticated users to create posts
+        // Allow all authenticated users to create posts (VIEWER = writer)
         return user.getRole() == Role.USER ||
+                user.getRole() == Role.VIEWER ||
                 user.getRole() == Role.WRITER ||
                 user.getRole() == Role.EDITOR ||
                 user.getRole() == Role.ADMIN;

@@ -39,7 +39,7 @@ public class DataSeeder implements CommandLineRunner {
                 if (userRepository.count() == 0) {
                         admin = new User();
                         admin.setEmail("ayaanalam78670@gmail.com");
-                        admin.setUsername("Ayaan Alam");
+                        admin.setDisplayName("Ayaan Alam");
                         admin.setPassword(passwordEncoder.encode("Admin@123")); // Change this password after first
                                                                                 // login!
                         admin.setRole(Role.ADMIN);

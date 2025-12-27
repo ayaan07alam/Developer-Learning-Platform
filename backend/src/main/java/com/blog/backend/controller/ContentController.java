@@ -25,19 +25,4 @@ public class ContentController {
         return postRepository.findBySlug(slug)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
     }
-
-    @GetMapping("/content/stats") // Dashboard statistics
-    public java.util.Map<String, Object> getContentStats() {
-        long totalPosts = postRepository.count();
-        long publishedPosts = postRepository.findByStatus(com.blog.backend.model.PostStatus.PUBLISHED).size();
-        long draftPosts = postRepository.findByStatus(com.blog.backend.model.PostStatus.DRAFT).size();
-
-        java.util.Map<String, Object> stats = new java.util.HashMap<>();
-        stats.put("totalPosts", totalPosts);
-        stats.put("publishedPosts", publishedPosts);
-        stats.put("draftPosts", draftPosts);
-        stats.put("totalViews", 0); // Placeholder - can add actual view counting later
-
-        return stats;
-    }
 }

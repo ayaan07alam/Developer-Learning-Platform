@@ -14,6 +14,21 @@ export default function DashboardPage() {
     const [stats, setStats] = useState(null);
     const [activeTab, setActiveTab] = useState('overview');
 
+    // Random quote selection - changes on every page load
+    const writingQuotes = [
+        "Start writing, no matter what. The water does not flow until the faucet is turned on. — Louis L'Amour",
+        "You can always edit a bad page. You can't edit a blank page. — Jodi Picoult",
+        "The scariest moment is always just before you start. — Stephen King",
+        "Write what should not be forgotten. — Isabel Allende",
+        "There is no greater agony than bearing an untold story inside you. — Maya Angelou",
+        "If you want to be a writer, you must do two things above all others: read a lot and write a lot. — Stephen King",
+        "Your story matters. Write it down. Share it with the world.",
+        "The first draft is just you telling yourself the story. — Terry Pratchett",
+        "Words are, of course, the most powerful drug used by mankind. — Rudyard Kipling",
+        "Fill your paper with the breathings of your heart. — William Wordsworth"
+    ];
+    const [randomQuote] = useState(() => writingQuotes[Math.floor(Math.random() * writingQuotes.length)]);
+
     useEffect(() => {
         if (!loading) {
             if (!user) {
@@ -36,7 +51,8 @@ export default function DashboardPage() {
 
     const fetchStats = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/content/stats', {
+            // Regular users should see only their stats, not system-wide
+            const response = await fetch('http://localhost:8080/api/content/my-stats', {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')} `
                 }
@@ -71,26 +87,39 @@ export default function DashboardPage() {
                 <div className="max-w-7xl mx-auto">
                     <div className="mb-8">
                         <h1 className="text-4xl font-bold mb-2">Author Dashboard</h1>
-                        <p className="text-muted-foreground">
-                            Welcome back, {user?.username}!
+                        <p className="text-muted-foreground mb-4">
+                            Welcome back, {user?.displayName}!
                         </p>
+                        {/* Inspirational Writing Quote */}
+                        <div className="mt-4 p-4 rounded-lg bg-gradient-to-r from-primary/10 via-blue-500/10 to-purple-500/10 border border-primary/20 backdrop-blur-sm">
+                            <p className="text-lg font-serif italic text-foreground/90 leading-relaxed">
+                                "{randomQuote}"
+                            </p>
+                        </div>
                     </div>
 
-                    {/* Tab Navigation */}
-                    <div className="flex gap-2 mb-8 border-b border-border">
-                        {tabs.map((tab) => (
-                            <button
-                                key={tab.id}
-                                onClick={() => setActiveTab(tab.id)}
-                                className={`px - 4 py - 3 font - medium transition - colors flex items - center gap - 2 border - b - 2 ${activeTab === tab.id
-                                        ? 'border-primary text-primary'
-                                        : 'border-transparent text-muted-foreground hover:text-foreground'
-                                    } `}
-                            >
-                                <tab.icon className="w-4 h-4" />
-                                {tab.label}
-                            </button>
-                        ))}
+                    {/* Tab Navigation - Modern Pill Design */}
+                    <div className="flex gap-3 mb-8 p-2 bg-secondary/20 rounded-full border border-border/50 w-fit">
+                        {tabs.map((tab) => {
+                            const Icon = tab.icon;
+                            const isActive = activeTab === tab.id;
+                            return (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => setActiveTab(tab.id)}
+                                    className={`
+                                        px-6 py-3 font-semibold rounded-full transition-all duration-300 flex items-center gap-2
+                                        ${isActive
+                                            ? 'bg-gradient-to-r from-primary to-blue-600 text-white shadow-lg shadow-primary/30 scale-105'
+                                            : 'text-muted-foreground hover:text-foreground hover:bg-secondary/40 hover:scale-105'
+                                        }
+                                    `}
+                                >
+                                    <Icon className={`w-5 h-5 ${isActive ? 'animate-pulse' : ''}`} />
+                                    <span className="font-bold">{tab.label}</span>
+                                </button>
+                            );
+                        })}
                     </div>
 
                     {/* Tab Content */}

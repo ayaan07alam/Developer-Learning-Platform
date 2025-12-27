@@ -106,7 +106,7 @@ export default function ReviewerDashboard() {
                                                 )}
                                             </td>
                                             <td className="px-6 py-4 text-sm text-muted-foreground">
-                                                {post.author?.name || post.createdBy?.username || 'Unknown'}
+                                                {post.author?.name || post.createdBy?.displayName || 'Unknown'}
                                             </td>
                                             <td className="px-6 py-4 text-sm text-muted-foreground">
                                                 {new Date(post.createdAt).toLocaleDateString()}

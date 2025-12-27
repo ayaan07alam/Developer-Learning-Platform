@@ -99,7 +99,7 @@ export default function ApplicationsPage() {
                                 {/* Applicant Header */}
                                 <div className="flex items-start justify-between mb-4">
                                     <div>
-                                        <h3 className="text-xl font-bold mb-1">{app.applicant.username}</h3>
+                                        <h3 className="text-xl font-bold mb-1">{app.applicant.displayName}</h3>
                                         <div className="flex items-center gap-4 text-sm text-muted-foreground">
                                             <span className="flex items-center gap-1">
                                                 <Mail className="w-4 h-4" />
@@ -115,12 +115,12 @@ export default function ApplicationsPage() {
                                     </div>
                                     <div className="text-right">
                                         <span className={`px-3 py-1 rounded-full text-xs font-medium ${app.status === 'PENDING'
-                                                ? 'bg-yellow-500/10 text-yellow-500'
-                                                : app.status === 'REVIEWED'
-                                                    ? 'bg-blue-500/10 text-blue-500'
-                                                    : app.status === 'SHORTLISTED'
-                                                        ? 'bg-green-500/10 text-green-500'
-                                                        : 'bg-red-500/10 text-red-500'
+                                            ? 'bg-yellow-500/10 text-yellow-500'
+                                            : app.status === 'REVIEWED'
+                                                ? 'bg-blue-500/10 text-blue-500'
+                                                : app.status === 'SHORTLISTED'
+                                                    ? 'bg-green-500/10 text-green-500'
+                                                    : 'bg-red-500/10 text-red-500'
                                             }`}>
                                             {app.status}
                                         </span>

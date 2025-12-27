@@ -8,7 +8,7 @@ import { useAuth } from '@/contexts/AuthContext';
 export default function RegisterPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [username, setUsername] = useState('');
+    const [displayName, setDisplayName] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const { register } = useAuth();
@@ -19,7 +19,7 @@ export default function RegisterPage() {
         setError('');
         setLoading(true);
 
-        const result = await register(email, password, username);
+        const result = await register(email, password, displayName);
 
         if (result.success) {
             router.push('/');
@@ -65,8 +65,8 @@ export default function RegisterPage() {
                                 name="username"
                                 type="text"
                                 autoComplete="username"
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
+                                value={displayName}
+                                onChange={(e) => setDisplayName(e.target.value)}
                                 required
                                 minLength={3}
                                 maxLength={30}

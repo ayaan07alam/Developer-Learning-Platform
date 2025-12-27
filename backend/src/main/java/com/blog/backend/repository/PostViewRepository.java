@@ -6,12 +6,17 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Repository
 public interface PostViewRepository extends JpaRepository<PostView, Long> {
 
     @Query("SELECT COUNT(DISTINCT pv.ipAddress) FROM PostView pv WHERE pv.post.id = ?1")
     Long countUniqueViewsByPostId(Long postId);
+
+    Optional<PostView> findByPostIdAndIpAddress(Long postId, String ipAddress);
+
+    void deleteByPostId(Long postId);
 
     boolean existsByPostIdAndIpAddressAndViewDateAfter(Long postId, String ipAddress, LocalDateTime viewDate);
 }

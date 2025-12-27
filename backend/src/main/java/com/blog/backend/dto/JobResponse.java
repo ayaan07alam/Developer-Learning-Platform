@@ -42,7 +42,7 @@ public class JobResponse {
     @AllArgsConstructor
     public static class EmployerInfo {
         private Long id;
-        private String username;
+        private String displayName;
         private String email;
     }
 
@@ -71,7 +71,7 @@ public class JobResponse {
         if (includeEmployerInfo && job.getPostedBy() != null) {
             EmployerInfo employerInfo = new EmployerInfo();
             employerInfo.setId(job.getPostedBy().getId());
-            employerInfo.setUsername(job.getPostedBy().getUsername());
+            employerInfo.setDisplayName(job.getPostedBy().getDisplayName());
             employerInfo.setEmail(job.getPostedBy().getEmail());
             response.setPostedBy(employerInfo);
         }

@@ -38,15 +38,17 @@ export default function EditPostPage() {
         status: 'DRAFT'
     });
 
-    // Auth check
+    // Auth check - Allow all authenticated users, will verify ownership in fetchPost
     useEffect(() => {
-        if (!isAuthenticated || (!isEditor && !isAdmin && !isReviewer)) {
+        if (!isAuthenticated) {
             router.push('/login');
             return;
         }
+        // Allow all authenticated users to access edit page
+        // Ownership will be verified when fetching the post
         fetchPost();
         fetchCategories();
-    }, [isAuthenticated, isEditor, isReviewer, isAdmin, router, params.id]);
+    }, [isAuthenticated, router, params.id]);
 
     const fetchCategories = async () => {
         try {
@@ -60,6 +62,7 @@ export default function EditPostPage() {
 
     const fetchPost = async () => {
         try {
+            console.log('Fetching post:', params.id);
             const response = await fetch(`http://localhost:8080/api/posts/${params.id}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -67,10 +70,12 @@ export default function EditPostPage() {
             });
 
             if (!response.ok) {
-                throw new Error('Failed to fetch post');
+                const errorData = await response.json().catch(() => ({ message: 'Failed to fetch post' }));
+                throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
             }
 
             const post = await response.json();
+            console.log('Post fetched:', post);
             setOriginalPost(post);
 
             // If post is PUBLISHED, check for active draft revision
@@ -81,7 +86,8 @@ export default function EditPostPage() {
                 loadPostData(post);
             }
         } catch (err) {
-            setError(err.message);
+            console.error('Error fetching post:', err);
+            setError(err.message || 'Failed to load post');
         } finally {
             setLoading(false);
         }
@@ -224,18 +230,24 @@ export default function EditPostPage() {
                 }
 
                 if (targetAction === 'PUBLISHED') {
-                    setSuccessMessage('🎉 Post published successfully!');
+                    setSuccessMessage('🎉 Post published successfully!');                  // Stay on page to allow further edits
                 } else if (targetAction === 'UNDER_REVIEW') {
                     setSuccessMessage('📝 Post submitted for review!');
+                    // Stay on page
                 } else {
                     setSuccessMessage('✅ Changes saved successfully!');
+                    // Stay on page for drafts
                 }
             }
+
+            // Refresh post data to show updated values
+            await fetchPost();
 
             // Auto-hide success message after 5 seconds
             setTimeout(() => setSuccessMessage(''), 5000);
         } catch (err) {
-            setError(err.message);
+            console.error('Save error:', err);
+            setError(err.message || 'Failed to save post');
         } finally {
             setSaving(false);
         }
@@ -260,7 +272,7 @@ export default function EditPostPage() {
         }
     };
 
-    if (!isAuthenticated || (!isEditor && !isAdmin && !isReviewer)) {
+    if (!isAuthenticated) {
         return null;
     }
 
@@ -270,6 +282,20 @@ export default function EditPostPage() {
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
                     <p className="text-muted-foreground">Loading post...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="min-h-screen pt-24 pb-12 bg-background flex items-center justify-center">
+                <div className="text-center max-w-md px-6">
+                    <h2 className="text-2xl font-bold text-red-500 mb-4">Error Loading Post</h2>
+                    <p className="text-muted-foreground mb-6">{error}</p>
+                    <Link href="/dashboard/write" className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors inline-block">
+                        Back to Dashboard
+                    </Link>
                 </div>
             </div>
         );
@@ -324,11 +350,11 @@ export default function EditPostPage() {
                                     onClick={() => handleSubmit('UNDER_REVIEW')}
                                     disabled={saving || !formData.title || !formData.content}
                                     size="sm"
-                                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                                    className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg"
                                 >
-                                    Submit for Approval
+                                    {saving ? 'Submitting...' : 'Submit for Approval'}
                                 </Button>
-                            ) : (
+                            ) : isEditor || isAdmin ? (
                                 // Editors and Admins can publish directly
                                 <>
                                     {formData.status === 'UNDER_REVIEW' && !isEditingPublished && (
@@ -337,7 +363,7 @@ export default function EditPostPage() {
                                             disabled={saving}
                                             variant="destructive"
                                             size="sm"
-                                            className="bg-red-500 hover:bg-red-600 text-white"
+                                            className="bg-red-500 hover:bg-red-600 text-white shadow-lg"
                                         >
                                             Reject
                                         </Button>
@@ -346,11 +372,21 @@ export default function EditPostPage() {
                                         onClick={() => handleSubmit('PUBLISHED')}
                                         disabled={saving || !formData.title || !formData.content}
                                         size="sm"
-                                        className="bg-primary hover:bg-primary/90 text-white"
+                                        className="bg-green-600 hover:bg-green-700 text-white shadow-lg"
                                     >
                                         {isEditingPublished ? 'Publish Changes' : formData.status === 'PUBLISHED' ? 'Update & Publish' : 'Publish'}
                                     </Button>
                                 </>
+                            ) : (
+                                // Regular users (VIEWER/USER/WRITER) submit for review
+                                <Button
+                                    onClick={() => handleSubmit('UNDER_REVIEW')}
+                                    disabled={saving || !formData.title || !formData.content}
+                                    size="sm"
+                                    className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg"
+                                >
+                                    {saving ? 'Submitting...' : 'Submit for Review'}
+                                </Button>
                             )}
                         </div>
                     </div>

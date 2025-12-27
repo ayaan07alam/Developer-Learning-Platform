@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -29,19 +30,22 @@ public class ProfileController {
                     .body(Map.of("error", "Authentication required"));
         }
 
-        // Safely cast the principal
-        Object principal = authentication.getPrincipal();
-        if (!(principal instanceof User)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("error", "Invalid authentication token"));
+        // Get user email from authentication
+        String userEmail = authentication.getName();
+
+        // Fetch fresh user from database
+        Optional<User> userOpt = userRepository.findByEmail(userEmail);
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "User not found"));
         }
 
-        User user = (User) principal;
+        User user = userOpt.get();
 
         UserDTO userDTO = new UserDTO(
                 user.getId(),
                 user.getEmail(),
-                user.getUsername(),
+                user.getDisplayName(),
                 user.getRole().name(),
                 user.getOauthProvider(),
                 user.getCreatedAt(),
@@ -62,25 +66,35 @@ public class ProfileController {
                     .body(Map.of("error", "Authentication required"));
         }
 
-        // Safely cast the principal
-        Object principal = authentication.getPrincipal();
-        if (!(principal instanceof User)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("error", "Invalid authentication token"));
+        // Get user email from authentication
+        String userEmail = authentication.getName();
+
+        // Fetch fresh user from database
+        Optional<User> userOpt = userRepository.findByEmail(userEmail);
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "User not found"));
         }
 
-        User user = (User) principal;
+        User user = userOpt.get();
+
+        System.out.println("=== PROFILE UPDATE DEBUG ===");
+        System.out.println("Current displayName in DB: " + user.getDisplayName());
+        System.out.println("Requested displayName: " + request.getDisplayName());
+        System.out.println("Requested bio: " + request.getBio());
 
         // Update fields if provided
-        if (request.getUsername() != null && !request.getUsername().isEmpty()) {
-            // Check if username is already taken by another user
-            if (userRepository.existsByUsername(request.getUsername()) &&
-                    !user.getUsername().equals(request.getUsername())) {
+        if (request.getDisplayName() != null && !request.getDisplayName().isEmpty()) {
+            // Check if displayName is already taken by another user
+            if (userRepository.existsByDisplayName(request.getDisplayName()) &&
+                    !user.getDisplayName().equals(request.getDisplayName())) {
                 Map<String, String> error = new HashMap<>();
-                error.put("error", "Username already taken");
+                error.put("error", "Display name already taken");
+                System.out.println("ERROR: Display name already taken");
                 return ResponseEntity.badRequest().body(error);
             }
-            user.setUsername(request.getUsername());
+            System.out.println("Setting new displayName: " + request.getDisplayName());
+            user.setDisplayName(request.getDisplayName());
         }
 
         if (request.getBio() != null) {
@@ -92,11 +106,13 @@ public class ProfileController {
         }
 
         User updatedUser = userRepository.save(user);
+        System.out.println("Saved displayName: " + updatedUser.getDisplayName());
+        System.out.println("===========================");
 
         UserDTO userDTO = new UserDTO(
                 updatedUser.getId(),
                 updatedUser.getEmail(),
-                updatedUser.getUsername(),
+                updatedUser.getDisplayName(),
                 updatedUser.getRole().name(),
                 updatedUser.getOauthProvider(),
                 updatedUser.getCreatedAt(),

@@ -20,7 +20,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -214,6 +213,58 @@ public class DashboardContentController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Error fetching all content: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * Get content statistics
+     * Returns counts of posts by status
+     */
+    @GetMapping("/stats")
+    public ResponseEntity<?> getContentStats() {
+        try {
+            long total = postRepository.count();
+            long published = postRepository.countByStatus(PostStatus.PUBLISHED);
+            long drafts = postRepository.countByStatus(PostStatus.DRAFT);
+            long pending = postRepository.countByStatus(PostStatus.UNDER_REVIEW);
+
+            Map<String, Long> stats = Map.of(
+                    "total", total,
+                    "published", published,
+                    "drafts", drafts,
+                    "pending", pending);
+
+            return ResponseEntity.ok(stats);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Error fetching stats: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * Get current user's content statistics
+     * Returns counts of posts by status for the authenticated user only
+     */
+    @GetMapping("/my-stats")
+    public ResponseEntity<?> getMyContentStats() {
+        try {
+            User currentUser = getCurrentUser();
+
+            long total = postRepository.countByCreatedBy(currentUser);
+            long published = postRepository.countByCreatedByAndStatus(currentUser, PostStatus.PUBLISHED);
+            long drafts = postRepository.countByCreatedByAndStatus(currentUser, PostStatus.DRAFT);
+            long pending = postRepository.countByCreatedByAndStatus(currentUser, PostStatus.UNDER_REVIEW);
+
+            Map<String, Long> stats = Map.of(
+                    "total", total,
+                    "published", published,
+                    "drafts", drafts,
+                    "pending", pending);
+
+            return ResponseEntity.ok(stats);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Error fetching user stats: " + e.getMessage()));
         }
     }
 }

@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class UserDTO {
     private Long id;
     private String email;
-    private String username;
+    private String displayName;
     private String role; // Changed from Role enum to String for JSON serialization
     private String oauthProvider;
     private LocalDateTime createdAt;

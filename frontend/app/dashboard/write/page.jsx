@@ -4,8 +4,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
-    FileText, Clock, CheckCircle2, AlertCircle,
-    Edit, Eye, Send, Loader2, PenTool, TrendingUp
+    FileText, Clock, CheckCircle, AlertCircle,
+    Edit, Eye, Send, Loader2, PenTool, TrendingUp, X, FileX, Trash2
 } from "lucide-react";
 
 export default function WriterDashboardPage() {
@@ -14,7 +14,15 @@ export default function WriterDashboardPage() {
     const [submissions, setSubmissions] = useState([]);
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [deletingId, setDeletingId] = useState(null);
     const [error, setError] = useState(null);
+    const [deletionModalOpen, setDeletionModalOpen] = useState(false);
+    const [selectedPost, setSelectedPost] = useState(null);
+    const [deletionReason, setDeletionReason] = useState('');
+    const [deletionRequests, setDeletionRequests] = useState([]);
+
+    console.log('=== WRITER DASHBOARD LOADED ===');
+    console.log('Deletion requests state:', deletionRequests);
 
     useEffect(() => {
         if (!authLoading) {
@@ -30,6 +38,7 @@ export default function WriterDashboardPage() {
             }
 
             fetchSubmissions();
+            fetchDeletionRequests();
         }
     }, [isAuthenticated, user, authLoading, router]);
 
@@ -38,7 +47,7 @@ export default function WriterDashboardPage() {
             const token = localStorage.getItem('token');
             const response = await fetch('http://localhost:8080/api/posts/my-submissions', {
                 headers: {
-                    'Authorization': `Bearer ${token}`,
+                    'Authorization': `Bearer ${token} `,
                     'Content-Type': 'application/json'
                 }
             });
@@ -55,6 +64,34 @@ export default function WriterDashboardPage() {
         } finally {
             setLoading(false);
         }
+    };
+
+    const fetchDeletionRequests = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch('http://localhost:8080/api/admin/deletion-requests/my-requests', {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log('=== DELETION REQUESTS FETCHED ===', data);
+                setDeletionRequests(data || []);
+            } else {
+                console.error('Failed to fetch deletion requests:', response.status);
+            }
+        } catch (err) {
+            console.error('Error fetching deletion requests:', err);
+        }
+    };
+
+    const getDeletionRequestForPost = (postId) => {
+        const request = deletionRequests.find(req => req.post?.id === postId);
+        console.log(`Deletion request for post ${postId}:`, request);
+        return request;
     };
 
     const getStatusBadge = (status) => {
@@ -85,7 +122,7 @@ export default function WriterDashboardPage() {
         const Icon = config.icon;
 
         return (
-            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border ${config.color}`}>
+            <span className={`inline - flex items - center gap - 1.5 px - 3 py - 1 rounded - full text - xs font - semibold border ${config.color} `}>
                 <Icon className="w-3.5 h-3.5" />
                 {config.label}
             </span>
@@ -116,6 +153,115 @@ export default function WriterDashboardPage() {
             }
         } catch (err) {
             alert('An error occurred while submitting the post');
+        }
+    };
+
+    const handleUnsubmit = async (postId) => {
+        if (!confirm('Are you sure you want to retract this submission? It will be moved back to drafts.')) {
+            return;
+        }
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`http://localhost:8080/api/posts/${postId}/unsubmit`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (response.ok) {
+                alert('Post retracted successfully!');
+                fetchSubmissions();
+            } else {
+                const error = await response.json();
+                alert(error.error || 'Failed to retract post');
+            }
+        } catch (err) {
+            alert('An error occurred while retracting the post');
+        }
+    };
+
+    const handleDelete = async (post) => {
+        console.log('=== DELETE DEBUG ===');
+        console.log('Post status:', post.status);
+        console.log('User role:', user?.role);
+
+        const isAdminOrEditor = user?.role && ['ADMIN', 'EDITOR'].includes(user.role);
+        console.log('Is admin/editor?', isAdminOrEditor);
+        console.log('Is PUBLISHED?', post.status === 'PUBLISHED');
+        console.log('Should show modal?', post.status === 'PUBLISHED' && !isAdminOrEditor);
+
+        // Check if published AND not admin/editor - show deletion request modal
+        if (post.status === 'PUBLISHED' && !isAdminOrEditor) {
+            console.log('✅ SHOWING MODAL');
+            setSelectedPost(post);
+            setDeletionModalOpen(true);
+            return; // Don't proceed with direct delete
+        }
+
+        console.log('❌ PROCEEDING WITH DELETE REQUEST');
+
+        // Direct delete for DRAFT/UNDER_REVIEW or if user is ADMIN/EDITOR
+        const confirmMessage = post.status === 'PUBLISHED'
+            ? `Are you sure you want to delete this PUBLISHED post? This action cannot be undone.`
+            : `Are you sure you want to delete this post?`;
+
+        if (!confirm(confirmMessage)) {
+            return;
+        }
+
+        setDeletingId(post.id);
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`http://localhost:8080/api/posts/${post.id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.ok) {
+                alert('Post deleted successfully!');
+                await Promise.all([fetchSubmissions(), fetchStats()]);
+            } else {
+                const error = await response.json();
+                alert(error.error || 'Failed to delete post');
+            }
+        } catch (err) {
+            alert('An error occurred while deleting the post');
+        } finally {
+            setDeletingId(null);
+        }
+    };
+
+    const handleSubmitDeletionRequest = async () => {
+        if (!deletionReason.trim()) {
+            alert('Please provide a reason for deletion');
+            return;
+        }
+
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`http://localhost:8080/api/posts/${selectedPost.id}/request-deletion`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ reason: deletionReason })
+            });
+
+            if (response.ok) {
+                alert('Deletion request submitted successfully!');
+                setDeletionModalOpen(false);
+                setDeletionReason('');
+                setSelectedPost(null);
+            } else {
+                const error = await response.json();
+                alert(error.error || 'Failed to submit deletion request');
+            }
+        } catch (err) {
+            alert('An error occurred while submitting deletion request');
         }
     };
 
@@ -221,6 +367,27 @@ export default function WriterDashboardPage() {
                                                 {post.title}
                                             </h3>
                                             {getStatusBadge(post.status)}
+                                            {(() => {
+                                                const deletionRequest = getDeletionRequestForPost(post.id);
+                                                if (deletionRequest) {
+                                                    if (deletionRequest.status === 'PENDING') {
+                                                        return (
+                                                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border bg-yellow-500/10 text-yellow-500 border-yellow-500/20">
+                                                                <Clock className="w-3.5 h-3.5" />
+                                                                Deletion Pending
+                                                            </span>
+                                                        );
+                                                    } else if (deletionRequest.status === 'DENIED') {
+                                                        return (
+                                                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border bg-red-500/10 text-red-500 border-red-500/20">
+                                                                <X className="w-3.5 h-3.5" />
+                                                                Deletion Denied
+                                                            </span>
+                                                        );
+                                                    }
+                                                }
+                                                return null;
+                                            })()}
                                         </div>
                                         {post.excerpt && (
                                             <p className="text-muted-foreground text-sm mb-4 line-clamp-2">{post.excerpt}</p>
@@ -255,6 +422,27 @@ export default function WriterDashboardPage() {
                                                 </button>
                                             </>
                                         )}
+                                        <button
+                                            onClick={() => handleDelete(post)}
+                                            disabled={deletingId === post.id}
+                                            className="p-2 rounded-lg border border-border hover:bg-red-500/10 hover:border-red-500/50 text-red-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[36px]"
+                                            title={post.status === 'PUBLISHED' ? 'Request deletion' : 'Delete post'}
+                                        >
+                                            {deletingId === post.id ? (
+                                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-red-500"></div>
+                                            ) : (
+                                                <Trash2 className="w-4 h-4" />
+                                            )}
+                                        </button>
+                                        {post.status === 'UNDER_REVIEW' && (
+                                            <button
+                                                onClick={() => handleUnsubmit(post.id)}
+                                                className="p-2 rounded-lg bg-yellow-500/10 border border-yellow-500/30 hover:bg-yellow-500/20 text-yellow-500 transition-all"
+                                                title="Retract Submission"
+                                            >
+                                                <X className="w-4 h-4" />
+                                            </button>
+                                        )}
                                         {post.status !== 'DRAFT' && (
                                             <Link href={`/blogs/${post.slug}`} target="_blank">
                                                 <button className="p-2 rounded-lg border border-border hover:bg-secondary/20 hover:border-primary/50 transition-all" title="View">
@@ -277,6 +465,47 @@ export default function WriterDashboardPage() {
                     )}
                 </div>
             </div>
+
+            {/* Deletion Request Modal */}
+            {deletionModalOpen && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-md w-full mx-4 p-6">
+                        <h3 className="text-xl font-bold mb-4">Request Post Deletion</h3>
+                        <p className="text-sm text-muted-foreground mb-4">
+                            This post is published. You cannot delete it directly. Please provide a reason for deletion,
+                            and an admin will review your request.
+                        </p>
+                        <div className="mb-4">
+                            <label className="block text-sm font-medium mb-2">Reason for deletion *</label>
+                            <textarea
+                                value={deletionReason}
+                                onChange={(e) => setDeletionReason(e.target.value)}
+                                className="w-full p-3 border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                                rows={4}
+                                placeholder="Explain why you want to delete this post..."
+                            />
+                        </div>
+                        <div className="flex gap-3 justify-end">
+                            <button
+                                onClick={() => {
+                                    setDeletionModalOpen(false);
+                                    setDeletionReason('');
+                                    setSelectedPost(null);
+                                }}
+                                className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleSubmitDeletionRequest}
+                                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                            >
+                                Submit Request
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

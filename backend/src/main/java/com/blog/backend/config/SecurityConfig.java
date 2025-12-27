@@ -90,7 +90,18 @@ public class SecurityConfig {
 
                                                 // Protected endpoints - require authentication
                                                 .requestMatchers("/api/dashboard/**").hasAnyAuthority("ADMIN", "EDITOR")
-                                                .requestMatchers("/api/posts/**").hasAnyAuthority("ADMIN", "EDITOR")
+
+                                                // Post creation - all authenticated users can create posts
+                                                .requestMatchers(HttpMethod.POST, "/api/posts").authenticated()
+
+                                                // Post management - permissions checked in controller
+                                                .requestMatchers(HttpMethod.PUT, "/api/posts/**")
+                                                .authenticated()
+                                                .requestMatchers(HttpMethod.PATCH, "/api/posts/**")
+                                                .authenticated()
+                                                .requestMatchers(HttpMethod.DELETE, "/api/posts/**")
+                                                .authenticated()
+
                                                 .requestMatchers("/api/categories/**")
                                                 .hasAnyAuthority("ADMIN", "EDITOR")
                                                 .requestMatchers("/api/authors/**").hasAnyAuthority("ADMIN", "EDITOR")

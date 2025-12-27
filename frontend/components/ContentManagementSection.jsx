@@ -7,6 +7,10 @@ import PostStatusBadge from './PostStatusBadge';
 export default function ContentManagementSection({ userRole }) {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [deletingId, setDeletingId] = useState(null);
+    const [deletionModalOpen, setDeletionModalOpen] = useState(false);
+    const [selectedPost, setSelectedPost] = useState(null);
+    const [deletionReason, setDeletionReason] = useState('');
     const [filters, setFilters] = useState({
         status: '',
         search: '',
@@ -53,7 +57,10 @@ export default function ContentManagementSection({ userRole }) {
 
     const fetchStats = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/content/stats', {
+            // Use different endpoint based on role
+            const endpoint = isEditorOrAdmin ? '/api/content/stats' : '/api/content/my-stats';
+
+            const response = await fetch(`http://localhost:8080${endpoint}`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
@@ -72,11 +79,26 @@ export default function ContentManagementSection({ userRole }) {
         setFilters(prev => ({ ...prev, [key]: value, page: 0 }));
     };
 
-    const handleDelete = async (postId) => {
-        if (!confirm('Are you sure you want to delete this post?')) return;
+    const handleDelete = async (post) => {
+        const isAdminOrEditor = isEditorOrAdmin;
 
+        // Check if published AND not admin/editor - show deletion request modal
+        if (post.status === 'PUBLISHED' && !isAdminOrEditor) {
+            setSelectedPost(post);
+            setDeletionModalOpen(true);
+            return;
+        }
+
+        // Direct delete for DRAFT/UNDER_REVIEW or if user is ADMIN/EDITOR
+        const confirmMessage = post.status === 'PUBLISHED'
+            ? 'Are you sure you want to delete this PUBLISHED post? This action cannot be undone.'
+            : 'Are you sure you want to delete this post?';
+
+        if (!confirm(confirmMessage)) return;
+
+        setDeletingId(post.id);
         try {
-            const response = await fetch(`http://localhost:8080/api/posts/${postId}`, {
+            const response = await fetch(`http://localhost:8080/api/posts/${post.id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -84,11 +106,48 @@ export default function ContentManagementSection({ userRole }) {
             });
 
             if (response.ok) {
-                fetchContent();
-                fetchStats();
+                alert('Post deleted successfully!');
+                await Promise.all([fetchContent(), fetchStats()]);
+            } else {
+                const error = await response.json();
+                alert(error.error || 'Failed to delete post');
             }
         } catch (error) {
             console.error('Error deleting post:', error);
+            alert('An error occurred while deleting the post. Please try again.');
+        } finally {
+            setDeletingId(null);
+        }
+    };
+
+    const handleSubmitDeletionRequest = async () => {
+        if (!deletionReason.trim()) {
+            alert('Please provide a reason for deletion');
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:8080/api/posts/${selectedPost.id}/request-deletion`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ reason: deletionReason })
+            });
+
+            if (response.ok) {
+                alert('Deletion request submitted successfully!');
+                setDeletionModalOpen(false);
+                setDeletionReason('');
+                setSelectedPost(null);
+            } else {
+                const error = await response.json();
+                alert(error.error || 'Failed to submit deletion request');
+            }
+        } catch (error) {
+            console.error('Error submitting deletion request:', error);
+            alert('An error occurred. Please try again.');
         }
     };
 
@@ -123,29 +182,28 @@ export default function ContentManagementSection({ userRole }) {
 
             {/* Filters */}
             <div className="flex flex-col md:flex-row gap-4">
-                {/* Search */}
-                <div className="flex-1 relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                    <input
-                        type="text"
-                        placeholder="Search by title..."
-                        value={filters.search}
-                        onChange={(e) => handleFilterChange('search', e.target.value)}
-                        className="w-full pl-10 pr-4 py-3 rounded-lg bg-secondary/10 border border-border focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
-                    />
+                {/* Filters */}
+                <div className="flex gap-4 mb-6">
+                    <div className="flex-1">
+                        <input
+                            type="text"
+                            placeholder="Search posts..."
+                            value={filters.search}
+                            onChange={(e) => handleFilterChange('search', e.target.value)}
+                            className="w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                        />
+                    </div>
+                    <select
+                        value={filters.status}
+                        onChange={(e) => handleFilterChange('status', e.target.value)}
+                        className="px-4 py-2 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                    >
+                        <option value="">All Status</option>
+                        <option value="DRAFT">Draft</option>
+                        <option value="UNDER_REVIEW">Under Review</option>
+                        <option value="PUBLISHED">Published</option>
+                    </select>
                 </div>
-
-                {/* Status Filter */}
-                <select
-                    value={filters.status}
-                    onChange={(e) => handleFilterChange('status', e.target.value)}
-                    className="px-4 py-3 rounded-lg bg-secondary/10 border border-border focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
-                >
-                    <option value="">All Status</option>
-                    <option value="PUBLISHED">Published</option>
-                    <option value="DRAFT">Draft</option>
-                    <option value="PENDING_REVIEW">Pending Review</option>
-                </select>
             </div>
 
             {/* Posts Table/List */}
@@ -172,7 +230,7 @@ export default function ContentManagementSection({ userRole }) {
                                         <PostStatusBadge status={post.status} />
                                     </div>
                                     <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
-                                        <span>By {post.createdBy?.username || 'Unknown'}</span>
+                                        <span>By {post.createdBy?.displayName || 'Unknown'}</span>
                                         <span className="flex items-center gap-1">
                                             <Clock className="w-4 h-4" />
                                             {new Date(post.createdAt).toLocaleDateString()}
@@ -201,11 +259,16 @@ export default function ContentManagementSection({ userRole }) {
                                         <Edit2 className="w-4 h-4" />
                                     </Link>
                                     <button
-                                        onClick={() => handleDelete(post.id)}
-                                        className="p-2 rounded-lg border border-red-500/50 text-red-500 hover:bg-red-500/10 transition-colors"
+                                        onClick={() => handleDelete(post)}
+                                        disabled={deletingId === post.id}
+                                        className="p-2 rounded-lg border border-red-500/50 text-red-500 hover:bg-red-500/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[36px]"
                                         title="Delete Post"
                                     >
-                                        <Trash2 className="w-4 h-4" />
+                                        {deletingId === post.id ? (
+                                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-red-500"></div>
+                                        ) : (
+                                            <Trash2 className="w-4 h-4" />
+                                        )}
                                     </button>
                                 </div>
                             </div>
@@ -234,6 +297,47 @@ export default function ContentManagementSection({ userRole }) {
                     >
                         Next
                     </button>
+                </div>
+            )}
+
+            {/* Deletion Request Modal */}
+            {deletionModalOpen && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+                    <div className="bg-card rounded-xl shadow-2xl max-w-md w-full mx-4 p-6 border border-border">
+                        <h3 className="text-xl font-bold mb-4">Request Post Deletion</h3>
+                        <p className="text-sm text-muted-foreground mb-4">
+                            This post is published. You cannot delete it directly. Please provide a reason for deletion,
+                            and an admin will review your request.
+                        </p>
+                        <div className="mb-4">
+                            <label className="block text-sm font-medium mb-2">Reason for deletion *</label>
+                            <textarea
+                                value={deletionReason}
+                                onChange={(e) => setDeletionReason(e.target.value)}
+                                className="w-full p-3 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                                rows={4}
+                                placeholder="Explain why you want to delete this post..."
+                            />
+                        </div>
+                        <div className="flex gap-3 justify-end">
+                            <button
+                                onClick={() => {
+                                    setDeletionModalOpen(false);
+                                    setDeletionReason('');
+                                    setSelectedPost(null);
+                                }}
+                                className="px-4 py-2 bg-secondary text-foreground rounded-lg hover:bg-secondary/80 transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleSubmitDeletionRequest}
+                                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                            >
+                                Submit Request
+                            </button>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>

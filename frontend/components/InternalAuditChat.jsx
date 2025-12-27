@@ -82,14 +82,14 @@ export default function InternalAuditChat({ postId }) {
                         <div key={comment.id} className={`flex gap-3 ${comment.user.id === user?.id ? 'flex-row-reverse' : ''}`}>
                             <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
                                 {comment.user?.profilePhoto ? (
-                                    <img src={comment.user.profilePhoto} alt={comment.user.username} className="w-full h-full rounded-full object-cover" />
+                                    <img src={comment.user.profilePhoto} alt={comment.user.displayName} className="w-full h-full rounded-full object-cover" />
                                 ) : (
                                     <User className="w-4 h-4 text-primary" />
                                 )}
                             </div>
                             <div className={`flex flex-col max-w-[80%] ${comment.user.id === user?.id ? 'items-end' : 'items-start'}`}>
                                 <div className="flex items-center gap-2 mb-1">
-                                    <span className="text-xs font-semibold">{comment.user.username}</span>
+                                    <span className="text-xs font-semibold">{comment.user.displayName}</span>
                                     {comment.user.role && (
                                         <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-secondary text-secondary-foreground">
                                             {comment.user.role}
@@ -100,8 +100,8 @@ export default function InternalAuditChat({ postId }) {
                                     </span>
                                 </div>
                                 <div className={`px-3 py-2 rounded-lg text-sm ${comment.user.id === user?.id
-                                        ? 'bg-primary text-primary-foreground rounded-tr-none'
-                                        : 'bg-muted text-foreground rounded-tl-none'
+                                    ? 'bg-primary text-primary-foreground rounded-tr-none'
+                                    : 'bg-muted text-foreground rounded-tl-none'
                                     }`}>
                                     {comment.content}
                                 </div>

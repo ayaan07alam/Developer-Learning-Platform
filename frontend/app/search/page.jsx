@@ -161,7 +161,7 @@ export default function SearchPage() {
                                             {post.author && (
                                                 <div className="flex items-center gap-1">
                                                     <User className="w-3 h-3" />
-                                                    <span>{post.author.username || post.author.email}</span>
+                                                    <span>{post.author.displayName || post.author.email}</span>
                                                 </div>
                                             )}
                                         </div>

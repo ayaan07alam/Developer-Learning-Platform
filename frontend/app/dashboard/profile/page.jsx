@@ -10,7 +10,7 @@ export default function ProfilePage() {
     const [saving, setSaving] = useState(false);
     const [message, setMessage] = useState('');
     const [profile, setProfile] = useState({
-        username: '',
+        displayName: '',
         email: '',
         bio: '',
         profilePhoto: '',
@@ -78,7 +78,7 @@ export default function ProfilePage() {
                     'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({
-                    username: profile.username,
+                    displayName: profile.displayName,
                     bio: profile.bio,
                     profilePhoto: profile.profilePhoto
                 })
@@ -181,8 +181,8 @@ export default function ProfilePage() {
                                 <label className="block text-sm font-medium mb-2">Username</label>
                                 <input
                                     type="text"
-                                    value={profile.username || ''}
-                                    onChange={(e) => setProfile({ ...profile, username: e.target.value })}
+                                    value={profile.displayName || ''}
+                                    onChange={(e) => setProfile({ ...profile, displayName: e.target.value })}
                                     className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                                     placeholder="Enter your username"
                                 />
