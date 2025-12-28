@@ -7,6 +7,9 @@ import Link from 'next/link';
 export default function JobDetailPage() {
     const params = useParams();
     const router = useRouter();
+    // Extract ID from slug (format: slug-title-id)
+    const jobId = params.slug ? params.slug.split('-').pop() : null;
+
     const [job, setJob] = useState(null);
     const [loading, setLoading] = useState(true);
     const [applying, setApplying] = useState(false);
@@ -21,12 +24,14 @@ export default function JobDetailPage() {
     const [error, setError] = useState('');
 
     useEffect(() => {
-        fetchJobDetails();
-    }, [params.id]);
+        if (jobId) {
+            fetchJobDetails();
+        }
+    }, [jobId]);
 
     const fetchJobDetails = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/api/jobs/${params.id}`, {
+            const response = await fetch(`http://localhost:8080/api/jobs/${jobId}`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 },
@@ -51,7 +56,7 @@ export default function JobDetailPage() {
         setError('');
 
         try {
-            const response = await fetch(`http://localhost:8080/api/jobs/${params.id}/apply`, {
+            const response = await fetch(`http://localhost:8080/api/jobs/${jobId}/apply`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

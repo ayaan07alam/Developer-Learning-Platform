@@ -36,6 +36,7 @@ const Header = () => {
     { name: "Home", href: "/" },
     { name: "Learn", href: "/learn" },
     { name: "Blogs", href: "/blogs" },
+    { name: "Compiler", href: "/compiler" },
     { name: "Tools", href: "/tools" },
     { name: "Jobs", href: "/jobs", target: "_blank" },
   ];

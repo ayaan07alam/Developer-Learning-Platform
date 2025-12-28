@@ -61,7 +61,7 @@ export const metadata = {
     "tech career roadmap",
     "coding for beginners",
     "tech tutorials for professionals"],
-  authors: [{ name: 'IntelForgeeks.com' }, { name: 'IntelForgeeks.com', url: 'https://intelforgeeks.com' }],
+  authors: [{ name: 'IntelForgeeks.com' }, { name: 'IntelForgeeks.com', url: 'https://www.intelforgeeks.com' }],
   creator: 'IntelForgeeks.com',
   publisher: 'IntelForgeeks.com',
   formatDetection: {
@@ -70,11 +70,11 @@ export const metadata = {
     telephone: false,
   },
   og: {
-    url: 'https://intelforgeeks.com',
+    url: 'https://www.intelforgeeks.com',
     type: 'website',
     title: 'IntelForgeeks.com - Explore the Tech World',
     description: 'Discover in-depth articles on new tech trends, tutorials, and tools at IntelForgeeks.com.',
-    image: 'https://intelforgeeks.com/og-image.jpg',
+    image: 'https://www.intelforgeeks.com/og-image.jpg',
     site_name: 'IntelForgeeks.com'
   },
   twitter: {
@@ -82,7 +82,7 @@ export const metadata = {
     site: '@IntelForgeeks',
     title: 'IntelForgeeks.com - Explore the Tech World',
     description: 'Discover in-depth articles on new tech trends, tutorials, and tools at IntelForgeeks.com.',
-    image: 'https://intelforgeeks.com/twitter-image.jpg',
+    image: 'https://www.intelforgeeks.com/twitter-image.jpg',
     creator: '@IntelForgeeks'
   },
 

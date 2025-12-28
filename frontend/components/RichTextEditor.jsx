@@ -98,7 +98,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
         },
         editorProps: {
             attributes: {
-                class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-2xl dark:prose-invert focus:outline-none min-h-[600px] max-w-none p-6',
+                class: 'prose prose-sm sm:prose xl:prose-lg dark:prose-invert focus:outline-none min-h-[600px] max-w-none p-6',
             },
         },
     });

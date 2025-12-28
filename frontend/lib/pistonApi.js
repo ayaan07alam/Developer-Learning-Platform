@@ -19,8 +19,7 @@ const LANGUAGE_VERSIONS = {
     swift: { language: 'swift', version: '5.3.3' },
     kotlin: { language: 'kotlin', version: '1.8.20' },
     r: { language: 'r', version: '4.1.1' },
-    bash: { language: 'bash', version: '5.2.0' },
-    sql: { language: 'sqlite3', version: '3.36.0' },
+    bash: { language: 'bash', version: '5.2.0' }
 };
 
 export async function executeCode(code, language) {
@@ -107,8 +106,7 @@ function getFileExtension(language) {
         swift: 'swift',
         kotlin: 'kt',
         r: 'r',
-        bash: 'sh',
-        sql: 'sql'
+        bash: 'sh'
     };
     return extensions[language.toLowerCase()] || 'txt';
 }

@@ -30,7 +30,7 @@ export const metadata = {
   openGraph: {
     title: "IntelForgeeks - Complete Developer Ecosystem",
     description: "40+ free tools, tech blog, tutorials & jobs for developers",
-    url: "https://intellforgeeks.com",
+    url: "https://www.intelforgeeks.com",
     siteName: "IntelForgeeks",
     locale: "en_US",
     type: "website",
@@ -52,7 +52,7 @@ export const metadata = {
     },
   },
   alternates: {
-    canonical: "https://intellforgeeks.com",
+    canonical: "https://www.intelforgeeks.com",
   },
 };
 

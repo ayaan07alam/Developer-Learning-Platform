@@ -220,61 +220,66 @@ export default function JobSeekerDashboard() {
                     </div>
                 ) : (
                     <div className="grid gap-6">
-                        {filteredJobs.map((job) => (
-                            <Link
-                                key={job.id}
-                                href={`/jobs/seeker/${job.id}`}
-                                className="group p-6 rounded-xl bg-secondary/5 border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10"
-                            >
-                                <div className="flex items-start justify-between mb-4">
-                                    <div className="flex-1">
-                                        <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
-                                            {job.title}
-                                        </h3>
-                                        <p className="text-lg text-muted-foreground mb-3">{job.companyName}</p>
+                        {filteredJobs.map((job) => {
+                            const titleSlug = job.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+                            const jobSlug = `${titleSlug}-${job.id}`;
+
+                            return (
+                                <Link
+                                    key={job.id}
+                                    href={`/jobs/seeker/${jobSlug}`}
+                                    className="group p-6 rounded-xl bg-secondary/5 border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10"
+                                >
+                                    <div className="flex items-start justify-between mb-4">
+                                        <div className="flex-1">
+                                            <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
+                                                {job.title}
+                                            </h3>
+                                            <p className="text-lg text-muted-foreground mb-3">{job.companyName}</p>
+                                        </div>
+                                        {job.companyLogo && (
+                                            <img
+                                                src={job.companyLogo}
+                                                alt={job.companyName}
+                                                className="w-16 h-16 rounded-lg object-cover"
+                                            />
+                                        )}
                                     </div>
-                                    {job.companyLogo && (
-                                        <img
-                                            src={job.companyLogo}
-                                            alt={job.companyName}
-                                            className="w-16 h-16 rounded-lg object-cover"
-                                        />
-                                    )}
-                                </div>
 
-                                <div className="flex flex-wrap gap-3 mb-4">
-                                    <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getJobTypeColor(job.jobType)}`}>
-                                        {job.jobType.replace('_', ' ')}
-                                    </span>
-                                    {job.location && (
-                                        <span className="flex items-center gap-1 text-sm text-muted-foreground">
-                                            <MapPin className="w-4 h-4" />
-                                            {job.location}
+                                    <div className="flex flex-wrap gap-3 mb-4">
+                                        <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getJobTypeColor(job.jobType)}`}>
+                                            {job.jobType.replace('_', ' ')}
                                         </span>
-                                    )}
-                                    {(job.salaryMin || job.salaryMax) && (
-                                        <span className="flex items-center gap-1 text-sm text-muted-foreground">
-                                            <DollarSign className="w-4 h-4" />
-                                            {formatSalary(job.salaryMin, job.salaryMax)}
+                                        {job.location && (
+                                            <span className="flex items-center gap-1 text-sm text-muted-foreground">
+                                                <MapPin className="w-4 h-4" />
+                                                {job.location}
+                                            </span>
+                                        )}
+                                        {(job.salaryMin || job.salaryMax) && (
+                                            <span className="flex items-center gap-1 text-sm text-muted-foreground">
+                                                <DollarSign className="w-4 h-4" />
+                                                {formatSalary(job.salaryMin, job.salaryMax)}
+                                            </span>
+                                        )}
+                                    </div>
+
+                                    <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
+                                        {job.description}
+                                    </p>
+
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-xs text-muted-foreground flex items-center gap-1">
+                                            <Clock className="w-3 h-3" />
+                                            Posted {new Date(job.createdAt).toLocaleDateString()}
                                         </span>
-                                    )}
-                                </div>
-
-                                <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
-                                    {job.description}
-                                </p>
-
-                                <div className="flex items-center justify-between">
-                                    <span className="text-xs text-muted-foreground flex items-center gap-1">
-                                        <Clock className="w-3 h-3" />
-                                        Posted {new Date(job.createdAt).toLocaleDateString()}
-                                    </span>
-                                    <span className="text-sm font-semibold text-primary group-hover:translate-x-1 transition-transform">
-                                        View Details →
-                                    </span>
-                                </div>
-                            </Link>
-                        ))}
+                                        <span className="text-sm font-semibold text-primary group-hover:translate-x-1 transition-transform">
+                                            View Details →
+                                        </span>
+                                    </div>
+                                </Link>
+                            );
+                        })}
                     </div>
                 )}
             </div>

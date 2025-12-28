@@ -18,10 +18,10 @@ export default function SchemaMarkup({ post, faqs = [] }) {
         },
         "publisher": {
             "@type": "Organization",
-            "name": "IntelliGeek",
+            "name": "IntelForgeeks",
             "logo": {
                 "@type": "ImageObject",
-                "url": `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/logo.png`
+                "url": `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.intelforgeeks.com'}/logo.png`
             }
         },
         "mainEntityOfPage": {
