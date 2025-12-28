@@ -36,9 +36,8 @@ const Header = () => {
     { name: "Home", href: "/" },
     { name: "Learn", href: "/learn" },
     { name: "Blogs", href: "/blogs" },
-    { name: "Roadmaps", href: "/roadmaps" },
     { name: "Tools", href: "/tools" },
-    { name: "Jobs", href: "/jobs" },
+    { name: "Jobs", href: "/jobs", target: "_blank" },
   ];
 
   return (
@@ -71,6 +70,8 @@ const Header = () => {
             <Link
               key={link.name}
               href={link.href}
+              target={link.target}
+              rel={link.target === "_blank" ? "noopener noreferrer" : undefined}
               className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors hover:bg-white/5 rounded-full"
             >
               {link.name}
@@ -85,7 +86,7 @@ const Header = () => {
             onSubmit={(e) => {
               e.preventDefault();
               if (searchQuery.trim()) {
-                window.location.href = `/ search ? q = ${encodeURIComponent(searchQuery)} `;
+                window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
               }
             }}
             className="relative"
@@ -210,7 +211,7 @@ const Header = () => {
         </div>
 
         {/* Mobile Menu */}
-        <div className="md:hidden flex items-center gap-4">
+        <div className="md:hidden flex items-center gap-2">
           <Button
             variant="ghost"
             size="icon"
@@ -227,25 +228,98 @@ const Header = () => {
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px] border-l border-border/50 bg-background/95 backdrop-blur-xl">
-              <div className="flex flex-col gap-8 mt-8">
-                <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-6 mt-8">
+                {/* Search in Mobile */}
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    if (searchQuery.trim()) {
+                      window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
+                    }
+                  }}
+                  className="relative px-4"
+                >
+                  <input
+                    type="text"
+                    placeholder="Search blogs..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-10 pr-4 py-2.5 w-full rounded-lg bg-secondary/10 border border-border/50 focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm transition-all"
+                  />
+                  <Search className="absolute left-7 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                </form>
+
+                {/* Navigation Links */}
+                <div className="flex flex-col gap-1">
                   {navLinks.map((link) => (
                     <Link
                       key={link.name}
                       href={link.href}
-                      className="text-lg font-medium px-4 py-3 rounded-lg hover:bg-primary/10 hover:text-primary transition-colors"
+                      target={link.target}
+                      rel={link.target === "_blank" ? "noopener noreferrer" : undefined}
+                      className="text-base font-medium px-4 py-3 rounded-lg hover:bg-primary/10 hover:text-primary transition-colors"
                     >
                       {link.name}
                     </Link>
                   ))}
                 </div>
-                <div className="flex flex-col gap-4 px-4">
-                  <Button className="w-full bg-primary text-primary-foreground font-bold">
-                    Sign Up
-                  </Button>
-                  <Button variant="outline" className="w-full border-primary/20 hover:bg-primary/5">
-                    Log In
-                  </Button>
+
+                {/* Auth Buttons */}
+                <div className="flex flex-col gap-3 px-4 pt-4 border-t border-border/50">
+                  {isAuthenticated ? (
+                    <>
+                      {/* Write Button for All Authenticated Users */}
+                      <Link href="/dashboard/posts/create">
+                        <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg font-semibold shadow-lg shadow-primary/20 gap-2">
+                          <PenTool className="w-4 h-4" />
+                          Write
+                        </Button>
+                      </Link>
+
+                      {/* Dashboard Link */}
+                      <Link href="/dashboard">
+                        <Button variant="outline" className="w-full border-border/50 hover:bg-accent gap-2">
+                          <LayoutDashboard className="w-4 h-4" />
+                          Dashboard
+                        </Button>
+                      </Link>
+
+                      {/* Profile Link */}
+                      <Link href="/profile">
+                        <Button variant="outline" className="w-full border-border/50 hover:bg-accent gap-2">
+                          <User className="w-4 h-4" />
+                          Profile
+                        </Button>
+                      </Link>
+
+                      {/* Logout */}
+                      <Button
+                        onClick={logout}
+                        variant="ghost"
+                        className="w-full text-red-500 hover:bg-red-500/10 gap-2"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        Logout
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      {/* Write Button - Redirects to Login */}
+                      <Link href="/login?redirect=/dashboard/write">
+                        <Button variant="outline" className="w-full border-primary/30 hover:bg-primary/10 rounded-lg font-semibold gap-2">
+                          <PenTool className="w-4 h-4" />
+                          Write
+                        </Button>
+                      </Link>
+
+                      {/* Login Button */}
+                      <Link href="/login">
+                        <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg font-semibold shadow-lg shadow-primary/20">
+                          Login
+                        </Button>
+                      </Link>
+                    </>
+                  )}
                 </div>
               </div>
             </SheetContent>

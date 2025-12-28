@@ -17,6 +17,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
         List<Post> findByStatus(PostStatus status);
 
+        List<Post> findTop20ByStatusOrderByPublishedAtDesc(PostStatus status);
+
         // Pagination support
         Page<Post> findByStatus(PostStatus status, Pageable pageable);
 

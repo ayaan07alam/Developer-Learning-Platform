@@ -164,16 +164,16 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
         }
 
-        // Check if username is already taken
-        if (userRepository.existsByUsername(newUsername)) {
+        // Check if username (display name) is already taken
+        if (userRepository.existsByDisplayName(newUsername)) {
             Map<String, String> error = new HashMap<>();
             error.put("error", "Username already taken");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
         }
 
         User user = (User) authentication.getPrincipal();
-        // Update username
-        user.setUsername(newUsername);
+        // Update display name
+        user.setDisplayName(newUsername);
         User updatedUser = userRepository.save(user);
 
         UserDTO userDTO = new UserDTO(

@@ -55,7 +55,7 @@ const Footer = () => {
                 <li><Link href="/blogs" className="hover:text-primary transition-colors hover:pl-2 duration-300 block">Engineering Blog</Link></li>
                 <li><Link href="/tools" className="hover:text-primary transition-colors hover:pl-2 duration-300 block">Developer Tools</Link></li>
                 <li><Link href="/react" className="hover:text-primary transition-colors hover:pl-2 duration-300 block">Learning Paths</Link></li>
-                <li><Link href="/jobs" className="hover:text-primary transition-colors hover:pl-2 duration-300 block">Job Board</Link></li>
+                <li><Link href="/jobs" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors hover:pl-2 duration-300 block">Job Board</Link></li>
               </ul>
             </div>
 
@@ -68,7 +68,7 @@ const Footer = () => {
                 <li><Link href="/tools/pdf" className="hover:text-secondary transition-colors hover:pl-2 duration-300 block">PDF Utilities</Link></li>
                 <li><Link href="/tools/images" className="hover:text-secondary transition-colors hover:pl-2 duration-300 block">Image Optimizer</Link></li>
                 <li><Link href="/tools/code" className="hover:text-secondary transition-colors hover:pl-2 duration-300 block">Code Formatters</Link></li>
-                <li><Link href="/roadmaps" className="hover:text-secondary transition-colors hover:pl-2 duration-300 block">Career Roadmaps</Link></li>
+
               </ul>
             </div>
 

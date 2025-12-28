@@ -83,7 +83,7 @@ export default function DashboardPage() {
     return (
         <div className="min-h-screen bg-background">
             <Sidebar />
-            <div className="ml-64 p-8">
+            <div className="ml-64 p-8 pt-24">
                 <div className="max-w-7xl mx-auto">
                     <div className="mb-8">
                         <h1 className="text-4xl font-bold mb-2">Author Dashboard</h1>
@@ -169,19 +169,22 @@ export default function DashboardPage() {
                             {/* Quick Actions */}
                             <div className="p-6 rounded-xl bg-secondary/5 border border-border">
                                 <h2 className="text-xl font-bold mb-4">Quick Actions</h2>
-                                <div className="flex gap-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <Button
-                                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
-                                        onClick={() => router.push('/dashboard/posts/new')}
+                                        className="h-auto py-6 text-lg font-bold bg-cyan-500 hover:bg-cyan-600 text-white shadow-lg shadow-cyan-500/20 transition-all hover:scale-[1.02]"
+                                        onClick={() => router.push('/dashboard/posts/create')}
                                     >
-                                        Create Post
+                                        <PenTool className="w-5 h-5 mr-2" />
+                                        Create New Post
                                     </Button>
-                                    <button
+                                    <Button
                                         onClick={() => setActiveTab('drafts')}
-                                        className="px-6 py-3 rounded-lg border border-border hover:bg-secondary/10 transition-colors font-medium"
+                                        variant="outline"
+                                        className="h-auto py-6 text-lg font-bold border-border hover:bg-secondary/40 transition-all hover:scale-[1.02]"
                                     >
+                                        <FileEdit className="w-5 h-5 mr-2" />
                                         View Improvement Drafts
-                                    </button>
+                                    </Button>
                                 </div>
                             </div>
                         </div>

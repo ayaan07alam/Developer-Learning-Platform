@@ -301,7 +301,7 @@ const Home = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
-              <Link href="/jobs" className="group relative overflow-hidden rounded-2xl border border-border bg-card p-8 hover:border-orange-500/50 hover:shadow-xl hover:shadow-orange-500/10 transition-all duration-300 block h-full">
+              <Link href="/jobs" target="_blank" rel="noopener noreferrer" className="group relative overflow-hidden rounded-2xl border border-border bg-card p-8 hover:border-orange-500/50 hover:shadow-xl hover:shadow-orange-500/10 transition-all duration-300 block h-full">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/10 rounded-full blur-3xl group-hover:bg-orange-500/20 group-hover:scale-150 transition-all duration-500"></div>
                 <div className="relative z-10">
                   <div className="w-14 h-14 rounded-xl bg-orange-500/10 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-orange-500/20 transition-all duration-300">
@@ -637,7 +637,7 @@ const Home = () => {
               <div className="font-bold mb-1">Write</div>
               <div className="text-xs text-muted-foreground">Share knowledge</div>
             </Link>
-            <Link href="/jobs" className="p-6 rounded-xl border border-border bg-card hover:border-primary hover:bg-primary/5 transition-all group">
+            <Link href="/jobs" target="_blank" rel="noopener noreferrer" className="p-6 rounded-xl border border-border bg-card hover:border-primary hover:bg-primary/5 transition-all group">
               <div className="text-3xl mb-2">💼</div>
               <div className="font-bold mb-1">Find Jobs</div>
               <div className="text-xs text-muted-foreground">Hire or get hired</div>

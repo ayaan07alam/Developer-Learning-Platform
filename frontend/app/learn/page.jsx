@@ -1,77 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaReact, FaNodeJs, FaVuejs, FaAngular, FaDocker, FaCss3Alt, FaSass, FaBootstrap, FaJs, FaNpm, FaHtml5 } from "react-icons/fa";
-import { SiExpress, SiHtml5, SiMongodb, SiTypescript, SiGraphql, SiTailwindcss, SiRedux, SiRestapi, SiWebpack, SiJest } from "react-icons/si";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { X } from "lucide-react";
-
-const getIcon = (title) => {
-  switch (title) {
-    case "React": return <FaReact className="text-blue-500 text-4xl" />;
-    case "Node.js": return <FaNodeJs className="text-green-500 text-4xl" />;
-    case "Express.js": return <SiExpress className="text-gray-500 text-4xl" />;
-    case "MongoDB": return <SiMongodb className="text-green-500 text-4xl" />;
-    case "TypeScript": return <SiTypescript className="text-blue-500 text-4xl" />;
-    case "HTML": return <SiHtml5 className="text-orange-500 text-4xl" />;
-    case "CSS": return <FaCss3Alt className="text-blue-400 text-4xl" />;
-    case "JavaScript": return <FaJs className="text-yellow-400 text-4xl" />;
-    case "Next.js": return <div className="text-4xl font-bold">N</div>; // Placeholder
-    default: return <div className="text-4xl">📚</div>;
-  }
-};
-
-const items = [
-  {
-    id: 1,
-    title: "HTML",
-    subtitle: "The structure of the web",
-    description: "HTML (Hypertext Markup Language) is the fundamental building block of the web, defining the structure of web pages.",
-    link: "/learn/html",
-    color: "from-orange-500 to-red-500"
-  },
-  {
-    id: 2,
-    title: "CSS",
-    subtitle: "Design and style",
-    description: "CSS (Cascading Style Sheets) is used to control the look and feel of your web pages.",
-    link: "/learn/css",
-    color: "from-blue-400 to-blue-600"
-  },
-  {
-    id: 3,
-    title: "JavaScript",
-    subtitle: "The brain of the web",
-    description: "JavaScript is a programming language that powers dynamic interactions and functionality on websites.",
-    link: "/learn/javascript",
-    color: "from-yellow-400 to-yellow-600"
-  },
-  {
-    id: 4,
-    title: "React",
-    subtitle: "Building interactive UIs",
-    description: "React is a popular JavaScript library for building user interfaces, especially for single-page applications.",
-    link: "/learn/react",
-    color: "from-blue-400 to-cyan-400"
-  },
-  {
-    id: 5,
-    title: "Next.js",
-    subtitle: "React Framework",
-    description: "Next.js is a powerful React framework for building modern web applications.",
-    link: "/learn/nextjs",
-    color: "from-gray-800 to-black"
-  },
-  {
-    id: 6,
-    title: "TypeScript",
-    subtitle: "Static Typing",
-    description: "TypeScript is a superset of JavaScript that adds static typing, making it easier to catch errors early.",
-    link: "/learn/typescript",
-    color: "from-blue-600 to-blue-800"
-  },
-];
+import { X, ArrowRight } from "lucide-react";
 
 const Learn = () => {
   const [selectedId, setSelectedId] = useState(null);
@@ -86,14 +18,13 @@ const Learn = () => {
     try {
       const response = await fetch('http://localhost:8080/api/categories');
       const data = await response.json();
-      // Transform API data to match the card format
       const transformedData = data.map((cat, index) => ({
         id: cat.id,
         title: cat.name,
         subtitle: cat.description || 'Learn more',
         description: cat.description || `Explore ${cat.name} tutorials and guides`,
         link: `/categories/${cat.slug}`,
-        color: getColorForIndex(index)
+        accent: getAccentForIndex(index)
       }));
       setCategories(transformedData);
     } catch (error) {
@@ -103,18 +34,14 @@ const Learn = () => {
     }
   };
 
-  const getColorForIndex = (index) => {
-    const colors = [
-      "from-orange-500 to-red-500",
-      "from-blue-400 to-blue-600",
-      "from-yellow-400 to-yellow-600",
-      "from-blue-400 to-cyan-400",
-      "from-gray-800 to-black",
-      "from-blue-600 to-blue-800",
-      "from-green-500 to-emerald-600",
-      "from-purple-500 to-pink-500"
+  const getAccentForIndex = (index) => {
+    const accents = [
+      "text-blue-500", "text-purple-500", "text-emerald-500", "text-rose-500",
+      "text-cyan-500", "text-indigo-500", "text-teal-500", "text-pink-500",
+      "text-violet-500", "text-fuchsia-500", "text-sky-500", "text-amber-500",
+      "text-lime-500", "text-orange-500", "text-red-500"
     ];
-    return colors[index % colors.length];
+    return accents[index % accents.length];
   };
 
   useEffect(() => {
@@ -126,50 +53,65 @@ const Learn = () => {
   }, [selectedId]);
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden pt-24 pb-12">
-      {/* Background Decor */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-accent/10 rounded-full blur-[100px] pointer-events-none" />
+    <div className="min-h-screen bg-gradient-to-b from-background via-background to-muted/20 relative overflow-hidden pt-24 pb-12">
+      {/* Subtle Background Pattern */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent" />
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
-            Explore Tutorials
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
+            Explore Topics
           </h1>
-          <p className="text-muted-foreground text-lg">
-            Master the latest technologies with our comprehensive specific guides.
-            From basics to advanced concepts, we've got you covered.
+          <p className="text-muted-foreground">
+            Browse through our curated collection of tech categories
           </p>
         </div>
 
         <motion.div
           layout
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4"
         >
           {loading ? (
-            <div className="col-span-full text-center py-12">Loading categories...</div>
+            <div className="col-span-full text-center py-12 text-muted-foreground">Loading...</div>
           ) : categories.length === 0 ? (
-            <div className="col-span-full text-center py-12">No categories available</div>
+            <div className="col-span-full text-center py-12 text-muted-foreground">No categories available</div>
           ) : (
             categories.map((item) => (
               <motion.div
                 layoutId={item.id}
                 key={item.id}
                 onClick={() => setSelectedId(item.id)}
-                whileHover={{ y: -5, scale: 1.02 }}
-                className="group cursor-pointer relative p-6 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/10 hover:border-primary/30 transition-all duration-300 shadow-xl"
+                whileHover={{ y: -6, rotateX: 5 }}
+                whileTap={{ scale: 0.98 }}
+                className="group cursor-pointer relative bg-card/80 backdrop-blur-sm hover:bg-card border border-border/50 rounded-xl p-5 transition-all duration-300 shadow-lg hover:shadow-xl hover:border-border min-h-[120px] flex flex-col"
+                style={{
+                  transformStyle: 'preserve-3d',
+                  perspective: '1000px'
+                }}
               >
-                <div className={cn("absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity bg-gradient-to-br rounded-3xl", item.color)} />
+                {/* 3D depth layer */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
 
-                <div className="relative z-10 flex flex-col items-start h-full">
-                  <div className="mb-4 p-3 rounded-2xl bg-background/50 border border-white/5 shadow-inner">
-                    {getIcon(item.title)}
-                  </div>
-                  <h3 className="text-xl font-bold mb-1 text-foreground">{item.title}</h3>
-                  <p className="text-sm font-medium text-primary mb-3">{item.subtitle}</p>
-                  <div className="mt-auto pt-4 flex items-center text-xs font-semibold text-muted-foreground group-hover:text-primary transition-colors">
-                    Read More →
-                  </div>
+                {/* Bottom shadow for 3D effect */}
+                <div className="absolute -bottom-1 left-2 right-2 h-1 bg-black/10 dark:bg-black/30 rounded-full blur-sm opacity-0 group-hover:opacity-100 transition-opacity" />
+
+                {/* Category name with colored text */}
+                <h3 className={cn(
+                  "text-base font-semibold transition-all duration-300 leading-tight mb-2",
+                  item.accent,
+                  "group-hover:scale-105"
+                )}>
+                  {item.title}
+                </h3>
+
+                {/* One-line description */}
+                <p className="text-xs text-muted-foreground/70 leading-snug line-clamp-2 flex-grow">
+                  {item.subtitle}
+                </p>
+
+                {/* Arrow on hover */}
+                <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 mt-3 transform group-hover:translate-x-0.5">
+                  <ArrowRight className={cn("w-3.5 h-3.5", item.accent)} />
                 </div>
               </motion.div>
             ))
@@ -184,42 +126,41 @@ const Learn = () => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={() => setSelectedId(null)}
-                className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                className="absolute inset-0 bg-black/60 backdrop-blur-md"
               />
 
               <motion.div
                 layoutId={selectedId}
-                className="relative w-full max-w-lg bg-[#1a1b26] border border-white/10 rounded-3xl p-8 shadow-2xl overflow-hidden"
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                className="relative w-full max-w-md bg-card/95 backdrop-blur-xl rounded-2xl border border-border shadow-2xl overflow-hidden"
               >
                 <button
                   onClick={() => setSelectedId(null)}
-                  className="absolute top-4 right-4 p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors"
+                  className="absolute top-4 right-4 z-20 p-2 rounded-lg hover:bg-accent/80 transition-colors"
                 >
-                  <X className="w-5 h-5 text-gray-400" />
+                  <X className="w-4 h-4 text-muted-foreground" />
                 </button>
 
-                <div className="relative z-10">
-                  <div className="mb-6">
-                    {getIcon(categories.find((item) => item.id === selectedId)?.title)}
-                  </div>
-
-                  <motion.h2 className="text-3xl font-bold mb-2 text-white">
+                <div className="p-8">
+                  <h2 className={cn(
+                    "text-2xl font-bold mb-2 transition-colors",
+                    categories.find((item) => item.id === selectedId)?.accent
+                  )}>
                     {categories.find((item) => item.id === selectedId)?.title}
-                  </motion.h2>
+                  </h2>
 
-                  <motion.p className="text-lg text-primary mb-4 font-medium">
-                    {categories.find((item) => item.id === selectedId)?.subtitle}
-                  </motion.p>
-
-                  <motion.p className="text-gray-400 leading-relaxed mb-8">
+                  <p className="text-sm text-muted-foreground mb-6">
                     {categories.find((item) => item.id === selectedId)?.description}
-                  </motion.p>
+                  </p>
 
                   <Link
                     href={categories.find((item) => item.id === selectedId)?.link || '#'}
-                    className="inline-flex items-center justify-center w-full px-6 py-3 rounded-xl bg-primary text-white font-bold hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20"
+                    className="inline-flex items-center justify-center w-full px-6 py-2.5 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-all duration-200 gap-2 shadow-lg hover:shadow-xl"
                   >
-                    Start Learning Now
+                    Start Learning
+                    <ArrowRight className="w-4 h-4" />
                   </Link>
                 </div>
               </motion.div>

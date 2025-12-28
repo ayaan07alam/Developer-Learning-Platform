@@ -66,24 +66,111 @@ public class DataSeeder implements CommandLineRunner {
                                         "[{\"_type\":\"block\",\"children\":[{\"_type\":\"span\",\"text\":\"A passionate full-stack developer and tech enthusiast.\",\"marks\":[]}]}]");
                         authorRepository.save(author);
 
-                        Category catReact = new Category();
-                        catReact.setName("React");
-                        catReact.setSlug("react");
-                        catReact.setDescription("Frontend Framework");
+                        // Programming Languages
+                        Category[] categories = {
+                                        createCategory("Java", "java", "Object-oriented programming language", "☕"),
+                                        createCategory("Python", "python", "Versatile high-level programming language",
+                                                        "🐍"),
+                                        createCategory("JavaScript", "javascript",
+                                                        "Client and server-side scripting language", "🟨"),
+                                        createCategory("TypeScript", "typescript", "Typed superset of JavaScript",
+                                                        "🔷"),
+                                        createCategory("C++", "cpp", "High-performance system programming", "⚙️"),
+                                        createCategory("C#", "csharp", ".NET programming language", "🔵"),
+                                        createCategory("Go", "golang", "Google's systems programming language", "🐹"),
+                                        createCategory("Rust", "rust", "Memory-safe systems programming", "🦀"),
+                                        createCategory("PHP", "php", "Server-side web development", "🐘"),
+                                        createCategory("Ruby", "ruby", "Dynamic object-oriented language", "💎"),
+                                        createCategory("Swift", "swift", "iOS and macOS development", "🔶"),
+                                        createCategory("Kotlin", "kotlin", "Modern Android development", "🟣"),
 
-                        Category catNextJS = new Category();
-                        catNextJS.setName("Next.js");
-                        catNextJS.setSlug("nextjs");
-                        catNextJS.setDescription("React Framework");
+                                        // Web Development
+                                        createCategory("React", "react", "JavaScript UI library", "⚛️"),
+                                        createCategory("Angular", "angular", "Google's web framework", "🅰️"),
+                                        createCategory("Vue.js", "vuejs", "Progressive JavaScript framework", "💚"),
+                                        createCategory("Next.js", "nextjs", "React production framework", "▲"),
+                                        createCategory("Node.js", "nodejs", "JavaScript runtime environment", "🟢"),
+                                        createCategory("Express.js", "expressjs", "Node.js web framework", "🚂"),
+                                        createCategory("HTML", "html", "Markup language for web pages", "🌐"),
+                                        createCategory("CSS", "css", "Styling language for web", "🎨"),
+                                        createCategory("Tailwind CSS", "tailwindcss", "Utility-first CSS framework",
+                                                        "🌊"),
+                                        createCategory("Bootstrap", "bootstrap", "Popular CSS framework", "🅱️"),
 
-                        Category catTypeScript = new Category();
-                        catTypeScript.setName("TypeScript");
-                        catTypeScript.setSlug("typescript");
-                        catTypeScript.setDescription("Programming Language");
+                                        // Mobile Development
+                                        createCategory("Android", "android", "Mobile app development", "🤖"),
+                                        createCategory("iOS", "ios", "Apple mobile development", "📱"),
+                                        createCategory("React Native", "react-native",
+                                                        "Cross-platform mobile framework", "📲"),
+                                        createCategory("Flutter", "flutter", "Google's UI toolkit", "🦋"),
 
-                        categoryRepository.save(catReact);
-                        categoryRepository.save(catNextJS);
-                        categoryRepository.save(catTypeScript);
+                                        // Backend & Databases
+                                        createCategory("Spring Boot", "spring-boot", "Java application framework",
+                                                        "🍃"),
+                                        createCategory("Django", "django", "Python web framework", "🌿"),
+                                        createCategory("Flask", "flask", "Lightweight Python framework", "⚗️"),
+                                        createCategory("MySQL", "mysql", "Relational database", "🐬"),
+                                        createCategory("PostgreSQL", "postgresql", "Advanced relational database",
+                                                        "🐘"),
+                                        createCategory("MongoDB", "mongodb", "NoSQL document database", "🍃"),
+                                        createCategory("Redis", "redis", "In-memory data store", "🔴"),
+                                        createCategory("GraphQL", "graphql", "Query language for APIs", "💜"),
+                                        createCategory("REST API", "rest-api", "RESTful web services", "🔗"),
+
+                                        // DevOps & Cloud
+                                        createCategory("Docker", "docker", "Containerization platform", "🐳"),
+                                        createCategory("Kubernetes", "kubernetes", "Container orchestration", "☸️"),
+                                        createCategory("AWS", "aws", "Amazon cloud services", "☁️"),
+                                        createCategory("Azure", "azure", "Microsoft cloud platform", "🌥️"),
+                                        createCategory("Google Cloud", "gcp", "Google's cloud platform", "☁️"),
+                                        createCategory("CI/CD", "cicd", "Continuous integration and deployment", "🔄"),
+                                        createCategory("Jenkins", "jenkins", "Automation server", "👷"),
+                                        createCategory("Git", "git", "Version control system", "🌳"),
+
+                                        // Data Science & AI
+                                        createCategory("Machine Learning", "machine-learning",
+                                                        "AI and predictive models", "🤖"),
+                                        createCategory("Deep Learning", "deep-learning", "Neural networks and AI",
+                                                        "🧠"),
+                                        createCategory("Data Science", "data-science", "Data analysis and insights",
+                                                        "📊"),
+                                        createCategory("TensorFlow", "tensorflow", "ML framework by Google", "🔶"),
+                                        createCategory("PyTorch", "pytorch", "Deep learning framework", "🔥"),
+                                        createCategory("Pandas", "pandas", "Python data analysis library", "🐼"),
+                                        createCategory("NumPy", "numpy", "Numerical computing in Python", "🔢"),
+
+                                        // Computer Science Fundamentals
+                                        createCategory("Data Structures", "data-structures",
+                                                        "Organizing and storing data", "📚"),
+                                        createCategory("Algorithms", "algorithms", "Problem-solving techniques", "🧩"),
+                                        createCategory("System Design", "system-design",
+                                                        "Scalable architecture design", "🏗️"),
+                                        createCategory("Operating Systems", "operating-systems",
+                                                        "OS concepts and internals", "💻"),
+                                        createCategory("Computer Networks", "computer-networks",
+                                                        "Networking fundamentals", "🌐"),
+                                        createCategory("Database Management", "dbms", "Database systems and SQL",
+                                                        "🗄️"),
+
+                                        // Security & Testing
+                                        createCategory("Cybersecurity", "cybersecurity", "Security best practices",
+                                                        "🔒"),
+                                        createCategory("Testing", "testing", "Software testing strategies", "🧪"),
+                                        createCategory("Unit Testing", "unit-testing", "Component-level testing", "✅"),
+
+                                        // Other
+                                        createCategory("Design Patterns", "design-patterns",
+                                                        "Software design solutions", "🎯"),
+                                        createCategory("Microservices", "microservices", "Distributed architecture",
+                                                        "🔷"),
+                                        createCategory("Blockchain", "blockchain", "Decentralized technology", "⛓️"),
+                                        createCategory("Web3", "web3", "Decentralized web", "🌐"),
+                                        createCategory("Linux", "linux", "Unix-like operating system", "🐧")
+                        };
+
+                        for (Category cat : categories) {
+                                categoryRepository.save(cat);
+                        }
 
                         // Post 1: Mastering React Hooks
                         Post post1 = new Post();
@@ -98,7 +185,8 @@ public class DataSeeder implements CommandLineRunner {
                         post1.setAuthor(author);
                         post1.setCreatedBy(admin); // Set the user who created it
                         Set<Category> cats1 = new HashSet<>();
-                        cats1.add(catReact);
+                        // Find React category from our array (index 12 - in Web Development section)
+                        cats1.add(categories[12]); // React
                         post1.setCategories(cats1);
                         post1.setPublishedAt(LocalDateTime.now().minusDays(5));
                         postRepository.save(post1);
@@ -117,8 +205,8 @@ public class DataSeeder implements CommandLineRunner {
                         post2.setAuthor(author);
                         post2.setCreatedBy(admin); // Set the user who created it
                         Set<Category> cats2 = new HashSet<>();
-                        cats2.add(catNextJS);
-                        cats2.add(catReact);
+                        cats2.add(categories[15]); // Next.js
+                        cats2.add(categories[12]); // React
                         post2.setCategories(cats2);
                         post2.setPublishedAt(LocalDateTime.now().minusDays(3));
                         postRepository.save(post2);
@@ -137,12 +225,22 @@ public class DataSeeder implements CommandLineRunner {
                         post3.setAuthor(author);
                         post3.setCreatedBy(admin); // Set the user who created it
                         Set<Category> cats3 = new HashSet<>();
-                        cats3.add(catTypeScript);
+                        cats3.add(categories[3]); // TypeScript
                         post3.setCategories(cats3);
                         post3.setPublishedAt(LocalDateTime.now().minusDays(1));
                         postRepository.save(post3);
 
-                        System.out.println("Data Seeding Completed! Created 3 blog posts.");
+                        System.out.println("Data Seeding Completed! Created 3 blog posts with 63 tech categories.");
                 }
+        }
+
+        // Helper method to create categories
+        private Category createCategory(String name, String slug, String description, String icon) {
+                Category category = new Category();
+                category.setName(name);
+                category.setSlug(slug);
+                category.setDescription(description);
+                category.setIcon(icon);
+                return category;
         }
 }

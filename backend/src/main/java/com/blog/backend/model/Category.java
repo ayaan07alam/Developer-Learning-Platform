@@ -29,6 +29,9 @@ public class Category {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @Column(columnDefinition = "TEXT")
+    private String icon; // URL or emoji for category icon
+
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;

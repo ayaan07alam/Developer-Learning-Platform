@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/seo")
@@ -32,7 +31,7 @@ public class SeoController {
      */
     @GetMapping(value = "/sitemap-blog.xml", produces = MediaType.APPLICATION_XML_VALUE)
     public ResponseEntity<String> generateBlogSitemap() {
-        List<Post> publishedPosts = postRepository.findByStatus("PUBLISHED");
+        List<Post> publishedPosts = postRepository.findByStatus(com.blog.backend.model.PostStatus.PUBLISHED);
 
         StringBuilder xml = new StringBuilder();
         xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
@@ -59,7 +58,7 @@ public class SeoController {
      */
     @GetMapping(value = "/sitemap-jobs.xml", produces = MediaType.APPLICATION_XML_VALUE)
     public ResponseEntity<String> generateJobsSitemap() {
-        List<Job> activeJobs = jobRepository.findByStatus("ACTIVE");
+        List<Job> activeJobs = jobRepository.findByStatusOrderByCreatedAtDesc(com.blog.backend.model.JobStatus.ACTIVE);
 
         StringBuilder xml = new StringBuilder();
         xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
@@ -120,7 +119,8 @@ public class SeoController {
      */
     @GetMapping(value = "/feed.xml", produces = MediaType.APPLICATION_XML_VALUE)
     public ResponseEntity<String> generateRssFeed() {
-        List<Post> recentPosts = postRepository.findTop20ByStatusOrderByPublishedAtDesc("PUBLISHED");
+        List<Post> recentPosts = postRepository
+                .findTop20ByStatusOrderByPublishedAtDesc(com.blog.backend.model.PostStatus.PUBLISHED);
 
         StringBuilder xml = new StringBuilder();
         xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
