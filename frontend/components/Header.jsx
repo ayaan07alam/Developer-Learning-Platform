@@ -269,7 +269,7 @@ const Header = () => {
                   {isAuthenticated ? (
                     <>
                       {/* Write Button for All Authenticated Users */}
-                      <Link href="/dashboard/posts/create">
+                      <Link href="/dashboard/posts/new">
                         <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg font-semibold shadow-lg shadow-primary/20 gap-2">
                           <PenTool className="w-4 h-4" />
                           Write

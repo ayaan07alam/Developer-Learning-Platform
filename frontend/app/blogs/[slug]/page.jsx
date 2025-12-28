@@ -11,12 +11,15 @@ import AuthorCard from '@/components/AuthorCard';
 import ReadingProgress from '@/components/ReadingProgress';
 import RelatedBlogs from '@/components/RelatedBlogs';
 import { notFound } from 'next/navigation';
+import CustomDialog from '@/components/CustomDialog';
+import { useDialog } from '@/lib/useDialog';
 
 const BlogPost = () => {
     const params = useParams();
     const [post, setPost] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const { showAlert, dialogState, handleClose, handleConfirm } = useDialog();
 
     useEffect(() => {
         const fetchPost = async () => {
@@ -237,7 +240,9 @@ const BlogPost = () => {
                                             <button
                                                 onClick={() => {
                                                     navigator.clipboard.writeText(window.location.href);
-                                                    alert('Link copied to clipboard!');
+                                                    showAlert('Link copied to clipboard!', {
+                                                        title: 'Success'
+                                                    });
                                                 }}
                                                 className="w-full flex items-center gap-3 px-4 py-2 hover:bg-muted transition-colors text-left"
                                             >
@@ -300,6 +305,19 @@ const BlogPost = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Custom Dialog */}
+            <CustomDialog
+                isOpen={dialogState.isOpen}
+                onClose={handleClose}
+                onConfirm={handleConfirm}
+                title={dialogState.title}
+                message={dialogState.message}
+                type={dialogState.type}
+                confirmText={dialogState.confirmText}
+                cancelText={dialogState.cancelText}
+                variant={dialogState.variant}
+            />
         </>
     );
 };

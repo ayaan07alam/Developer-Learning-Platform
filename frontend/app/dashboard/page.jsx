@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import Sidebar from "@/components/Sidebar";
+import Sidebar from "@/components/sidebar";
 import { PenTool, FileText, TrendingUp, FileEdit, FolderOpen } from "lucide-react";
 import ImprovementDraftsSection from "@/components/ImprovementDraftsSection";
 import ContentManagementSection from "@/components/ContentManagementSection";
@@ -172,7 +172,7 @@ export default function DashboardPage() {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <Button
                                         className="h-auto py-6 text-lg font-bold bg-cyan-500 hover:bg-cyan-600 text-white shadow-lg shadow-cyan-500/20 transition-all hover:scale-[1.02]"
-                                        onClick={() => router.push('/dashboard/posts/create')}
+                                        onClick={() => router.push('/dashboard/posts/new')}
                                     >
                                         <PenTool className="w-5 h-5 mr-2" />
                                         Create New Post

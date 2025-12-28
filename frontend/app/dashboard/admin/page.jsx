@@ -2,11 +2,13 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
-import Sidebar from "@/components/Sidebar";
+import Sidebar from "@/components/sidebar";
 import { Users, FileText, Database, Settings, Shield, Activity, Trash2, Check, X, AlertCircle } from "lucide-react";
 import ImprovementDraftsSection from "@/components/ImprovementDraftsSection";
 import ContentManagementSection from "@/components/ContentManagementSection";
 import Link from "next/link";
+import CustomDialog from "@/components/CustomDialog";
+import { useDialog } from "@/lib/useDialog";
 
 export default function AdminDashboard() {
     const router = useRouter();
@@ -20,6 +22,7 @@ export default function AdminDashboard() {
     const [deletionRequests, setDeletionRequests] = useState([]);
     const [loadingRequests, setLoadingRequests] = useState(false);
     const [processingId, setProcessingId] = useState(null);
+    const { showConfirm, showAlert, dialogState, handleClose, handleConfirm } = useDialog();
 
     useEffect(() => {
         if (!loading) {
@@ -90,7 +93,11 @@ export default function AdminDashboard() {
     };
 
     const handleApprove = async (requestId) => {
-        if (!confirm('Approve this deletion request? The post will be permanently deleted.')) return;
+        const confirmed = await showConfirm('Approve this deletion request? The post will be permanently deleted.', {
+            title: 'Approve Deletion',
+            variant: 'danger'
+        });
+        if (!confirmed) return;
 
         setProcessingId(requestId);
         try {
@@ -101,22 +108,31 @@ export default function AdminDashboard() {
             });
 
             if (response.ok) {
-                alert('Request approved and post deleted successfully!');
+                showAlert('Request approved and post deleted successfully!', {
+                    title: 'Success'
+                });
                 fetchDeletionRequests();
                 fetchStats();
             } else {
-                alert('Failed to approve request');
+                showAlert('Failed to approve request', {
+                    title: 'Error'
+                });
             }
         } catch (error) {
             console.error('Error approving request:', error);
-            alert('An error occurred');
+            showAlert('An error occurred', {
+                title: 'Error'
+            });
         } finally {
             setProcessingId(null);
         }
     };
 
     const handleDeny = async (requestId) => {
-        if (!confirm('Deny this deletion request? The post will remain published.')) return;
+        const confirmed = await showConfirm('Deny this deletion request? The post will remain published.', {
+            title: 'Deny Deletion Request'
+        });
+        if (!confirmed) return;
 
         setProcessingId(requestId);
         try {
@@ -127,14 +143,20 @@ export default function AdminDashboard() {
             });
 
             if (response.ok) {
-                alert('Request denied successfully!');
+                showAlert('Request denied successfully!', {
+                    title: 'Success'
+                });
                 fetchDeletionRequests();
             } else {
-                alert('Failed to deny request');
+                showAlert('Failed to deny request', {
+                    title: 'Error'
+                });
             }
         } catch (error) {
             console.error('Error denying request:', error);
-            alert('An error occurred');
+            showAlert('An error occurred', {
+                title: 'Error'
+            });
         } finally {
             setProcessingId(null);
         }
@@ -367,6 +389,19 @@ export default function AdminDashboard() {
                     )}
                 </div>
             </div>
+
+            {/* Custom Dialog */}
+            <CustomDialog
+                isOpen={dialogState.isOpen}
+                onClose={handleClose}
+                onConfirm={handleConfirm}
+                title={dialogState.title}
+                message={dialogState.message}
+                type={dialogState.type}
+                confirmText={dialogState.confirmText}
+                cancelText={dialogState.cancelText}
+                variant={dialogState.variant}
+            />
         </div>
     );
 }

@@ -19,7 +19,15 @@ const Blogs = () => {
         throw new Error('Failed to fetch blogs');
       }
       const data = await response.json();
-      setBlogs(data);
+
+      // Sort blogs by publishedAt date (most recent first)
+      const sortedBlogs = [...data].sort((a, b) => {
+        const dateA = new Date(a.publishedAt || a.createdAt);
+        const dateB = new Date(b.publishedAt || b.createdAt);
+        return dateB - dateA; // Descending order (newest first)
+      });
+
+      setBlogs(sortedBlogs);
     } catch (err) {
       setError(err.message);
     } finally {

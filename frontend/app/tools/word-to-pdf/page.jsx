@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import { FileText, Upload, Download, Loader2, Check, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
+import { API_BASE_URL } from '@/lib/api-client';
+
 export default function WordToPDFPage() {
     const [file, setFile] = useState(null);
     const [converting, setConverting] = useState(false);
@@ -37,7 +39,7 @@ export default function WordToPDFPage() {
         formData.append('file', file);
 
         try {
-            const response = await fetch('http://localhost:8080/api/tools/word/to-pdf', {
+            const response = await fetch(`${API_BASE_URL}/api/tools/word/to-pdf`, {
                 method: 'POST',
                 body: formData,
             });

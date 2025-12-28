@@ -5,6 +5,8 @@ import { useToast } from '@/contexts/ToastContext';
 import { useRouter } from 'next/navigation';
 import { MessageCircle, Check, X, AlertTriangle, Trash2, RefreshCw } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import CustomDialog from '@/components/CustomDialog';
+import { useDialog } from '@/lib/useDialog';
 
 export default function CommentsPage() {
     const [comments, setComments] = useState([]);
@@ -14,6 +16,7 @@ export default function CommentsPage() {
     const { user, token } = useAuth();
     const toast = useToast();
     const router = useRouter();
+    const { showConfirm, dialogState, handleClose, handleConfirm } = useDialog();
 
     useEffect(() => {
         if (!user || user.role !== 'ADMIN') {
@@ -77,7 +80,11 @@ export default function CommentsPage() {
     };
 
     const handleDelete = async (commentId) => {
-        if (!confirm('Are you sure you want to delete this comment?')) return;
+        const confirmed = await showConfirm('Are you sure you want to delete this comment?', {
+            title: 'Delete Comment',
+            variant: 'danger'
+        });
+        if (!confirmed) return;
 
         try {
             const res = await fetch(`http://localhost:8080/api/admin/comments/${commentId}`, {
@@ -250,6 +257,19 @@ export default function CommentsPage() {
                     </div>
                 )}
             </div>
+
+            {/* Custom Dialog */}
+            <CustomDialog
+                isOpen={dialogState.isOpen}
+                onClose={handleClose}
+                onConfirm={handleConfirm}
+                title={dialogState.title}
+                message={dialogState.message}
+                type={dialogState.type}
+                confirmText={dialogState.confirmText}
+                cancelText={dialogState.cancelText}
+                variant={dialogState.variant}
+            />
         </div>
     );
 }

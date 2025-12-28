@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, Code2, Terminal, Cpu, Globe, Zap, Layers, BookOpen, Users, Code, Sparkles } from "lucide-react";
+import { ArrowRight, Code2, Terminal, Cpu, Globe, Zap, Layers, BookOpen, Users, Code, Sparkles, Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -67,10 +67,25 @@ const Home = () => {
       const response = await fetch('http://localhost:8080/api/posts?status=PUBLISHED');
       if (response.ok) {
         const posts = await response.json();
-        // Get all published posts for carousel
-        setLatestPosts(posts);
-        // Get latest 6 posts for trending section
-        setTrendingPosts(posts.slice(0, 6));
+
+        // Sort posts by publishedAt date (most recent first)
+        const sortedByDate = [...posts].sort((a, b) => {
+          const dateA = new Date(a.publishedAt || a.createdAt);
+          const dateB = new Date(b.publishedAt || b.createdAt);
+          return dateB - dateA; // Descending order (newest first)
+        });
+
+        // Latest posts for "Latest Articles" section (sorted by date)
+        setLatestPosts(sortedByDate);
+
+        // Filter for "Trending" category
+        const trendingOnly = sortedByDate.filter(post =>
+          post.category && post.category.name && post.category.name.toLowerCase() === 'trending'
+        );
+
+        // If we have trending posts, use them. Otherwise fallback to latest (optional, but good for empty state)
+        // For now, based on your request, we will strictly use the filter.
+        setTrendingPosts(trendingOnly.slice(0, 6));
       }
     } catch (error) {
       console.error('Error fetching posts:', error);
@@ -158,48 +173,155 @@ const Home = () => {
               </div>
             </motion.div>
 
-            {/* Right: Visual (Code Interface Mockup) */}
+
+            {/* Right: Search/Demo Section - Modern & Clean */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
               className="relative"
             >
-              <div className="relative z-10 bg-card border border-border rounded-xl p-2 shadow-2xl shadow-primary/10">
-                <div className="flex items-center gap-2 px-4 py-3 border-b border-border">
-                  <div className="flex gap-1.5">
-                    <div className="w-3 h-3 rounded-full bg-red-500/50" />
-                    <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
-                    <div className="w-3 h-3 rounded-full bg-green-500/50" />
-                  </div>
-                  <div className="text-xs font-mono text-muted-foreground ml-4">main.tsx — nebula-v2</div>
+              {/* Search Bar Card */}
+              <div className="relative bg-card/50 backdrop-blur-sm border border-border rounded-2xl p-8 shadow-xl">
+                <div className="mb-6">
+                  <h3 className="text-2xl font-bold mb-2">What do you want to learn today?</h3>
+                  <p className="text-muted-foreground text-sm">Search from 40+ tools, tutorials, and articles</p>
                 </div>
-                <div className="p-6 font-mono text-sm leading-relaxed text-muted-foreground">
-                  <div className="mb-2"><span className="text-purple-400">const</span> <span className="text-blue-400">Engineer</span> = <span className="text-yellow-400">()</span> <span className="text-purple-400">=&gt;</span> {"{"}</div>
-                  <div className="pl-6 mb-2"><span className="text-purple-400">const</span> stack = [<span className="text-green-400">"React"</span>, <span className="text-green-400">"Next.js"</span>, <span className="text-green-400">"AI"</span>];</div>
-                  <div className="pl-6 mb-2"><span className="text-purple-400">return</span> (</div>
-                  <div className="pl-12 mb-2">&lt;<span className="text-red-400">Future</span></div>
-                  <div className="pl-16 mb-2"><span className="text-orange-400">skills</span>={"{"}stack{"}"}</div>
-                  <div className="pl-16 mb-2"><span className="text-orange-400">mode</span>=<span className="text-green-400">"limitless"</span></div>
-                  <div className="pl-12 mb-2">/&gt;</div>
-                  <div className="pl-6">);</div>
-                  <div>{"}"};</div>
+
+                {/* Search Input */}
+                <form onSubmit={(e) => {
+                  e.preventDefault();
+                  const input = e.target.querySelector('input');
+                  const query = input.value.trim().toLowerCase();
+
+                  if (!query) return;
+
+                  // Smart routing based on keywords
+                  if (query.includes('pdf') || query.includes('excel') || query.includes('image') || query.includes('word') || query.includes('ppt')) {
+                    window.location.href = '/tools';
+                  } else if (query.includes('react') || query.includes('javascript') || query.includes('typescript') || query.includes('css')) {
+                    const techMap = {
+                      'react': '/react',
+                      'javascript': '/javascript',
+                      'typescript': '/typescript',
+                      'css': '/css'
+                    };
+                    const tech = Object.keys(techMap).find(t => query.includes(t));
+                    window.location.href = tech ? techMap[tech] : '/react';
+                  } else if (query.includes('job')) {
+                    window.location.href = '/jobs';
+                  } else {
+                    // Default to blogs with search
+                    window.location.href = `/blogs?search=${encodeURIComponent(query)}`;
+                  }
+                }} className="relative group">
+                  <input
+                    type="text"
+                    placeholder="Try 'PDF merge', 'React hooks', 'JavaScript'..."
+                    className="w-full px-6 py-4 pr-14 rounded-xl bg-background border-2 border-border focus:border-primary outline-none transition-all text-lg placeholder:text-muted-foreground/50"
+                  />
+                  <button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-lg bg-primary hover:bg-primary/90 flex items-center justify-center transition-all group-hover:scale-105">
+                    <ArrowRight className="w-5 h-5 text-white" />
+                  </button>
+                </form>
+
+                {/* Quick Links */}
+                <div className="mt-6 flex flex-wrap gap-2">
+                  <span className="text-xs text-muted-foreground">Popular:</span>
+                  <Link href="/tools/pdf" className="text-xs px-3 py-1 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
+                    PDF Tools
+                  </Link>
+                  <Link href="/react" className="text-xs px-3 py-1 rounded-full bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 transition-colors">
+                    React
+                  </Link>
+                  <Link href="/blogs" className="text-xs px-3 py-1 rounded-full bg-purple-500/10 text-purple-500 hover:bg-purple-500/20 transition-colors">
+                    Latest Posts
+                  </Link>
                 </div>
-                {/* Floating Elements */}
-                <motion.div
-                  animate={{ y: [0, -20, 0] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute -top-10 -right-10 bg-card border border-border p-4 rounded-lg shadow-xl backdrop-blur-xl z-20"
-                >
-                  <Zap className="w-8 h-8 text-yellow-400 select-none" />
-                </motion.div>
               </div>
 
-              {/* Decorative Grid Behind */}
-              <div className="absolute inset-0 z-0 bg-transparent bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] mask-image-[radial-gradient(ellipse_at_center,black,transparent)]" />
+              {/* Stats Row Below */}
+              <div className="mt-6 grid grid-cols-3 gap-4">
+                <div className="text-center p-4 rounded-xl bg-card/30 border border-border/50">
+                  <div className="text-2xl font-black text-green-500 mb-1">40+</div>
+                  <div className="text-xs text-muted-foreground">Free Tools</div>
+                </div>
+                <div className="text-center p-4 rounded-xl bg-card/30 border border-border/50">
+                  <div className="text-2xl font-black text-blue-500 mb-1">4</div>
+                  <div className="text-xs text-muted-foreground">Tech Stacks</div>
+                </div>
+                <div className="text-center p-4 rounded-xl bg-card/30 border border-border/50">
+                  <div className="text-2xl font-black text-purple-500 mb-1">∞</div>
+                  <div className="text-xs text-muted-foreground">Opportunities</div>
+                </div>
+              </div>
             </motion.div>
 
+
+
           </div>
+        </div>
+      </section>
+
+      {/* TRENDING NOW - First Content Section */}
+      <section className="py-24 border-t border-border">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold mb-4 font-mono uppercase tracking-tighter">
+              Trending <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Now</span>
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
+              Hot topics and tutorials making waves in the developer community
+            </p>
+          </div>
+
+          {loading ? (
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+            </div>
+          ) : trendingPosts.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">No trending posts yet</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {trendingPosts.map((post) => (
+                <Link
+                  href={`/blogs/${post.slug}`}
+                  key={post.id}
+                  className="group relative overflow-hidden rounded-xl border border-border bg-card hover:border-primary/50 hover:shadow-xl transition-all duration-300">
+                  <div className="relative h-48 overflow-hidden">
+                    {post.mainImage ? (
+                      <Image
+                        src={post.mainImage}
+                        alt={post.title}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
+                        <BookOpen className="w-12 h-12 text-muted-foreground" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-5">
+                    <h3 className="text-lg font-bold mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+                      {post.title}
+                    </h3>
+                    {post.excerpt && (
+                      <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
+                        {post.excerpt}
+                      </p>
+                    )}
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                      <span>{post.readTime || 5} min read</span>
+                      <span className="text-primary font-semibold">Read →</span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -359,15 +481,15 @@ const Home = () => {
         </div>
       </section>
 
-      {/* TRENDING BLOGS SECTION */}
-      <section className="py-24 bg-muted/30 border-t border-border">
+      {/* LATEST ARTICLES */}
+      <section className="py-24 border-t border-border">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold mb-4 font-mono uppercase tracking-tighter">
-              Trending <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Now</span>
+            <h2 className="text-3xl md:text-5xl font-bold mb-4">
+              Latest <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Articles</span>
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-              Latest insights and tutorials making waves in the developer community
+              Fresh content published recently
             </p>
           </div>
 
@@ -375,18 +497,17 @@ const Home = () => {
             <div className="text-center py-12">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
             </div>
-          ) : trendingPosts.length === 0 ? (
+          ) : latestPosts.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-muted-foreground">No trending posts yet</p>
+              <p className="text-muted-foreground">No posts yet</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {trendingPosts.map((post) => (
+              {latestPosts.slice(0, 6).map((post) => (
                 <Link
                   href={`/blogs/${post.slug}`}
                   key={post.id}
-                  className="group relative overflow-hidden rounded-xl border border-border bg-card hover:border-primary/50 hover:shadow-xl transition-all duration-300"
-                >
+                  className="group relative overflow-hidden rounded-xl border border-border bg-card hover:border-primary/50 hover:shadow-xl transition-all duration-300">
                   <div className="relative h-48 overflow-hidden">
                     {post.mainImage ? (
                       <Image
@@ -497,48 +618,51 @@ const Home = () => {
         </div>
       </section>
 
-      {/* LATEST ARTICLES - Priority Section for SEO */}
-      <section className="py-24 container mx-auto px-6">
-        <div className="flex flex-col md:flex-row items-end justify-between mb-12 gap-6">
-          <div>
-            <h2 className="text-3xl md:text-5xl font-bold mb-4">From Our Developer Community</h2>
-            <p className="text-muted-foreground">Fresh insights, tutorials, and experiences from developers worldwide.</p>
-          </div>
-          <div className="flex items-center gap-4">
-            <Link href="/blogs" className="text-primary font-semibold hover:underline decoration-2 underline-offset-4 flex items-center gap-1">
-              Browse All Posts <ArrowRight className="w-4 h-4" />
-            </Link>
+      {/* FROM OUR DEVELOPER COMMUNITY */}
+      <section className="py-24 bg-muted/20 border-t border-border">
+        <div className="container mx-auto px-6 md:px-12 lg:px-24">
+          <div className="flex flex-col md:flex-row items-end justify-between mb-12 gap-6">
+            <div>
+              <h2 className="text-3xl md:text-5xl font-bold mb-4">From Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Developer Community</span></h2>
+              <p className="text-muted-foreground">Fresh insights, tutorials, and experiences from developers worldwide</p>
+            </div>
+            <div className="flex items-center gap-4">
+              <Link href="/blogs" className="text-primary font-semibold hover:underline decoration-2 underline-offset-4 flex items-center gap-1">
+                Browse All Posts <ArrowRight className="w-4 h-4" />
+              </Link>
 
-            {/* Carousel Navigation */}
-            {latestPosts.length > postsPerSlide && (
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={prevSlide}
-                  disabled={!canGoPrev}
-                  className={`p-2 rounded-lg border border-border transition-all ${canGoPrev
-                    ? 'hover:bg-secondary/10 hover:border-primary cursor-pointer'
-                    : 'opacity-30 cursor-not-allowed'
-                    }`}
-                  aria-label="Previous posts"
-                >
-                  <ArrowRight className="w-5 h-5 rotate-180" />
-                </button>
-                <span className="text-sm text-muted-foreground font-mono">
-                  {currentSlide + 1} / {totalSlides}
-                </span>
-                <button
-                  onClick={nextSlide}
-                  disabled={!canGoNext}
-                  className={`p-2 rounded-lg border border-border transition-all ${canGoNext
-                    ? 'hover:bg-secondary/10 hover:border-primary cursor-pointer'
-                    : 'opacity-30 cursor-not-allowed'
-                    }`}
-                  aria-label="Next posts"
-                >
-                  <ArrowRight className="w-5 h-5" />
-                </button>
-              </div>
-            )}
+
+              {/* Carousel Navigation */}
+              {latestPosts.length > postsPerSlide && (
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={prevSlide}
+                    disabled={!canGoPrev}
+                    className={`p-2 rounded-lg border border-border transition-all ${canGoPrev
+                      ? 'hover:bg-secondary/10 hover:border-primary cursor-pointer'
+                      : 'opacity-30 cursor-not-allowed'
+                      }`}
+                    aria-label="Previous posts"
+                  >
+                    <ArrowRight className="w-5 h-5 rotate-180" />
+                  </button>
+                  <span className="text-sm text-muted-foreground font-mono">
+                    {currentSlide + 1} / {totalSlides}
+                  </span>
+                  <button
+                    onClick={nextSlide}
+                    disabled={!canGoNext}
+                    className={`p-2 rounded-lg border border-border transition-all ${canGoNext
+                      ? 'hover:bg-secondary/10 hover:border-primary cursor-pointer'
+                      : 'opacity-30 cursor-not-allowed'
+                      }`}
+                    aria-label="Next posts"
+                  >
+                    <ArrowRight className="w-5 h-5" />
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -554,9 +678,8 @@ const Home = () => {
         ) : (
           <div className="relative overflow-hidden">
             <div
-              className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 transition-all duration-500 ease-in-out"
+              className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
               style={{
-                transform: `translateX(-${currentSlide * 100}%)`,
                 display: 'grid'
               }}
             >
@@ -584,7 +707,7 @@ const Home = () => {
                         </div>
                       )}
                     </div>
-                    <div className="p-6 flex flex-col flex-grow">
+                    <div className="p-8 flex flex-col flex-grow">
                       {post.tags && post.tags.length > 0 && (
                         <div className="flex gap-2 mb-4 flex-wrap">
                           {post.tags.slice(0, 3).map(tag => (

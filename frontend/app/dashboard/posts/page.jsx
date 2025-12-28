@@ -5,6 +5,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Plus, Edit, Trash2, Eye, EyeOff, Heart, MessageCircle, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
+import CustomDialog from '@/components/CustomDialog';
+import { useDialog } from '@/lib/useDialog';
 
 export default function PostsListPage() {
     const router = useRouter();
@@ -13,6 +15,7 @@ export default function PostsListPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [filter, setFilter] = useState('ALL');
+    const { showConfirm, showAlert, dialogState, handleClose, handleConfirm } = useDialog();
 
     useEffect(() => {
         if (!isAuthenticated || !isEditor) {
@@ -47,9 +50,11 @@ export default function PostsListPage() {
     };
 
     const deletePost = async (id) => {
-        if (!confirm('Are you sure you want to delete this post?')) {
-            return;
-        }
+        const confirmed = await showConfirm('Are you sure you want to delete this post?', {
+            title: 'Delete Post',
+            variant: 'danger'
+        });
+        if (!confirmed) return;
 
         try {
             const response = await fetch(`http://localhost:8080/api/posts/${id}`, {
@@ -284,6 +289,19 @@ export default function PostsListPage() {
                     </div>
                 </div>
             </div>
+
+            {/* Custom Dialog */}
+            <CustomDialog
+                isOpen={dialogState.isOpen}
+                onClose={handleClose}
+                onConfirm={handleConfirm}
+                title={dialogState.title}
+                message={dialogState.message}
+                type={dialogState.type}
+                confirmText={dialogState.confirmText}
+                cancelText={dialogState.cancelText}
+                variant={dialogState.variant}
+            />
         </div>
     );
 }

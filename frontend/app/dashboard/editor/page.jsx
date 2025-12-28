@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
-import Sidebar from "@/components/Sidebar";
+import Sidebar from "@/components/sidebar";
 import ImprovementDraftsSection from "@/components/ImprovementDraftsSection";
 import ContentManagementSection from "@/components/ContentManagementSection";
 import { FileText, Users, FolderOpen, Plus, Edit, Eye, Clock } from 'lucide-react';

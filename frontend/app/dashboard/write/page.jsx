@@ -7,6 +7,8 @@ import {
     FileText, Clock, CheckCircle, AlertCircle,
     Edit, Eye, Send, Loader2, PenTool, TrendingUp, X, FileX, Trash2
 } from "lucide-react";
+import CustomDialog from "@/components/CustomDialog";
+import { useDialog } from "@/lib/useDialog";
 
 export default function WriterDashboardPage() {
     const { user, isAuthenticated, loading: authLoading } = useAuth();
@@ -20,6 +22,7 @@ export default function WriterDashboardPage() {
     const [selectedPost, setSelectedPost] = useState(null);
     const [deletionReason, setDeletionReason] = useState('');
     const [deletionRequests, setDeletionRequests] = useState([]);
+    const { showConfirm, showAlert, dialogState, handleClose, handleConfirm } = useDialog();
 
     console.log('=== WRITER DASHBOARD LOADED ===');
     console.log('Deletion requests state:', deletionRequests);
@@ -130,9 +133,10 @@ export default function WriterDashboardPage() {
     };
 
     const handleSubmitForApproval = async (postId) => {
-        if (!confirm('Are you sure you want to submit this post for approval?')) {
-            return;
-        }
+        const confirmed = await showConfirm('Are you sure you want to submit this post for approval?', {
+            title: 'Submit for Approval'
+        });
+        if (!confirmed) return;
 
         try {
             const token = localStorage.getItem('token');
@@ -145,21 +149,29 @@ export default function WriterDashboardPage() {
             });
 
             if (response.ok) {
-                alert('Post submitted for approval successfully!');
+                showAlert('Post submitted for approval successfully!', {
+                    title: 'Success'
+                });
                 fetchSubmissions(); // Refresh list
             } else {
                 const error = await response.json();
-                alert(error.error || 'Failed to submit post');
+                showAlert(error.error || 'Failed to submit post', {
+                    title: 'Error'
+                });
             }
         } catch (err) {
-            alert('An error occurred while submitting the post');
+            showAlert('An error occurred while submitting the post', {
+                title: 'Error'
+            });
         }
     };
 
     const handleUnsubmit = async (postId) => {
-        if (!confirm('Are you sure you want to retract this submission? It will be moved back to drafts.')) {
-            return;
-        }
+        const confirmed = await showConfirm('Are you sure you want to retract this submission? It will be moved back to drafts.', {
+            title: 'Retract Submission'
+        });
+        if (!confirmed) return;
+
         try {
             const token = localStorage.getItem('token');
             const response = await fetch(`http://localhost:8080/api/posts/${postId}/unsubmit`, {
@@ -170,14 +182,20 @@ export default function WriterDashboardPage() {
                 }
             });
             if (response.ok) {
-                alert('Post retracted successfully!');
+                showAlert('Post retracted successfully!', {
+                    title: 'Success'
+                });
                 fetchSubmissions();
             } else {
                 const error = await response.json();
-                alert(error.error || 'Failed to retract post');
+                showAlert(error.error || 'Failed to retract post', {
+                    title: 'Error'
+                });
             }
         } catch (err) {
-            alert('An error occurred while retracting the post');
+            showAlert('An error occurred while retracting the post', {
+                title: 'Error'
+            });
         }
     };
 
@@ -206,9 +224,11 @@ export default function WriterDashboardPage() {
             ? `Are you sure you want to delete this PUBLISHED post? This action cannot be undone.`
             : `Are you sure you want to delete this post?`;
 
-        if (!confirm(confirmMessage)) {
-            return;
-        }
+        const confirmed = await showConfirm(confirmMessage, {
+            title: 'Delete Post',
+            variant: 'danger'
+        });
+        if (!confirmed) return;
 
         setDeletingId(post.id);
         try {
@@ -221,14 +241,20 @@ export default function WriterDashboardPage() {
             });
 
             if (response.ok) {
-                alert('Post deleted successfully!');
+                showAlert('Post deleted successfully!', {
+                    title: 'Success'
+                });
                 await Promise.all([fetchSubmissions(), fetchStats()]);
             } else {
                 const error = await response.json();
-                alert(error.error || 'Failed to delete post');
+                showAlert(error.error || 'Failed to delete post', {
+                    title: 'Error'
+                });
             }
         } catch (err) {
-            alert('An error occurred while deleting the post');
+            showAlert('An error occurred while deleting the post', {
+                title: 'Error'
+            });
         } finally {
             setDeletingId(null);
         }
@@ -236,7 +262,9 @@ export default function WriterDashboardPage() {
 
     const handleSubmitDeletionRequest = async () => {
         if (!deletionReason.trim()) {
-            alert('Please provide a reason for deletion');
+            showAlert('Please provide a reason for deletion', {
+                title: 'Validation Error'
+            });
             return;
         }
 
@@ -252,16 +280,22 @@ export default function WriterDashboardPage() {
             });
 
             if (response.ok) {
-                alert('Deletion request submitted successfully!');
+                showAlert('Deletion request submitted successfully!', {
+                    title: 'Success'
+                });
                 setDeletionModalOpen(false);
                 setDeletionReason('');
                 setSelectedPost(null);
             } else {
                 const error = await response.json();
-                alert(error.error || 'Failed to submit deletion request');
+                showAlert(error.error || 'Failed to submit deletion request', {
+                    title: 'Error'
+                });
             }
         } catch (err) {
-            alert('An error occurred while submitting deletion request');
+            showAlert('An error occurred while submitting deletion request', {
+                title: 'Error'
+            });
         }
     };
 
@@ -506,6 +540,19 @@ export default function WriterDashboardPage() {
                     </div>
                 </div>
             )}
+
+            {/* Custom Dialog */}
+            <CustomDialog
+                isOpen={dialogState.isOpen}
+                onClose={handleClose}
+                onConfirm={handleConfirm}
+                title={dialogState.title}
+                message={dialogState.message}
+                type={dialogState.type}
+                confirmText={dialogState.confirmText}
+                cancelText={dialogState.cancelText}
+                variant={dialogState.variant}
+            />
         </div>
     );
 }

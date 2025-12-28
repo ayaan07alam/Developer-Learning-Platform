@@ -7,6 +7,8 @@ import RichTextEditor from '@/components/RichTextEditor';
 import FAQBuilder from '@/components/FAQBuilder';
 import { Button } from '@/components/ui/button';
 import { Save, Eye, Trash2 } from 'lucide-react';
+import CustomDialog from '@/components/CustomDialog';
+import { useDialog } from '@/lib/useDialog';
 
 export default function NewPostPage() {
     const router = useRouter();
@@ -20,6 +22,7 @@ export default function NewPostPage() {
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [hasChanges, setHasChanges] = useState(true); // Track if form has unsaved changes
     const [lastSubmittedData, setLastSubmittedData] = useState(null); // Track last submitted state
+    const { showAlert, dialogState, handleClose, handleConfirm } = useDialog();
 
     // Track if a post has been created (to switch from POST to PUT)
     const [createdPostId, setCreatedPostId] = useState(null);
@@ -162,15 +165,21 @@ export default function NewPostPage() {
 
             // Show success and redirect based on status
             if (status === 'DRAFT') {
-                alert(isUpdate ? 'Draft updated!' : 'Post saved as draft!');
+                showAlert(isUpdate ? 'Draft updated!' : 'Post saved as draft!', {
+                    title: 'Success'
+                });
                 setHasChanges(false); // CRITICAL: Reset to prevent re-saves
                 // Stay on page for drafts
             } else if (status === 'UNDER_REVIEW') {
-                alert('Post submitted for review!');
+                showAlert('Post submitted for review!', {
+                    title: 'Success'
+                });
                 setHasChanges(false);
                 router.push('/dashboard/write');
             } else if (status === 'PUBLISHED') {
-                alert('Post published successfully!');
+                showAlert('Post published successfully!', {
+                    title: 'Success'
+                });
                 setHasChanges(false);
                 router.push('/dashboard/posts');
             }
@@ -541,6 +550,19 @@ export default function NewPostPage() {
                     </div>
                 </div>
             </div>
+
+            {/* Custom Dialog */}
+            <CustomDialog
+                isOpen={dialogState.isOpen}
+                onClose={handleClose}
+                onConfirm={handleConfirm}
+                title={dialogState.title}
+                message={dialogState.message}
+                type={dialogState.type}
+                confirmText={dialogState.confirmText}
+                cancelText={dialogState.cancelText}
+                variant={dialogState.variant}
+            />
         </div >
     );
 }

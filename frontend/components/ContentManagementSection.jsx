@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import { Search, Filter, FileText, Eye, Edit2, Trash2, Clock } from 'lucide-react';
 import Link from 'next/link';
 import PostStatusBadge from './PostStatusBadge';
+import CustomDialog from './CustomDialog';
+import { useDialog } from '@/lib/useDialog';
 
 export default function ContentManagementSection({ userRole }) {
     const [posts, setPosts] = useState([]);
@@ -19,6 +21,7 @@ export default function ContentManagementSection({ userRole }) {
     });
     const [stats, setStats] = useState(null);
     const [totalPages, setTotalPages] = useState(0);
+    const { showConfirm, showAlert, dialogState, handleClose, handleConfirm } = useDialog();
 
     const isEditorOrAdmin = userRole === 'ROLE_EDITOR' || userRole === 'ROLE_ADMIN';
 
@@ -94,7 +97,11 @@ export default function ContentManagementSection({ userRole }) {
             ? 'Are you sure you want to delete this PUBLISHED post? This action cannot be undone.'
             : 'Are you sure you want to delete this post?';
 
-        if (!confirm(confirmMessage)) return;
+        const confirmed = await showConfirm(confirmMessage, {
+            title: 'Delete Post',
+            variant: 'danger'
+        });
+        if (!confirmed) return;
 
         setDeletingId(post.id);
         try {
@@ -106,15 +113,21 @@ export default function ContentManagementSection({ userRole }) {
             });
 
             if (response.ok) {
-                alert('Post deleted successfully!');
+                showAlert('Post deleted successfully!', {
+                    title: 'Success'
+                });
                 await Promise.all([fetchContent(), fetchStats()]);
             } else {
                 const error = await response.json();
-                alert(error.error || 'Failed to delete post');
+                showAlert(error.error || 'Failed to delete post', {
+                    title: 'Error'
+                });
             }
         } catch (error) {
             console.error('Error deleting post:', error);
-            alert('An error occurred while deleting the post. Please try again.');
+            showAlert('An error occurred while deleting the post. Please try again.', {
+                title: 'Error'
+            });
         } finally {
             setDeletingId(null);
         }
@@ -122,7 +135,9 @@ export default function ContentManagementSection({ userRole }) {
 
     const handleSubmitDeletionRequest = async () => {
         if (!deletionReason.trim()) {
-            alert('Please provide a reason for deletion');
+            showAlert('Please provide a reason for deletion', {
+                title: 'Validation Error'
+            });
             return;
         }
 
@@ -137,17 +152,23 @@ export default function ContentManagementSection({ userRole }) {
             });
 
             if (response.ok) {
-                alert('Deletion request submitted successfully!');
+                showAlert('Deletion request submitted successfully!', {
+                    title: 'Success'
+                });
                 setDeletionModalOpen(false);
                 setDeletionReason('');
                 setSelectedPost(null);
             } else {
                 const error = await response.json();
-                alert(error.error || 'Failed to submit deletion request');
+                showAlert(error.error || 'Failed to submit deletion request', {
+                    title: 'Error'
+                });
             }
         } catch (error) {
             console.error('Error submitting deletion request:', error);
-            alert('An error occurred. Please try again.');
+            showAlert('An error occurred. Please try again.', {
+                title: 'Error'
+            });
         }
     };
 
@@ -340,6 +361,19 @@ export default function ContentManagementSection({ userRole }) {
                     </div>
                 </div>
             )}
+
+            {/* Custom Dialog */}
+            <CustomDialog
+                isOpen={dialogState.isOpen}
+                onClose={handleClose}
+                onConfirm={handleConfirm}
+                title={dialogState.title}
+                message={dialogState.message}
+                type={dialogState.type}
+                confirmText={dialogState.confirmText}
+                cancelText={dialogState.cancelText}
+                variant={dialogState.variant}
+            />
         </div>
     );
 }

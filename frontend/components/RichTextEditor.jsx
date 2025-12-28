@@ -24,6 +24,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
 import CodeBlockComponent from './CodeBlockComponent';
+import CustomDialog from './CustomDialog';
+import { useDialog } from '@/lib/useDialog';
 
 // Initialize lowlight with common languages
 const lowlight = createLowlight(common);
@@ -31,6 +33,7 @@ const lowlight = createLowlight(common);
 export default function RichTextEditor({ content, onChange, placeholder = "Start writing..." }) {
     const [showTOCDialog, setShowTOCDialog] = useState(false);
     const [selectedHeadings, setSelectedHeadings] = useState([2, 3]); // Default H2 and H3
+    const { showAlert, dialogState, handleClose, handleConfirm } = useDialog();
 
     const editor = useEditor({
         extensions: [
@@ -169,7 +172,9 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
         extractHeadings(json);
 
         if (headings.length === 0) {
-            alert('No headings found! Add some headings (H2, H3, etc.) to your content first.');
+            showAlert('No headings found! Add some headings (H2, H3, etc.) to your content first.', {
+                title: 'No Headings'
+            });
             return;
         }
 
@@ -599,6 +604,19 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
             <div className="flex-1 overflow-y-auto">
                 <EditorContent editor={editor} />
             </div>
+
+            {/* Custom Dialog */}
+            <CustomDialog
+                isOpen={dialogState.isOpen}
+                onClose={handleClose}
+                onConfirm={handleConfirm}
+                title={dialogState.title}
+                message={dialogState.message}
+                type={dialogState.type}
+                confirmText={dialogState.confirmText}
+                cancelText={dialogState.cancelText}
+                variant={dialogState.variant}
+            />
         </div>
     );
 }

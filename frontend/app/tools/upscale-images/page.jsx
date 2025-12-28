@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import { Image as ImageIcon, Upload, Download, Loader2, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
+import { API_BASE_URL } from '@/lib/api-client';
+
 export default function UpscaleImagesPage() {
     const [file, setFile] = useState(null);
     const [preview, setPreview] = useState('');
@@ -47,7 +49,7 @@ export default function UpscaleImagesPage() {
             formData.append('maintain', 'false');
 
             try {
-                const response = await fetch('http://localhost:8080/api/tools/images/resize', {
+                const response = await fetch(`${API_BASE_URL}/api/tools/images/resize`, {
                     method: 'POST',
                     body: formData,
                 });
@@ -118,8 +120,8 @@ export default function UpscaleImagesPage() {
                                         key={factor}
                                         onClick={() => setScale(factor)}
                                         className={`flex-1 p-3 rounded-lg font-medium transition-all ${scale === factor
-                                                ? 'bg-primary text-primary-foreground'
-                                                : 'bg-background border border-border hover:border-primary'
+                                            ? 'bg-primary text-primary-foreground'
+                                            : 'bg-background border border-border hover:border-primary'
                                             }`}
                                     >
                                         {factor}x

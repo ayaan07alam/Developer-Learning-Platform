@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import { Image as ImageIcon, Upload, Download, Loader2, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
+import { API_BASE_URL } from '@/lib/api-client';
+
 export default function ImagesToJPGPage() {
     const [file, setFile] = useState(null);
     const [preview, setPreview] = useState('');
@@ -29,7 +31,7 @@ export default function ImagesToJPGPage() {
         formData.append('format', 'jpg');
 
         try {
-            const response = await fetch('http://localhost:8080/api/tools/images/convert', {
+            const response = await fetch(`${API_BASE_URL}/api/tools/images/convert`, {
                 method: 'POST',
                 body: formData,
             });

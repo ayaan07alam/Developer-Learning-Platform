@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import { Upload, Download, Image as ImageIcon, Check, X, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
+import { API_BASE_URL } from '@/lib/api-client';
+
 export default function ImageConverterPage() {
     const [file, setFile] = useState(null);
     const [preview, setPreview] = useState('');
@@ -51,7 +53,7 @@ export default function ImageConverterPage() {
         formData.append('format', format);
 
         try {
-            const response = await fetch('http://localhost:8080/api/tools/images/convert', {
+            const response = await fetch(`${API_BASE_URL}/api/tools/images/convert`, {
                 method: 'POST',
                 body: formData,
             });
@@ -118,8 +120,8 @@ export default function ImageConverterPage() {
                             key={fmt.id}
                             onClick={() => setFormat(fmt.id)}
                             className={`px-6 py-2.5 rounded-lg font-medium transition-all ${format === fmt.id
-                                    ? `bg-gradient-to-r ${fmt.color} text-white shadow-lg`
-                                    : 'bg-card border border-border hover:border-primary'
+                                ? `bg-gradient-to-r ${fmt.color} text-white shadow-lg`
+                                : 'bg-card border border-border hover:border-primary'
                                 }`}
                         >
                             {fmt.name}

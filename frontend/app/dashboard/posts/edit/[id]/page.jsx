@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Save, Eye, Trash2, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import InternalAuditChat from '@/components/InternalAuditChat';
+import CustomDialog from '@/components/CustomDialog';
+import { useDialog } from '@/lib/useDialog';
 
 export default function EditPostPage() {
     const router = useRouter();
@@ -19,6 +21,7 @@ export default function EditPostPage() {
     const [successMessage, setSuccessMessage] = useState('');
     const [categories, setCategories] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
+    const { showConfirm, dialogState, handleClose, handleConfirm } = useDialog();
 
     // Revision tracking
     const [originalPost, setOriginalPost] = useState(null);
@@ -256,7 +259,11 @@ export default function EditPostPage() {
     const handleDiscardDraft = async () => {
         if (!revisionId) return;
 
-        if (!confirm('Discard all changes and keep the published version?')) return;
+        const confirmed = await showConfirm('Discard all changes and keep the published version?', {
+            title: 'Discard Draft',
+            variant: 'danger'
+        });
+        if (!confirmed) return;
 
         try {
             const response = await fetch(`http://localhost:8080/api/revisions/${revisionId}`, {
@@ -660,6 +667,19 @@ export default function EditPostPage() {
                     </div>
                 </div>
             </div>
+
+            {/* Custom Dialog */}
+            <CustomDialog
+                isOpen={dialogState.isOpen}
+                onClose={handleClose}
+                onConfirm={handleConfirm}
+                title={dialogState.title}
+                message={dialogState.message}
+                type={dialogState.type}
+                confirmText={dialogState.confirmText}
+                cancelText={dialogState.cancelText}
+                variant={dialogState.variant}
+            />
         </div>
     );
 }

@@ -3,12 +3,15 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, Briefcase, Eye, Edit, Trash2, XCircle, Users, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
+import CustomDialog from '@/components/CustomDialog';
+import { useDialog } from '@/lib/useDialog';
 
 export default function EmployerDashboard() {
     const router = useRouter();
     const [jobs, setJobs] = useState([]);
     const [loading, setLoading] = useState(true);
     const [stats, setStats] = useState({ total: 0, active: 0, closed: 0 });
+    const { showConfirm, showAlert, dialogState, handleClose, handleConfirm } = useDialog();
 
     useEffect(() => {
         fetchMyJobs();
@@ -39,31 +42,42 @@ export default function EmployerDashboard() {
     };
 
     const handleSwitchRole = async () => {
-        if (confirm('Switch to Job Seeker mode? You can switch back anytime.')) {
-            try {
-                const response = await fetch('http://localhost:8080/api/users/change-job-role', {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                    },
-                    body: JSON.stringify({ jobRole: 'JOB_SEEKER' }),
-                });
+        const confirmed = await showConfirm('Switch to Job Seeker mode? You can switch back anytime.', {
+            title: 'Switch Role'
+        });
+        if (!confirmed) return;
 
-                if (response.ok) {
-                    router.push('/jobs/seeker');
-                } else {
-                    alert('Failed to switch role');
-                }
-            } catch (error) {
-                console.error('Error switching role:', error);
-                alert('Error switching role');
+        try {
+            const response = await fetch('http://localhost:8080/api/users/change-job-role', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                },
+                body: JSON.stringify({ jobRole: 'JOB_SEEKER' }),
+            });
+
+            if (response.ok) {
+                router.push('/jobs/seeker');
+            } else {
+                showAlert('Failed to switch role', {
+                    title: 'Error'
+                });
             }
+        } catch (error) {
+            console.error('Error switching role:', error);
+            showAlert('Error switching role', {
+                title: 'Error'
+            });
         }
     };
 
     const handleDelete = async (jobId) => {
-        if (!confirm('Are you sure you want to delete this job?')) return;
+        const confirmed = await showConfirm('Are you sure you want to delete this job?', {
+            title: 'Delete Job',
+            variant: 'danger'
+        });
+        if (!confirmed) return;
 
         try {
             const response = await fetch(`http://localhost:8080/api/jobs/${jobId}`, {
@@ -81,7 +95,7 @@ export default function EmployerDashboard() {
         }
     };
 
-    const handleClose = async (jobId) => {
+    const handleCloseJob = async (jobId) => {
         try {
             const response = await fetch(`http://localhost:8080/api/jobs/${jobId}/close`, {
                 method: 'POST',
@@ -220,7 +234,7 @@ export default function EmployerDashboard() {
                                     </Link>
                                     {job.status === 'ACTIVE' && (
                                         <button
-                                            onClick={() => handleClose(job.id)}
+                                            onClick={() => handleCloseJob(job.id)}
                                             className="px-4 py-2 rounded-lg bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 transition-colors text-sm font-medium flex items-center gap-2"
                                         >
                                             <XCircle className="w-4 h-4" />
@@ -240,6 +254,19 @@ export default function EmployerDashboard() {
                     </div>
                 )}
             </div>
+
+            {/* Custom Dialog */}
+            <CustomDialog
+                isOpen={dialogState.isOpen}
+                onClose={handleClose}
+                onConfirm={handleConfirm}
+                title={dialogState.title}
+                message={dialogState.message}
+                type={dialogState.type}
+                confirmText={dialogState.confirmText}
+                cancelText={dialogState.cancelText}
+                variant={dialogState.variant}
+            />
         </div>
     );
 }

@@ -2,10 +2,13 @@
 import { useState, useEffect } from 'react';
 import { Clock, FileEdit, CheckCircle, XCircle, Eye, Trash2 } from 'lucide-react';
 import Link from 'next/link';
+import CustomDialog from './CustomDialog';
+import { useDialog } from '@/lib/useDialog';
 
 export default function ImprovementDraftsSection({ userId }) {
     const [drafts, setDrafts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const { showConfirm, dialogState, handleClose, handleConfirm } = useDialog();
 
     useEffect(() => {
         fetchImprovementDrafts();
@@ -31,7 +34,11 @@ export default function ImprovementDraftsSection({ userId }) {
     };
 
     const handleDiscard = async (id) => {
-        if (!confirm('Are you sure you want to discard this draft?')) return;
+        const confirmed = await showConfirm('Are you sure you want to discard this draft?', {
+            title: 'Discard Draft',
+            variant: 'danger'
+        });
+        if (!confirmed) return;
 
         try {
             const response = await fetch(`http://localhost:8080/api/revisions/${id}`, {
@@ -150,6 +157,19 @@ export default function ImprovementDraftsSection({ userId }) {
                     </div>
                 ))}
             </div>
+
+            {/* Custom Dialog */}
+            <CustomDialog
+                isOpen={dialogState.isOpen}
+                onClose={handleClose}
+                onConfirm={handleConfirm}
+                title={dialogState.title}
+                message={dialogState.message}
+                type={dialogState.type}
+                confirmText={dialogState.confirmText}
+                cancelText={dialogState.cancelText}
+                variant={dialogState.variant}
+            />
         </div>
     );
 }

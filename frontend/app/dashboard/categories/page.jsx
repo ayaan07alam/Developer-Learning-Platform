@@ -4,6 +4,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Plus, Edit, Trash2 } from 'lucide-react';
+import CustomDialog from '@/components/CustomDialog';
+import { useDialog } from '@/lib/useDialog';
 
 export default function CategoriesPage() {
     const { user } = useAuth();
@@ -13,6 +15,7 @@ export default function CategoriesPage() {
     const [showModal, setShowModal] = useState(false);
     const [editingCategory, setEditingCategory] = useState(null);
     const [formData, setFormData] = useState({ name: '', slug: '', description: '' });
+    const { showConfirm, dialogState, handleClose, handleConfirm } = useDialog();
 
     useEffect(() => {
         if (!user) {
@@ -74,7 +77,11 @@ export default function CategoriesPage() {
     };
 
     const handleDelete = async (id) => {
-        if (!confirm('Are you sure you want to delete this category?')) return;
+        const confirmed = await showConfirm('Are you sure you want to delete this category?', {
+            title: 'Delete Category',
+            variant: 'danger'
+        });
+        if (!confirmed) return;
 
         const token = localStorage.getItem('token');
         try {
@@ -220,6 +227,19 @@ export default function CategoriesPage() {
                     </div>
                 </div>
             )}
+
+            {/* Custom Dialog */}
+            <CustomDialog
+                isOpen={dialogState.isOpen}
+                onClose={handleClose}
+                onConfirm={handleConfirm}
+                title={dialogState.title}
+                message={dialogState.message}
+                type={dialogState.type}
+                confirmText={dialogState.confirmText}
+                cancelText={dialogState.cancelText}
+                variant={dialogState.variant}
+            />
         </div>
     );
 }

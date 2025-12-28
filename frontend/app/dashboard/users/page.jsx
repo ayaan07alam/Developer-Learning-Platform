@@ -4,6 +4,8 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { Users as UsersIcon, Shield, Trash2, Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import CustomDialog from '@/components/CustomDialog';
+import { useDialog } from '@/lib/useDialog';
 
 export default function UsersPage() {
     const router = useRouter();
@@ -12,6 +14,7 @@ export default function UsersPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [updatingUserId, setUpdatingUserId] = useState(null);
+    const { showConfirm, dialogState, handleClose, handleConfirm } = useDialog();
 
     useEffect(() => {
         if (!isAuthenticated || user?.role !== 'ADMIN') {
@@ -68,7 +71,11 @@ export default function UsersPage() {
     };
 
     const deleteUser = async (userId) => {
-        if (!confirm('Are you sure you want to delete this user?')) return;
+        const confirmed = await showConfirm('Are you sure you want to delete this user?', {
+            title: 'Delete User',
+            variant: 'danger'
+        });
+        if (!confirmed) return;
 
         try {
             const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
@@ -224,6 +231,19 @@ export default function UsersPage() {
                     </div>
                 </div>
             </div>
+
+            {/* Custom Dialog */}
+            <CustomDialog
+                isOpen={dialogState.isOpen}
+                onClose={handleClose}
+                onConfirm={handleConfirm}
+                title={dialogState.title}
+                message={dialogState.message}
+                type={dialogState.type}
+                confirmText={dialogState.confirmText}
+                cancelText={dialogState.cancelText}
+                variant={dialogState.variant}
+            />
         </div>
     );
 }

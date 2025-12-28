@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import { Presentation, Upload, Download, Loader2, Check, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
+import { API_BASE_URL } from '@/lib/api-client';
+
 export default function PPTCompressorPage() {
     const [file, setFile] = useState(null);
     const [compressing, setCompressing] = useState(false);
@@ -38,7 +40,7 @@ export default function PPTCompressorPage() {
         formData.append('file', file);
 
         try {
-            const response = await fetch('http://localhost:8080/api/tools/ppt/compress', {
+            const response = await fetch(`${API_BASE_URL}/api/tools/ppt/compress`, {
                 method: 'POST',
                 body: formData,
             });

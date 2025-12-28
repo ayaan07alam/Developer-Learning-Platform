@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import { FileText, Upload, Download, Loader2, Check, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
+import { API_BASE_URL } from '@/lib/api-client';
+
 export default function WordCompressorPage() {
     const [file, setFile] = useState(null);
     const [compressing, setCompressing] = useState(false);
@@ -38,7 +40,7 @@ export default function WordCompressorPage() {
         formData.append('file', file);
 
         try {
-            const response = await fetch('http://localhost:8080/api/tools/word/compress', {
+            const response = await fetch(`${API_BASE_URL}/api/tools/word/compress`, {
                 method: 'POST',
                 body: formData,
             });

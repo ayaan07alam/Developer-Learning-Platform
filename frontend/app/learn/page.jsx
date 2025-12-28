@@ -18,6 +18,58 @@ const Learn = () => {
     try {
       const response = await fetch('http://localhost:8080/api/categories');
       const data = await response.json();
+
+      const customCategories = [
+        {
+          id: 'careers-jobs',
+          title: 'Careers & Jobs',
+          subtitle: 'Job market & career advice',
+          description: 'Latest job opportunities, interview tips, and career growth strategies',
+          link: '/categories/careers-and-jobs',
+          accent: "text-emerald-500"
+        },
+        {
+          id: 'interview-experiences',
+          title: 'Interview Experiences',
+          subtitle: 'Real stories from candidates',
+          description: 'Read about real interview experiences and hiring processes at top tech companies',
+          link: '/categories/interview-experiences',
+          accent: "text-violet-500"
+        },
+        {
+          id: 'interview-questions',
+          title: 'Interview Questions',
+          subtitle: 'Prepare for your dream job',
+          description: 'Curated lists of frequently asked technical interview questions and answers',
+          link: '/categories/interview-questions',
+          accent: "text-blue-500"
+        },
+        {
+          id: 'roadmaps',
+          title: 'Roadmaps',
+          subtitle: 'Step-by-step learning paths',
+          description: 'Complete guides and roadmaps to become a frontend, backend, or full-stack developer',
+          link: '/categories/roadmaps',
+          accent: "text-cyan-500"
+        },
+        {
+          id: 'tech-insights',
+          title: 'Tech Insights',
+          subtitle: 'Latest tech revolution & updates',
+          description: 'Deep dives into technology trends, new stacks, and industry analysis',
+          link: '/categories/tech-insights',
+          accent: "text-amber-500"
+        },
+        {
+          id: 'trending',
+          title: 'Trending',
+          subtitle: 'What everyone is reading',
+          description: 'Most popular topics and viral tech discussions happening right now',
+          link: '/categories/trending',
+          accent: "text-rose-500"
+        }
+      ];
+
       const transformedData = data.map((cat, index) => ({
         id: cat.id,
         title: cat.name,
@@ -26,7 +78,9 @@ const Learn = () => {
         link: `/categories/${cat.slug}`,
         accent: getAccentForIndex(index)
       }));
-      setCategories(transformedData);
+
+      // Combine custom categories with API categories
+      setCategories([...customCategories, ...transformedData]);
     } catch (error) {
       console.error('Error fetching categories:', error);
     } finally {

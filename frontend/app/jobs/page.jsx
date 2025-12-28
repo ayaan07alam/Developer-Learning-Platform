@@ -34,7 +34,7 @@ export default function JobsPage() {
 
                 const response = await fetch('http://localhost:8080/api/users/job-role', {
                     headers: {
-                        'Authorization': `Bearer ${token}`,
+                        'Authorization': `Bearer ${token} `,
                     },
                 });
 

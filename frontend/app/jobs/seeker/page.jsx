@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search, MapPin, Briefcase, DollarSign, Clock, Filter, X, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
+import CustomDialog from '@/components/CustomDialog';
+import { useDialog } from '@/lib/useDialog';
 
 export default function JobSeekerDashboard() {
     const router = useRouter();
@@ -12,6 +14,7 @@ export default function JobSeekerDashboard() {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
     const [categories, setCategories] = useState([]);
+    const { showConfirm, showAlert, dialogState, handleClose, handleConfirm } = useDialog();
 
     useEffect(() => {
         fetchCategories();
@@ -72,26 +75,33 @@ export default function JobSeekerDashboard() {
     };
 
     const handleSwitchRole = async () => {
-        if (confirm('Switch to Employer mode? You can switch back anytime.')) {
-            try {
-                const response = await fetch('http://localhost:8080/api/users/change-job-role', {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                    },
-                    body: JSON.stringify({ jobRole: 'EMPLOYER' }),
-                });
+        const confirmed = await showConfirm('Switch to Employer mode? You can switch back anytime.', {
+            title: 'Switch Role'
+        });
+        if (!confirmed) return;
 
-                if (response.ok) {
-                    router.push('/jobs/employer');
-                } else {
-                    alert('Failed to switch role');
-                }
-            } catch (error) {
-                console.error('Error switching role:', error);
-                alert('Error switching role');
+        try {
+            const response = await fetch('http://localhost:8080/api/users/change-job-role', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                },
+                body: JSON.stringify({ jobRole: 'EMPLOYER' }),
+            });
+
+            if (response.ok) {
+                router.push('/jobs/employer');
+            } else {
+                showAlert('Failed to switch role', {
+                    title: 'Error'
+                });
             }
+        } catch (error) {
+            console.error('Error switching role:', error);
+            showAlert('Error switching role', {
+                title: 'Error'
+            });
         }
     };
 
@@ -268,6 +278,19 @@ export default function JobSeekerDashboard() {
                     </div>
                 )}
             </div>
+
+            {/* Custom Dialog */}
+            <CustomDialog
+                isOpen={dialogState.isOpen}
+                onClose={handleClose}
+                onConfirm={handleConfirm}
+                title={dialogState.title}
+                message={dialogState.message}
+                type={dialogState.type}
+                confirmText={dialogState.confirmText}
+                cancelText={dialogState.cancelText}
+                variant={dialogState.variant}
+            />
         </div>
     );
 }
