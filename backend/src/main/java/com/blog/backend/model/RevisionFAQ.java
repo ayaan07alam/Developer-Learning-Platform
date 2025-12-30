@@ -16,6 +16,7 @@ public class RevisionFAQ {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "revision_id", nullable = false)
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private PostRevision revision;
 
     @Column(nullable = false, columnDefinition = "TEXT")

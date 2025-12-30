@@ -14,7 +14,7 @@ public class FAQ {
 
     @ManyToOne
     @JoinColumn(name = "post_id", nullable = false)
-    @JsonIgnoreProperties({ "faqs", "content", "createdBy", "lastModifiedBy", "categories" })
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private Post post;
 
     @Column(nullable = false, length = 500)
