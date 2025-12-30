@@ -144,10 +144,62 @@ const Home = () => {
         HERO SECTION 
         Cyber-Minimalist: Massive Typography, Left Aligned, Right "Portal"
       */}
-      <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
-        {/* Background Mesh (Absolute) */}
-        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-primary/20 rounded-full blur-[150px] -translate-y-1/2 translate-x-1/3 pointer-events-none animate-pulse-glow" />
-        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-secondary/10 rounded-full blur-[120px] translate-y-1/3 -translate-x-1/4 pointer-events-none" />
+      <section className="relative pt-32 pb-32 lg:pt-48 lg:pb-40 overflow-hidden">
+        {/* RIVER FLOW BACKGROUND */}
+        <div className="absolute inset-0 bg-[#0a192f] z-0" />
+
+        {/* Wave 1 - Back */}
+        <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none z-0 opacity-30">
+          <motion.div
+            animate={{ x: ["0%", "-50%"] }}
+            transition={{ repeat: Infinity, ease: "linear", duration: 20 }}
+            className="w-[200%] flex"
+          >
+            <svg className="block w-full h-[500px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+              <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="#1e3a8a"></path>
+            </svg>
+            <svg className="block w-full h-[500px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+              <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="#1e3a8a"></path>
+            </svg>
+          </motion.div>
+        </div>
+
+        {/* Wave 2 - Middle */}
+        <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none z-0 opacity-40">
+          <motion.div
+            animate={{ x: ["-50%", "0%"] }}
+            transition={{ repeat: Infinity, ease: "linear", duration: 15 }}
+            className="w-[200%] flex"
+          >
+            <svg className="block w-full h-[400px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+              <path d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z" fill="#0ea5e9"></path>
+            </svg>
+            <svg className="block w-full h-[400px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+              <path d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z" fill="#0ea5e9"></path>
+            </svg>
+          </motion.div>
+        </div>
+
+        {/* Wave 3 - Front */}
+        <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none z-0 opacity-20">
+          <motion.div
+            animate={{ x: ["0%", "-50%"] }}
+            transition={{ repeat: Infinity, ease: "linear", duration: 12 }}
+            className="w-[200%] flex"
+          >
+            <svg className="block w-full h-[300px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+              <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" fill="#22d3ee"></path>
+              <path d="M0,0V15.81C13,36.92,46,62.34,87,53.19c47.79-10.65,66.8-49.83,115-58.32,44.91-7.91,82.11,8.19,123.63,22.61,46.12,16,92.09,33.58,141.9,43.26,92.83,18.06,183.19,1.75,274.57-41.56,66.17-31.39,127.31-48.27,180.72-35.32C981.65,5.69,1032.53,49.17,1102.39,71.07c57.19,17.92,123,17.29,158.48,5.92V0Z" opacity=".5" fill="#22d3ee"></path>
+              <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="#22d3ee"></path>
+            </svg>
+            <svg className="block w-full h-[300px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+              <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" fill="#22d3ee"></path>
+              <path d="M0,0V15.81C13,36.92,46,62.34,87,53.19c47.79-10.65,66.8-49.83,115-58.32,44.91-7.91,82.11,8.19,123.63,22.61,46.12,16,92.09,33.58,141.9,43.26,92.83,18.06,183.19,1.75,274.57-41.56,66.17-31.39,127.31-48.27,180.72-35.32C981.65,5.69,1032.53,49.17,1102.39,71.07c57.19,17.92,123,17.29,158.48,5.92V0Z" opacity=".5" fill="#22d3ee"></path>
+              <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="#22d3ee"></path>
+            </svg>
+          </motion.div>
+        </div>
+
 
         <div className="container mx-auto px-6 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -158,34 +210,40 @@ const Home = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
             >
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-primary mb-8 backdrop-blur-md">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs font-mono text-cyan-400 mb-8 backdrop-blur-md">
                 <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
                 </span>
                 WHERE KNOWLEDGE FLOWS & CODE RUNS
               </div>
 
               <h1 className="text-6xl lg:text-8xl font-black tracking-tighter leading-[0.9] mb-6">
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-primary animate-shimmer bg-[length:200%_auto]">
-                  RUNTIME
-                </span><br />
-                RIVER
+                <span className="text-foreground">RUNTIME</span>
+                <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 animate-gradient-x bg-[length:200%_auto]">
+                  RIVER
+                </span>
               </h1>
 
               <p className="text-xl text-muted-foreground max-w-lg leading-relaxed mb-10">
-                The open ecosystem for developers. <strong>Read & Write</strong> technical articles, build with <strong>free tools</strong>, and execute code in our <strong>online compiler</strong>. Anyone can contribute.
+                The open ecosystem for developers. Catch the <span className="text-cyan-400 font-medium">stream</span> of technical articles, build with free tools, and let your code <span className="text-blue-400 font-medium">flow</span> in our online compiler.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="h-14 px-8 text-lg rounded-none border border-primary bg-primary/10 hover:bg-primary text-primary hover:text-black transition-all font-mono uppercase tracking-widest" asChild>
-                  <Link href="/blogs">📚 Start Reading</Link>
+                <Button size="lg" className="h-14 px-8 text-lg rounded-full border-0 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white shadow-lg shadow-blue-500/25 transition-all hover:scale-105" asChild>
+                  <Link href="/blogs">
+                    🌊 Start Flowing
+                  </Link>
                 </Button>
-                <Button size="lg" variant="outline" className="h-14 px-8 text-lg rounded-none border-white/20 hover:border-white hover:bg-white/5 transition-all font-mono uppercase tracking-widest text-muted-foreground hover:text-foreground" asChild>
-                  <Link href="/compiler">▶️ Run Code</Link>
+                <Button size="lg" variant="outline" className="h-14 px-8 text-lg rounded-full border-white/10 hover:border-cyan-500/50 hover:bg-cyan-500/5 transition-all text-muted-foreground hover:text-cyan-400" asChild>
+                  <Link href="/compiler">
+                    <Terminal className="w-5 h-5 mr-2" /> Run Code
+                  </Link>
                 </Button>
               </div>
             </motion.div>
+
 
 
             {/* Right: Search/Demo Section - Modern & Clean */}
