@@ -30,6 +30,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
         Page<Post> findByCreatedBy(User user, Pageable pageable);
 
+        List<Post> findByCreatedByOrderByCreatedAtDesc(User user);
+
         Page<Post> findByCreatedByAndStatus(User user, PostStatus status, Pageable pageable);
 
         Page<Post> findByCreatedByAndTitleContainingIgnoreCase(User user, String title, Pageable pageable);
