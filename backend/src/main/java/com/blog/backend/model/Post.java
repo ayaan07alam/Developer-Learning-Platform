@@ -27,8 +27,9 @@ import com.blog.backend.model.PostInternalComment;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = { "categories", "author", "createdBy", "lastModifiedBy", "faqs" })
-@EqualsAndHashCode(exclude = { "categories", "author", "createdBy", "lastModifiedBy", "faqs" })
+@ToString(exclude = { "categories", "author", "createdBy", "lastModifiedBy", "faqs", "internalComments", "revisions" })
+@EqualsAndHashCode(exclude = { "categories", "author", "createdBy", "lastModifiedBy", "faqs", "internalComments",
+        "revisions" })
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
