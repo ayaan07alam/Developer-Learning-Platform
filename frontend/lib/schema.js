@@ -1,7 +1,7 @@
 // Generate JSON-LD Schema markup for SEO
 // Supports Article, Author, Breadcrumb, and Organization schemas
 
-export function generateArticleSchema(post, siteUrl = 'https://www.runtimeriver.dev') {
+export function generateArticleSchema(post, siteUrl = 'https://www.runtimeriver.com') {
     const schema = {
         "@context": "https://schema.org",
         "@type": "Article",
@@ -42,7 +42,7 @@ export function generateArticleSchema(post, siteUrl = 'https://www.runtimeriver.
     return schema;
 }
 
-export function generateBreadcrumbSchema(breadcrumbs, siteUrl = 'https://www.runtimeriver.dev') {
+export function generateBreadcrumbSchema(breadcrumbs, siteUrl = 'https://www.runtimeriver.com') {
     return {
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
@@ -55,7 +55,7 @@ export function generateBreadcrumbSchema(breadcrumbs, siteUrl = 'https://www.run
     };
 }
 
-export function generateAuthorSchema(author, siteUrl = 'https://www.runtimeriver.dev') {
+export function generateAuthorSchema(author, siteUrl = 'https://www.runtimeriver.com') {
     return {
         "@context": "https://schema.org",
         "@type": "Person",
@@ -67,7 +67,7 @@ export function generateAuthorSchema(author, siteUrl = 'https://www.runtimeriver
     };
 }
 
-export function generateOrganizationSchema(siteUrl = 'https://www.runtimeriver.dev') {
+export function generateOrganizationSchema(siteUrl = 'https://www.runtimeriver.com') {
     return {
         "@context": "https://schema.org",
         "@type": "Organization",
@@ -83,7 +83,7 @@ export function generateOrganizationSchema(siteUrl = 'https://www.runtimeriver.d
     };
 }
 
-export function generateWebsiteSchema(siteUrl = 'https://www.runtimeriver.dev') {
+export function generateWebsiteSchema(siteUrl = 'https://www.runtimeriver.com') {
     return {
         "@context": "https://schema.org",
         "@type": "WebSite",
@@ -114,7 +114,7 @@ export function injectSchema(schema) {
 }
 
 // Generate multiple schemas at once
-export function generateBlogPostSchemas(post, siteUrl = 'https://www.runtimeriver.dev') {
+export function generateBlogPostSchemas(post, siteUrl = 'https://www.runtimeriver.com') {
     const schemas = [];
 
     // Article schema

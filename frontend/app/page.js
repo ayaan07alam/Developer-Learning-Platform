@@ -52,7 +52,7 @@ export const metadata = {
     },
   },
   alternates: {
-    canonical: "https://www.runtimeriver.dev",
+    canonical: "https://www.runtimeriver.com",
   },
 };
 

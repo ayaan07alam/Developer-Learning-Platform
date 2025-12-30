@@ -21,7 +21,7 @@ export default function SchemaMarkup({ post, faqs = [] }) {
             "name": "RuntimeRiver",
             "logo": {
                 "@type": "ImageObject",
-                "url": `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.runtimeriver.dev'}/logo.png`
+                "url": `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.runtimeriver.com'}/logo.png`
             }
         },
         "mainEntityOfPage": {

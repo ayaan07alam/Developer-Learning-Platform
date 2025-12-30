@@ -264,7 +264,7 @@ const TermsOfService = () => {
       <p className="mt-4">
         In order to resolve a complaint regarding the Services or to receive further information regarding use of the Services, please contact us at:
       </p>
-      <p className="mt-4">contact@runtimeriver.dev</p>
+      <p className="mt-4">contact@runtimeriver.com</p>
     </div>
   );
 };

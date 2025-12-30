@@ -44,10 +44,10 @@ export async function generateMetadata({ params }) {
             title: metaTitle,
             description: metaDescription,
             type: 'article',
-            url: `https://www.runtimeriver.dev/blogs/${params.slug}`,
+            url: `https://www.runtimeriver.com/blogs/${params.slug}`,
             images: [
                 {
-                    url: post.mainImage || 'https://www.runtimeriver.dev/og-default.jpg',
+                    url: post.mainImage || 'https://www.runtimeriver.com/og-default.jpg',
                     width: 1200,
                     height: 630,
                     alt: post.title,
@@ -61,7 +61,7 @@ export async function generateMetadata({ params }) {
             card: 'summary_large_image',
             title: metaTitle,
             description: metaDescription,
-            images: [post.mainImage || 'https://www.runtimeriver.dev/og-default.jpg'],
+            images: [post.mainImage || 'https://www.runtimeriver.com/og-default.jpg'],
         }
     };
 }

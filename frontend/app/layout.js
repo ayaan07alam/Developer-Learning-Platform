@@ -15,6 +15,7 @@ import LoginPopup from "@/components/LoginPopup";
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
 
 export const metadata = {
+  metadataBase: new URL('https://runtimeriver.com'),
   title: {
     template: '%s - RuntimeRiver',
     default: 'RuntimeRiver - Code, Content & Community',
@@ -61,7 +62,7 @@ export const metadata = {
     "tech career roadmap",
     "coding for beginners",
     "tech tutorials for professionals"],
-  authors: [{ name: 'RuntimeRiver' }, { name: 'RuntimeRiver', url: 'https://www.runtimeriver.dev' }],
+  authors: [{ name: 'RuntimeRiver' }, { name: 'RuntimeRiver', url: 'https://www.runtimeriver.com' }],
   creator: 'RuntimeRiver',
   publisher: 'RuntimeRiver',
   formatDetection: {
@@ -70,11 +71,11 @@ export const metadata = {
     telephone: false,
   },
   og: {
-    url: 'https://www.runtimeriver.dev',
+    url: 'https://www.runtimeriver.com',
     type: 'website',
     title: 'RuntimeRiver - Code, Content & Community',
     description: 'Read and **write** technical articles, run code instantly, and build your profile. The open community for developers.',
-    image: 'https://www.runtimeriver.dev/og-image.jpg',
+    image: 'https://www.runtimeriver.com/og-image.jpg',
     site_name: 'RuntimeRiver'
   },
   twitter: {
@@ -82,7 +83,7 @@ export const metadata = {
     site: '@RuntimeRiver',
     title: 'RuntimeRiver - Read, Write, Run',
     description: 'Read articles, write your own, and run code instantly.',
-    image: 'https://www.runtimeriver.dev/twitter-image.jpg',
+    image: 'https://www.runtimeriver.com/twitter-image.jpg',
     creator: '@RuntimeRiver'
   },
 
