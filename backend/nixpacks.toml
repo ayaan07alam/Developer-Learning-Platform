@@ -1,5 +1,5 @@
 [phases.build]
-cmds = ["./mvnw clean install -DskipTests"]
+cmds = ["chmod +x mvnw", "./mvnw clean install -DskipTests"]
 
 [phases.setup]
 nixPkgs = ["openjdk17"]
