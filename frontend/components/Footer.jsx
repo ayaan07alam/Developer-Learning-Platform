@@ -99,9 +99,11 @@ const Footer = () => {
                 placeholder="Enter email address..."
                 className="flex-1 bg-background/50 border border-border rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-primary/50 transition-all"
               />
-              <button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6 py-3 rounded-lg transition-all flex items-center justify-center gap-2 whitespace-nowrap">
-                Subscribe <Mail className="w-4 h-4" />
-              </button>
+              <Link href="/contact">
+                <button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6 py-3 rounded-lg transition-all flex items-center justify-center gap-2 whitespace-nowrap">
+                  Subscribe <Mail className="w-4 h-4" />
+                </button>
+              </Link>
             </div>
           </div>
         </div>
