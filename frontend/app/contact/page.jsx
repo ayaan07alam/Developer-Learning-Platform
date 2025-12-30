@@ -26,18 +26,27 @@ export default function ContactPage() {
     setErrorMessage('');
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/contact`, {
+      // Web3Forms submission
+      const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({
+          access_key: 'a6159ce3-aa6e-41f8-8df0-525ff2589730',
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+          from_name: 'RuntimeRiver Contact Form',
+          replyto: formData.email
+        })
       });
 
       const result = await response.json();
 
-      if (response.ok) {
+      if (result.success) {
         setStatus('success');
         setFormData({ name: '', email: '', subject: '', message: '' });
 
