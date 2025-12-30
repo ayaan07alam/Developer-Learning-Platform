@@ -5,12 +5,12 @@ import { Github, Twitter, Linkedin, Mail, Terminal, Heart, Code2 } from "lucide-
 
 const Footer = () => {
   return (
-    <footer className="relative bg-background border-t border-border overflow-hidden pt-16 pb-8">
+    <footer className="relative bg-background border-t border-border overflow-hidden pt-10 md:pt-16 pb-8">
       {/* Background Gradient - Subtle */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-muted/20 pointer-events-none" />
 
       <div className="container relative mx-auto px-6 z-10">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 mb-10 md:mb-16">
 
           {/* Brand Column (Left - 4 cols) */}
           <div className="md:col-span-4 space-y-6">
@@ -22,7 +22,7 @@ const Footer = () => {
                 Runtime<span className="text-cyan-400">River</span>
               </span>
             </Link>
-            <p className="text-muted-foreground leading-relaxed max-w-sm">
+            <p className="text-muted-foreground leading-relaxed max-w-sm text-sm md:text-base">
               Where knowledge flows & code runs. Deep-dive tutorials, powerful tools, and live execution in one flow.
             </p>
             <div className="flex gap-4 pt-2">
@@ -44,14 +44,14 @@ const Footer = () => {
           </div>
 
           {/* Links Columns (Right - 8 cols grid) */}
-          <div className="md:col-span-8 grid grid-cols-2 md:grid-cols-3 gap-8">
+          <div className="md:col-span-8 grid grid-cols-2 sm:grid-cols-3 gap-8">
 
             {/* Column 1: Platform */}
             <div>
-              <h4 className="font-bold text-foreground mb-6 flex items-center gap-2">
+              <h4 className="font-bold text-foreground mb-4 md:mb-6 flex items-center gap-2">
                 <Code2 className="w-4 h-4 text-primary" /> Platform
               </h4>
-              <ul className="space-y-4 text-sm text-muted-foreground">
+              <ul className="space-y-3 md:space-y-4 text-sm text-muted-foreground">
                 <li><Link href="/blogs" className="hover:text-primary transition-colors hover:pl-2 duration-300 block">Engineering Blog</Link></li>
                 <li><Link href="/tools" className="hover:text-primary transition-colors hover:pl-2 duration-300 block">Developer Tools</Link></li>
                 <li><Link href="/react" className="hover:text-primary transition-colors hover:pl-2 duration-300 block">Learning Paths</Link></li>
@@ -61,10 +61,10 @@ const Footer = () => {
 
             {/* Column 2: Tools & Resources */}
             <div>
-              <h4 className="font-bold text-foreground mb-6 flex items-center gap-2">
+              <h4 className="font-bold text-foreground mb-4 md:mb-6 flex items-center gap-2">
                 <Terminal className="w-4 h-4 text-secondary" /> Resources
               </h4>
-              <ul className="space-y-4 text-sm text-muted-foreground">
+              <ul className="space-y-3 md:space-y-4 text-sm text-muted-foreground">
                 <li><Link href="/tools/pdf" className="hover:text-secondary transition-colors hover:pl-2 duration-300 block">PDF Utilities</Link></li>
                 <li><Link href="/tools/images" className="hover:text-secondary transition-colors hover:pl-2 duration-300 block">Image Optimizer</Link></li>
                 <li><Link href="/tools/code" className="hover:text-secondary transition-colors hover:pl-2 duration-300 block">Code Formatters</Link></li>
@@ -73,9 +73,9 @@ const Footer = () => {
             </div>
 
             {/* Column 3: Company */}
-            <div className="col-span-2 md:col-span-1">
-              <h4 className="font-bold text-foreground mb-6">Company</h4>
-              <ul className="space-y-4 text-sm text-muted-foreground">
+            <div className="col-span-2 sm:col-span-1">
+              <h4 className="font-bold text-foreground mb-4 md:mb-6">Company</h4>
+              <ul className="space-y-3 md:space-y-4 text-sm text-muted-foreground">
                 <li><Link href="/about" className="hover:text-foreground transition-colors">About Us</Link></li>
                 <li><Link href="/contact" className="hover:text-foreground transition-colors">Contact</Link></li>
                 <li><Link href="/privacy-policy" className="hover:text-foreground transition-colors">Privacy Policy</Link></li>
@@ -87,19 +87,19 @@ const Footer = () => {
         </div>
 
         {/* Newsletter Section */}
-        <div className="relative rounded-2xl bg-gradient-to-r from-primary/5 to-secondary/5 border border-border p-8 md:p-10 mb-12">
-          <div className="grid md:grid-cols-2 gap-8 items-center">
+        <div className="relative rounded-2xl bg-gradient-to-r from-primary/5 to-secondary/5 border border-border p-6 md:p-10 mb-10 md:mb-12">
+          <div className="grid md:grid-cols-2 gap-6 md:gap-8 items-center">
             <div>
-              <h3 className="text-2xl font-bold mb-2">Subscribe to our newsletter</h3>
+              <h3 className="text-xl md:text-2xl font-bold mb-2">Subscribe to our newsletter</h3>
               <p className="text-muted-foreground text-sm">Join 10,000+ developers receiving the latest tech news.</p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-3">
               <input
                 type="email"
                 placeholder="Enter email address..."
                 className="flex-1 bg-background/50 border border-border rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-primary/50 transition-all"
               />
-              <button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6 py-3 rounded-lg transition-all flex items-center gap-2">
+              <button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6 py-3 rounded-lg transition-all flex items-center justify-center gap-2 whitespace-nowrap">
                 Subscribe <Mail className="w-4 h-4" />
               </button>
             </div>

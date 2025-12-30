@@ -19,6 +19,8 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const { user, logout, isAuthenticated, isEditor } = useAuth();
 
+  const [isOpen, setIsOpen] = useState(false);
+
   useEffect(() => {
     setMounted(true);
     const handleScroll = () => {
@@ -222,7 +224,7 @@ const Header = () => {
             {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
           </Button>
 
-          <Sheet>
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
                 <Menu className="w-6 h-6" />
@@ -236,6 +238,7 @@ const Header = () => {
                     e.preventDefault();
                     if (searchQuery.trim()) {
                       window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
+                      setIsOpen(false);
                     }
                   }}
                   className="relative px-4"
@@ -257,6 +260,7 @@ const Header = () => {
                       key={link.name}
                       href={link.href}
                       target={link.target}
+                      onClick={() => setIsOpen(false)}
                       rel={link.target === "_blank" ? "noopener noreferrer" : undefined}
                       className="text-base font-medium px-4 py-3 rounded-lg hover:bg-primary/10 hover:text-primary transition-colors"
                     >
@@ -271,7 +275,10 @@ const Header = () => {
                     <>
                       {/* Write Button for All Authenticated Users */}
                       <Link href="/dashboard/posts/new">
-                        <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg font-semibold shadow-lg shadow-primary/20 gap-2">
+                        <Button
+                          onClick={() => setIsOpen(false)}
+                          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg font-semibold shadow-lg shadow-primary/20 gap-2"
+                        >
                           <PenTool className="w-4 h-4" />
                           Write
                         </Button>
@@ -279,7 +286,11 @@ const Header = () => {
 
                       {/* Dashboard Link */}
                       <Link href="/dashboard">
-                        <Button variant="outline" className="w-full border-border/50 hover:bg-accent gap-2">
+                        <Button
+                          onClick={() => setIsOpen(false)}
+                          variant="outline"
+                          className="w-full border-border/50 hover:bg-accent gap-2"
+                        >
                           <LayoutDashboard className="w-4 h-4" />
                           Dashboard
                         </Button>
@@ -287,7 +298,11 @@ const Header = () => {
 
                       {/* Profile Link */}
                       <Link href="/profile">
-                        <Button variant="outline" className="w-full border-border/50 hover:bg-accent gap-2">
+                        <Button
+                          onClick={() => setIsOpen(false)}
+                          variant="outline"
+                          className="w-full border-border/50 hover:bg-accent gap-2"
+                        >
                           <User className="w-4 h-4" />
                           Profile
                         </Button>
@@ -295,7 +310,10 @@ const Header = () => {
 
                       {/* Logout */}
                       <Button
-                        onClick={logout}
+                        onClick={() => {
+                          logout();
+                          setIsOpen(false);
+                        }}
                         variant="ghost"
                         className="w-full text-red-500 hover:bg-red-500/10 gap-2"
                       >
@@ -307,7 +325,11 @@ const Header = () => {
                     <>
                       {/* Write Button - Redirects to Login */}
                       <Link href="/login?redirect=/dashboard/write">
-                        <Button variant="outline" className="w-full border-primary/30 hover:bg-primary/10 rounded-lg font-semibold gap-2">
+                        <Button
+                          onClick={() => setIsOpen(false)}
+                          variant="outline"
+                          className="w-full border-primary/30 hover:bg-primary/10 rounded-lg font-semibold gap-2"
+                        >
                           <PenTool className="w-4 h-4" />
                           Write
                         </Button>
@@ -315,7 +337,10 @@ const Header = () => {
 
                       {/* Login Button */}
                       <Link href="/login">
-                        <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg font-semibold shadow-lg shadow-primary/20">
+                        <Button
+                          onClick={() => setIsOpen(false)}
+                          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg font-semibold shadow-lg shadow-primary/20"
+                        >
                           Login
                         </Button>
                       </Link>
