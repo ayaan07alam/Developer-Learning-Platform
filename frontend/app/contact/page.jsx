@@ -26,27 +26,18 @@ export default function ContactPage() {
     setErrorMessage('');
 
     try {
-      // Web3Forms submission
-      const response = await fetch('https://api.web3forms.com/submit', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/contact`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
-        body: JSON.stringify({
-          access_key: 'a6159ce3-aa6e-41f8-8df0-525ff2589730',
-          name: formData.name,
-          email: formData.email,
-          subject: formData.subject,
-          message: formData.message,
-          from_name: 'RuntimeRiver Contact Form',
-          replyto: formData.email
-        })
+        body: JSON.stringify(formData)
       });
 
       const result = await response.json();
 
-      if (result.success) {
+      if (response.ok) {
         setStatus('success');
         setFormData({ name: '', email: '', subject: '', message: '' });
 
@@ -57,6 +48,7 @@ export default function ContactPage() {
         setErrorMessage(result.message || 'Failed to send message. Please try again.');
       }
     } catch (error) {
+      console.error('Contact form error:', error);
       setStatus('error');
       setErrorMessage('Network error. Please check your connection and try again.');
     }
