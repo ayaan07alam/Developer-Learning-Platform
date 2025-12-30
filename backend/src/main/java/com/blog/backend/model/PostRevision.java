@@ -52,7 +52,6 @@ public class PostRevision {
     @Column(columnDefinition = "TEXT")
     private String excerpt;
 
-    @Lob
     @Column(columnDefinition = "TEXT")
     private String content;
 

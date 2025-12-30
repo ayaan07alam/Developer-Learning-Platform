@@ -54,8 +54,7 @@ public class Post {
         @Column(columnDefinition = "TEXT")
         private String excerpt; // Short description for SEO and previews
 
-        @Lob
-        @Column(columnDefinition = "TEXT")
+        @Column(columnDefinition = "TEXT", nullable = false)
         private String content; // Rich text content (HTML)
 
         // SEO
