@@ -5,13 +5,15 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 
+import { GoogleLogin } from '@react-oauth/google';
+
 export default function RegisterPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [displayName, setDisplayName] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const { register } = useAuth();
+    const { register, loginWithGoogle } = useAuth();
     const router = useRouter();
 
     const handleSubmit = async (e) => {
@@ -28,6 +30,25 @@ export default function RegisterPage() {
         }
 
         setLoading(false);
+    };
+
+    const handleGoogleSuccess = async (credentialResponse) => {
+        setError('');
+        setLoading(true);
+
+        const result = await loginWithGoogle(credentialResponse.credential);
+
+        if (result.success) {
+            router.push('/');
+        } else {
+            setError(result.error);
+        }
+
+        setLoading(false);
+    };
+
+    const handleGoogleError = () => {
+        setError('Google sign-up failed. Please try again.');
     };
 
     return (
@@ -54,6 +75,27 @@ export default function RegisterPage() {
                             {error}
                         </div>
                     )}
+
+                    {/* Google Sign-Up Button */}
+                    <div className="mb-6">
+                        <GoogleLogin
+                            onSuccess={handleGoogleSuccess}
+                            onError={handleGoogleError}
+                            text="signup_with"
+                            theme="filled_blue"
+                            size="large"
+                            width="100%"
+                        />
+                    </div>
+
+                    <div className="relative mb-6">
+                        <div className="absolute inset-0 flex items-center">
+                            <div className="w-full border-t border-border"></div>
+                        </div>
+                        <div className="relative flex justify-center text-sm">
+                            <span className="px-4 bg-card text-muted-foreground">Or register with email</span>
+                        </div>
+                    </div>
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div>

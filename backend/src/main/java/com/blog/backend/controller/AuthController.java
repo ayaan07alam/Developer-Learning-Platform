@@ -234,11 +234,24 @@ public class AuthController {
             // Create new user
             User newUser = new User();
             newUser.setEmail(email);
-            newUser.setDisplayName(name != null ? name : email.split("@")[0]);
-            newUser.setPassword(""); // No password for OAuth users
+
+            // Use first name as display name (as requested)
+            String baseUsername = (name != null) ? name.split(" ")[0] : email.split("@")[0];
+            String finalUsername = baseUsername;
+            int suffix = 1;
+
+            // Ensure unique username
+            while (userRepository.existsByDisplayName(finalUsername)) {
+                finalUsername = baseUsername + suffix;
+                suffix++;
+            }
+
+            newUser.setDisplayName(finalUsername);
+            newUser.setPassword(null); // No password for OAuth users
             newUser.setOauthProvider("GOOGLE");
             newUser.setOauthId(payload.getSubject());
             newUser.setRole(Role.VIEWER);
+            newUser.setActive(true);
             newUser.setProfilePhoto(picture); // Set Google profile picture
             user = userRepository.save(newUser);
         }
