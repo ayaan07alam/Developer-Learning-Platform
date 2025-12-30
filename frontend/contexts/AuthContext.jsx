@@ -139,7 +139,7 @@ export const AuthProvider = ({ children }) => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ token: credential })
+                body: JSON.stringify({ credential: credential })
             });
 
             if (response.ok) {
