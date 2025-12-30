@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import ForcedLoginPopup from '@/components/ForcedLoginPopup';
 import { API_BASE_URL } from '@/lib/api-client';
-import { API_BASE_URL } from '@/lib/api-client';
+
 
 export default function JobsPage() {
     const router = useRouter();
