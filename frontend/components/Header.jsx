@@ -63,7 +63,7 @@ const Header = () => {
             <span className="text-lg md:text-2xl font-bold tracking-tight leading-none bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-500 to-primary bg-[length:200%_auto] animate-gradient">
               Runtime<span className="font-extrabold">River</span>
             </span>
-            <span className="hidden md:block text-[10px] text-muted-foreground tracking-wider uppercase">Where Code Runs Free</span>
+            <span className="hidden md:block text-[10px] text-muted-foreground tracking-wider uppercase">Flow State for Developers</span>
           </div>
         </Link>
 
