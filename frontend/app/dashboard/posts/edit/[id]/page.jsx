@@ -230,7 +230,7 @@ export default function EditPostPage() {
 
                 if (!response.ok) {
                     const errorData = await response.json();
-                    throw new Error(errorData.error || 'Failed to update post');
+                    throw new Error(errorData.message || errorData.error || 'Failed to update post');
                 }
 
                 if (targetAction === 'PUBLISHED') {

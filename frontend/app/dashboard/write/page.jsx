@@ -53,7 +53,7 @@ export default function WriterDashboardPage() {
             const token = localStorage.getItem('token');
             const response = await fetch(`${API_BASE_URL}/api/posts/my-submissions`, {
                 headers: {
-                    'Authorization': `Bearer ${token} `,
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 }
             });
