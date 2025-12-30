@@ -4,11 +4,10 @@ A comprehensive full-stack developer education platform built with **Next.js** a
 
 ## 🚀 Features
 
-### 🏠 **Modern Homepage** (Recently Redesigned!)
-- **Dynamic Hero Section** - Search-focused design with trending associations
-- **Trending Now** - Real-time feed of popular content based on engagement
-- **Developer Community** - Showcase of the latest community contributions
-- **Smart Navigation** - Quick links to popular tools and categories
+### 🏠 **Modern Homepage** (Redesigned: "Runtime River" Theme)
+- **Fluid Hero Design** - Deep river gradients, animated currents, and floating elements
+- **Dynamic Stats** - Live fetching of category and post counts
+- **Smart Search** - Quick routing to tools, blogs, and job roles
 - **Responsive Layout** - Optimized for all device sizes
 
 ### 💼 **Job Platform** (NEW!)

@@ -145,61 +145,18 @@ const Home = () => {
         Cyber-Minimalist: Massive Typography, Left Aligned, Right "Portal"
       */}
       <section className="relative pt-32 pb-32 lg:pt-48 lg:pb-40 overflow-hidden">
-        {/* RIVER FLOW BACKGROUND */}
-        <div className="absolute inset-0 bg-[#0a192f] z-0" />
+        {/* Deep River Background */}
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-blue-950/5 to-background z-0" />
 
-        {/* Wave 1 - Back */}
-        <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none z-0 opacity-30">
-          <motion.div
-            animate={{ x: ["0%", "-50%"] }}
-            transition={{ repeat: Infinity, ease: "linear", duration: 20 }}
-            className="w-[200%] flex"
-          >
-            <svg className="block w-full h-[500px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-              <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="#1e3a8a"></path>
-            </svg>
-            <svg className="block w-full h-[500px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-              <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="#1e3a8a"></path>
-            </svg>
-          </motion.div>
+        {/* Animated Flow Lines (River Current) */}
+        <div className="absolute inset-0 opacity-20 pointer-events-none overflow-hidden">
+          <div className="absolute top-[20%] -left-[10%] w-[120%] h-[300px] bg-gradient-to-r from-cyan-500/20 via-blue-600/20 to-purple-600/20 blur-[80px] rotate-[-5deg] animate-pulse" />
+          <div className="absolute top-[60%] -right-[10%] w-[120%] h-[300px] bg-gradient-to-r from-blue-600/20 via-cyan-500/20 to-teal-400/20 blur-[80px] rotate-[5deg] animate-pulse delay-1000" />
         </div>
 
-        {/* Wave 2 - Middle */}
-        <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none z-0 opacity-40">
-          <motion.div
-            animate={{ x: ["-50%", "0%"] }}
-            transition={{ repeat: Infinity, ease: "linear", duration: 15 }}
-            className="w-[200%] flex"
-          >
-            <svg className="block w-full h-[400px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-              <path d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z" fill="#0ea5e9"></path>
-            </svg>
-            <svg className="block w-full h-[400px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-              <path d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z" fill="#0ea5e9"></path>
-            </svg>
-          </motion.div>
-        </div>
-
-        {/* Wave 3 - Front */}
-        <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none z-0 opacity-20">
-          <motion.div
-            animate={{ x: ["0%", "-50%"] }}
-            transition={{ repeat: Infinity, ease: "linear", duration: 12 }}
-            className="w-[200%] flex"
-          >
-            <svg className="block w-full h-[300px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-              <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" fill="#22d3ee"></path>
-              <path d="M0,0V15.81C13,36.92,46,62.34,87,53.19c47.79-10.65,66.8-49.83,115-58.32,44.91-7.91,82.11,8.19,123.63,22.61,46.12,16,92.09,33.58,141.9,43.26,92.83,18.06,183.19,1.75,274.57-41.56,66.17-31.39,127.31-48.27,180.72-35.32C981.65,5.69,1032.53,49.17,1102.39,71.07c57.19,17.92,123,17.29,158.48,5.92V0Z" opacity=".5" fill="#22d3ee"></path>
-              <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="#22d3ee"></path>
-            </svg>
-            <svg className="block w-full h-[300px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-              <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" fill="#22d3ee"></path>
-              <path d="M0,0V15.81C13,36.92,46,62.34,87,53.19c47.79-10.65,66.8-49.83,115-58.32,44.91-7.91,82.11,8.19,123.63,22.61,46.12,16,92.09,33.58,141.9,43.26,92.83,18.06,183.19,1.75,274.57-41.56,66.17-31.39,127.31-48.27,180.72-35.32C981.65,5.69,1032.53,49.17,1102.39,71.07c57.19,17.92,123,17.29,158.48,5.92V0Z" opacity=".5" fill="#22d3ee"></path>
-              <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="#22d3ee"></path>
-            </svg>
-          </motion.div>
-        </div>
-
+        {/* Abstract "Islands" */}
+        <div className="absolute top-20 right-[10%] w-64 h-64 bg-blue-500/10 rounded-full blur-[100px] animate-blob" />
+        <div className="absolute bottom-20 left-[10%] w-64 h-64 bg-cyan-500/10 rounded-full blur-[100px] animate-blob animation-delay-2000" />
 
         <div className="container mx-auto px-6 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
