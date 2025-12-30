@@ -139,7 +139,7 @@ export const AuthProvider = ({ children }) => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ token: googleToken })
+                body: JSON.stringify({ token: credential })
             });
 
             if (response.ok) {
