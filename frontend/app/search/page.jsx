@@ -4,6 +4,7 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Search, Calendar, User, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { API_BASE_URL } from '@/lib/api-client';
 
 export default function SearchPage() {
     const searchParams = useSearchParams();
@@ -22,7 +23,7 @@ export default function SearchPage() {
     const searchBlogs = async (searchQuery) => {
         try {
             setLoading(true);
-            const response = await fetch(`http://localhost:8080/api/posts/search?q=${encodeURIComponent(searchQuery)}`);
+            const response = await fetch(`${API_BASE_URL}/api/posts/search?q=${encodeURIComponent(searchQuery)}`);
             if (response.ok) {
                 const data = await response.json();
                 setResults(data);

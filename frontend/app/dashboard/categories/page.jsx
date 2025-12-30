@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Plus, Edit, Trash2 } from 'lucide-react';
 import CustomDialog from '@/components/CustomDialog';
 import { useDialog } from '@/lib/useDialog';
+import { API_BASE_URL } from '@/lib/api-client';
 
 export default function CategoriesPage() {
     const { user } = useAuth();
@@ -27,7 +28,7 @@ export default function CategoriesPage() {
 
     const fetchCategories = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/categories');
+            const response = await fetch(`${API_BASE_URL}/api/categories`);
             const data = await response.json();
             setCategories(data);
         } catch (error) {
@@ -43,8 +44,8 @@ export default function CategoriesPage() {
 
         try {
             const url = editingCategory
-                ? `http://localhost:8080/api/categories/${editingCategory.id}`
-                : 'http://localhost:8080/api/categories';
+                ? `${API_BASE_URL}/api/categories/${editingCategory.id}`
+                : `${API_BASE_URL}/api/categories`;
 
             const response = await fetch(url, {
                 method: editingCategory ? 'PUT' : 'POST',
@@ -85,7 +86,7 @@ export default function CategoriesPage() {
 
         const token = localStorage.getItem('token');
         try {
-            const response = await fetch(`http://localhost:8080/api/categories/${id}`, {
+            const response = await fetch(`${API_BASE_URL}/api/categories/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

@@ -1,15 +1,15 @@
 export const metadata = {
   title: 'About Us',
-  description: 'Learn more about IntelForgeeks, your ultimate tech resource hub. Discover our mission, values, and the team behind our content.',
+  description: 'Learn more about RuntimeRiver, where code runs free. Discover our mission, values, and the team behind our content.',
   og: {
-    title: 'About Us - IntelForgeeks',
-    description: 'Learn about our mission, values, and team at IntelForgeeks.',
-    image: 'https://intelforgeeks.com/about-og-image.jpg',
+    title: 'About Us - RuntimeRiver',
+    description: 'Learn about our mission, values, and team at RuntimeRiver.',
+    image: 'https://runtimeriver.dev/about-og-image.jpg',
   },
   twitter: {
-    title: 'About Us - IntelForgeeks',
-    description: 'Learn about our mission, values, and team at IntelForgeeks.',
-    image: 'https://intelforgeeks.com/about-twitter-image.jpg',
+    title: 'About Us - RuntimeRiver',
+    description: 'Learn about our mission, values, and team at RuntimeRiver.',
+    image: 'https://runtimeriver.dev/about-twitter-image.jpg',
   }
 }
 
@@ -21,9 +21,9 @@ export default function () {
           <div class="container mx-auto px-4 md:px-6 lg:px-8">
             <div class="grid md:grid-cols-2 gap-8 items-center">
               <div>
-                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">About IntelForgeeks</h1>
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">About RuntimeRiver</h1>
                 <p class="text-gray-600 dark:text-gray-400 mb-8">
-                  IntelForgeeks is a leading tech tutorial website that provides high-quality, comprehensive
+                  RuntimeRiver is a leading tech tutorial website that provides high-quality, comprehensive
                   tutorials on a wide range of programming languages, frameworks, and technologies.
                 </p>
                 <div class="flex gap-4">
@@ -37,7 +37,7 @@ export default function () {
               </div>
               <div class="hidden md:block">
                 <div className="w-full h-64 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white text-2xl font-bold">
-                  IntelForGeeks
+                  RuntimeRiver
                 </div>
               </div>
             </div>

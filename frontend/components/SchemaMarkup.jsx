@@ -18,10 +18,10 @@ export default function SchemaMarkup({ post, faqs = [] }) {
         },
         "publisher": {
             "@type": "Organization",
-            "name": "IntelForgeeks",
+            "name": "RuntimeRiver",
             "logo": {
                 "@type": "ImageObject",
-                "url": `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.intelforgeeks.com'}/logo.png`
+                "url": `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.runtimeriver.dev'}/logo.png`
             }
         },
         "mainEntityOfPage": {

@@ -53,15 +53,15 @@ const Header = () => {
       <div className="container mx-auto px-3 md:px-6 max-w-screen-2xl flex items-center justify-between gap-2 md:gap-4">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 md:gap-3 group shrink-0">
-          <div className="relative flex items-center justify-center w-9 h-9 md:w-11 md:h-11 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 border border-primary/30 group-hover:border-primary/60 transition-all duration-300 group-hover:scale-110">
-            <Terminal className="w-5 h-5 md:w-6 md:h-6 text-primary group-hover:rotate-12 transition-transform duration-300" />
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-accent/30 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="relative flex items-center justify-center w-9 h-9 md:w-11 md:h-11 rounded-xl bg-gradient-to-br from-cyan-400/20 to-blue-500/20 border border-cyan-400/30 group-hover:border-cyan-400/60 transition-all duration-300 group-hover:scale-110">
+            <Terminal className="w-5 h-5 md:w-6 md:h-6 text-cyan-400 group-hover:rotate-12 transition-transform duration-300" />
+            <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/30 to-blue-500/30 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </div>
           <div className="flex flex-col">
-            <span className="text-lg md:text-2xl font-bold tracking-tight leading-none bg-clip-text text-transparent bg-gradient-to-r from-foreground via-primary to-accent bg-[length:200%_auto] animate-gradient">
-              Intel<span className="font-extrabold">for</span>Geeks
+            <span className="text-lg md:text-2xl font-bold tracking-tight leading-none bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-500 to-primary bg-[length:200%_auto] animate-gradient">
+              Runtime<span className="font-extrabold">River</span>
             </span>
-            <span className="hidden md:block text-[10px] text-muted-foreground tracking-wider uppercase">Tech Excellence</span>
+            <span className="hidden md:block text-[10px] text-muted-foreground tracking-wider uppercase">Where Code Runs Free</span>
           </div>
         </Link>
 

@@ -5,6 +5,7 @@ import { Search, MapPin, Briefcase, DollarSign, Clock, Filter, X, RefreshCw } fr
 import Link from 'next/link';
 import CustomDialog from '@/components/CustomDialog';
 import { useDialog } from '@/lib/useDialog';
+import { API_BASE_URL } from '@/lib/api-client';
 
 export default function JobSeekerDashboard() {
     const router = useRouter();
@@ -27,7 +28,7 @@ export default function JobSeekerDashboard() {
 
     const fetchCategories = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/jobs/categories');
+            const response = await fetch(`${API_BASE_URL}/api/jobs/categories`);
             if (response.ok) {
                 const data = await response.json();
                 setCategories(data);
@@ -39,7 +40,7 @@ export default function JobSeekerDashboard() {
 
     const fetchJobs = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/jobs', {
+            const response = await fetch(`${API_BASE_URL}/api/jobs`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 },
@@ -81,7 +82,7 @@ export default function JobSeekerDashboard() {
         if (!confirmed) return;
 
         try {
-            const response = await fetch('http://localhost:8080/api/users/change-job-role', {
+            const response = await fetch(`${API_BASE_URL}/api/users/change-job-role`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

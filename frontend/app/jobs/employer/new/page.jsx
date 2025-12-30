@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Briefcase } from 'lucide-react';
 import Link from 'next/link';
+import { API_BASE_URL } from '@/lib/api-client';
 
 export default function NewJobPage() {
     const router = useRouter();
@@ -35,7 +36,7 @@ export default function NewJobPage() {
 
     const fetchCategories = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/jobs/categories');
+            const response = await fetch(`${API_BASE_URL}/api/jobs/categories`);
             if (response.ok) {
                 const data = await response.json();
                 setCategories(data);
@@ -47,7 +48,7 @@ export default function NewJobPage() {
 
     const fetchJobTypes = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/jobs/types');
+            const response = await fetch(`${API_BASE_URL}/api/jobs/types`);
             if (response.ok) {
                 const data = await response.json();
                 setJobTypes(data);
@@ -63,7 +64,7 @@ export default function NewJobPage() {
         setError('');
 
         try {
-            const response = await fetch('http://localhost:8080/api/jobs', {
+            const response = await fetch(`${API_BASE_URL}/api/jobs`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

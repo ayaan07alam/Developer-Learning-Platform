@@ -6,6 +6,7 @@ import { Users as UsersIcon, Shield, Trash2, Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import CustomDialog from '@/components/CustomDialog';
 import { useDialog } from '@/lib/useDialog';
+import { API_BASE_URL } from '@/lib/api-client';
 
 export default function UsersPage() {
     const router = useRouter();
@@ -26,7 +27,7 @@ export default function UsersPage() {
 
     const fetchUsers = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/users', {
+            const response = await fetch(`${API_BASE_URL}/api/users`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -48,7 +49,7 @@ export default function UsersPage() {
     const updateUserRole = async (userId, newRole) => {
         setUpdatingUserId(userId);
         try {
-            const response = await fetch(`http://localhost:8080/api/users/${userId}/role`, {
+            const response = await fetch(`${API_BASE_URL}/api/users/${userId}/role`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -78,7 +79,7 @@ export default function UsersPage() {
         if (!confirmed) return;
 
         try {
-            const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
+            const response = await fetch(`${API_BASE_URL}/api/users/${userId}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`

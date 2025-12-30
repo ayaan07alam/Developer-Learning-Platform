@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { FileEdit, Clock, CheckCircle } from 'lucide-react';
 import PostStatusBadge from '@/components/PostStatusBadge';
 import Link from 'next/link';
+import { API_BASE_URL } from '@/lib/api-client';
 
 export default function ReviewerDashboard() {
     const router = useRouter();
@@ -26,7 +27,7 @@ export default function ReviewerDashboard() {
             // DRAFT: Available to pick up
             // REJECTED: Returned for revision
             // UNDER_REVIEW: Submitted and pending approval (for reference)
-            const response = await fetch('http://localhost:8080/api/posts', {
+            const response = await fetch(`${API_BASE_URL}/api/posts`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 },

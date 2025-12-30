@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { MapPin, DollarSign, Briefcase, Calendar, Building, ArrowLeft, Send, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
+import { API_BASE_URL } from '@/lib/api-client';
 
 export default function JobDetailPage() {
     const params = useParams();
@@ -31,7 +32,7 @@ export default function JobDetailPage() {
 
     const fetchJobDetails = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/api/jobs/${jobId}`, {
+            const response = await fetch(`${API_BASE_URL}/api/jobs/${jobId}`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 },
@@ -56,7 +57,7 @@ export default function JobDetailPage() {
         setError('');
 
         try {
-            const response = await fetch(`http://localhost:8080/api/jobs/${jobId}/apply`, {
+            const response = await fetch(`${API_BASE_URL}/api/jobs/${jobId}/apply`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

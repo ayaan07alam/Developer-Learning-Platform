@@ -5,6 +5,7 @@ import Link from 'next/link';
 import PostStatusBadge from './PostStatusBadge';
 import CustomDialog from './CustomDialog';
 import { useDialog } from '@/lib/useDialog';
+import { API_BASE_URL } from '@/lib/api-client';
 
 export default function ContentManagementSection({ userRole }) {
     const [posts, setPosts] = useState([]);
@@ -40,7 +41,7 @@ export default function ContentManagementSection({ userRole }) {
             params.append('page', filters.page);
             params.append('size', filters.size);
 
-            const response = await fetch(`http://localhost:8080${endpoint}?${params}`, {
+            const response = await fetch(`${API_BASE_URL}${endpoint}?${params}`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
@@ -63,7 +64,7 @@ export default function ContentManagementSection({ userRole }) {
             // Use different endpoint based on role
             const endpoint = isEditorOrAdmin ? '/api/content/stats' : '/api/content/my-stats';
 
-            const response = await fetch(`http://localhost:8080${endpoint}`, {
+            const response = await fetch(`${API_BASE_URL}${endpoint}`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
@@ -105,7 +106,7 @@ export default function ContentManagementSection({ userRole }) {
 
         setDeletingId(post.id);
         try {
-            const response = await fetch(`http://localhost:8080/api/posts/${post.id}`, {
+            const response = await fetch(`${API_BASE_URL}/api/posts/${post.id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -142,7 +143,7 @@ export default function ContentManagementSection({ userRole }) {
         }
 
         try {
-            const response = await fetch(`http://localhost:8080/api/posts/${selectedPost.id}/request-deletion`, {
+            const response = await fetch(`${API_BASE_URL}/api/posts/${selectedPost.id}/request-deletion`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,

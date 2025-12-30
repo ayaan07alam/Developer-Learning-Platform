@@ -3,9 +3,10 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, Code2, Terminal, Cpu, Globe, Zap, Layers, BookOpen, Users, Code, Sparkles, Briefcase } from "lucide-react";
+import { ArrowRight, BookOpen, Code, Sparkles, Users, Search, X, Play, Zap, Globe, CheckCircle2, Star, TrendingUp, PenTool, Terminal, Layers, Briefcase, Cpu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { API_BASE_URL } from "@/lib/api-client";
 
 // Card Data for Features Grid
 const features = [
@@ -30,7 +31,7 @@ const testimonials = [
   {
     name: "Alex Johnson",
     role: "Frontend Engineer @ Vercel",
-    content: "IntelForgeeks completely changed how I learn. The interactive examples are game-changing.",
+    content: "RuntimeRiver completely changed how I learn. The live execution flow is game-changing.",
     avatar: "https://randomuser.me/api/portraits/men/32.jpg"
   },
   {
@@ -64,7 +65,7 @@ const Home = () => {
 
   const fetchLatestPosts = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/posts?status=PUBLISHED');
+      const response = await fetch(`${API_BASE_URL}/api/posts?status=PUBLISHED`);
       if (response.ok) {
         const posts = await response.json();
 
@@ -148,27 +149,26 @@ const Home = () => {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
                 </span>
-                COMPLETE DEVELOPER ECOSYSTEM
+                WHERE KNOWLEDGE FLOWS & CODE RUNS
               </div>
 
               <h1 className="text-6xl lg:text-8xl font-black tracking-tighter leading-[0.9] mb-6">
-                YOUR <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-white to-secondary animate-shimmer bg-[length:200%_auto]">
-                  COMPLETE
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-primary animate-shimmer bg-[length:200%_auto]">
+                  RUNTIME
                 </span><br />
-                PLATFORM.
+                RIVER
               </h1>
 
               <p className="text-xl text-muted-foreground max-w-lg leading-relaxed mb-10">
-                Write · Build · Learn · Connect — Everything developers need in one ecosystem.
+                The open ecosystem for developers. <strong>Read & Write</strong> technical articles, build with <strong>free tools</strong>, and execute code in our <strong>online compiler</strong>. Anyone can contribute.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button size="lg" className="h-14 px-8 text-lg rounded-none border border-primary bg-primary/10 hover:bg-primary text-primary hover:text-black transition-all font-mono uppercase tracking-widest" asChild>
-                  <Link href="/blogs">Explore Blog</Link>
+                  <Link href="/blogs">📚 Start Reading</Link>
                 </Button>
                 <Button size="lg" variant="outline" className="h-14 px-8 text-lg rounded-none border-white/20 hover:border-white hover:bg-white/5 transition-all font-mono uppercase tracking-widest text-muted-foreground hover:text-foreground" asChild>
-                  <Link href="/tools">Browse Tools</Link>
+                  <Link href="/compiler">▶️ Run Code</Link>
                 </Button>
               </div>
             </motion.div>
@@ -185,7 +185,7 @@ const Home = () => {
               <div className="relative bg-card/50 backdrop-blur-sm border border-border rounded-2xl p-8 shadow-xl">
                 <div className="mb-6">
                   <h3 className="text-2xl font-bold mb-2">What do you want to learn today?</h3>
-                  <p className="text-muted-foreground text-sm">Search from 40+ tools, tutorials, and articles</p>
+                  <p className="text-muted-foreground text-sm">Flow through 40+ tools, tutorials, and articles</p>
                 </div>
 
                 {/* Search Input */}
@@ -268,10 +268,10 @@ const Home = () => {
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-bold mb-4 font-mono uppercase tracking-tighter">
-              Trending <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Now</span>
+              Riding the <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Current</span> 🌊
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-              Hot topics and tutorials making waves in the developer community
+              What's flowing in the developer community
             </p>
           </div>
 
@@ -336,14 +336,14 @@ const Home = () => {
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-5xl font-bold mb-4 font-mono uppercase tracking-tighter">
-              Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Complete</span> Ecosystem
+              One Platform, <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Infinite Streams</span>
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-              Everything you need to grow as a developer — all in one platform.
+              Navigate through learning, tools, and opportunities — all flowing together.
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
             {/* Blog Platform */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -357,12 +357,36 @@ const Home = () => {
                   <div className="w-14 h-14 rounded-xl bg-purple-500/10 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-purple-500/20 transition-all duration-300">
                     <BookOpen className="w-7 h-7 text-purple-400 group-hover:text-purple-300 transition-colors" />
                   </div>
-                  <h3 className="text-xl font-bold mb-2 group-hover:text-purple-400 transition-colors">Blog Platform</h3>
+                  <h3 className="text-xl font-bold mb-2 group-hover:text-purple-400 transition-colors">Knowledge Stream 📚</h3>
                   <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                    Share your expertise and build your audience
+                    Read in-depth tutorials, guides, and tech insights
                   </p>
                   <div className="text-purple-400 text-sm font-semibold flex items-center gap-1 group-hover:gap-2 transition-all">
-                    Write <ArrowRight className="w-4 h-4" />
+                    Start Reading <ArrowRight className="w-4 h-4" />
+                  </div>
+                </div>
+              </Link>
+            </motion.div>
+
+            {/* Contribution Platform */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.15 }}
+            >
+              <Link href="/dashboard/posts/new" className="group relative overflow-hidden rounded-2xl border border-border bg-card p-8 hover:border-pink-500/50 hover:shadow-xl hover:shadow-pink-500/10 transition-all duration-300 block h-full">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-pink-500/10 rounded-full blur-3xl group-hover:bg-pink-500/20 group-hover:scale-150 transition-all duration-500"></div>
+                <div className="relative z-10">
+                  <div className="w-14 h-14 rounded-xl bg-pink-500/10 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-pink-500/20 transition-all duration-300">
+                    <PenTool className="w-7 h-7 text-pink-400 group-hover:text-pink-300 transition-colors" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2 group-hover:text-pink-400 transition-colors">Contribution Flow ✍️</h3>
+                  <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
+                    Write articles, share wisdom, and build your profile
+                  </p>
+                  <div className="text-pink-400 text-sm font-semibold flex items-center gap-1 group-hover:gap-2 transition-all">
+                    Start Writing <ArrowRight className="w-4 h-4" />
                   </div>
                 </div>
               </Link>
@@ -381,9 +405,9 @@ const Home = () => {
                   <div className="w-14 h-14 rounded-xl bg-green-500/10 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-green-500/20 transition-all duration-300">
                     <Code className="w-7 h-7 text-green-400 group-hover:text-green-300 transition-colors" />
                   </div>
-                  <h3 className="text-xl font-bold mb-2 group-hover:text-green-400 transition-colors">40+ Free Tools</h3>
+                  <h3 className="text-xl font-bold mb-2 group-hover:text-green-400 transition-colors">Tool Tributaries 🛠️</h3>
                   <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                    Utilities for everyday development work
+                    40+ Essential developer tools, formatters, and utilities
                   </p>
                   <div className="text-green-400 text-sm font-semibold flex items-center gap-1 group-hover:gap-2 transition-all">
                     Browse <ArrowRight className="w-4 h-4" />
@@ -399,15 +423,15 @@ const Home = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.3 }}
             >
-              <Link href="/react" className="group relative overflow-hidden rounded-2xl border border-border bg-card p-8 hover:border-blue-500/50 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 block h-full">
+              <Link href="/compiler" className="group relative overflow-hidden rounded-2xl border border-border bg-card p-8 hover:border-blue-500/50 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 block h-full">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl group-hover:bg-blue-500/20 group-hover:scale-150 transition-all duration-500"></div>
                 <div className="relative z-10">
                   <div className="w-14 h-14 rounded-xl bg-blue-500/10 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-blue-500/20 transition-all duration-300">
                     <Sparkles className="w-7 h-7 text-blue-400 group-hover:text-blue-300 transition-colors" />
                   </div>
-                  <h3 className="text-xl font-bold mb-2 group-hover:text-blue-400 transition-colors">Interactive Learning</h3>
+                  <h3 className="text-xl font-bold mb-2 group-hover:text-blue-400 transition-colors">Execution Stream ⚡</h3>
                   <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                    Tutorials on modern tech stacks
+                    Online Compiler & IDE supporting 18+ languages
                   </p>
                   <div className="text-blue-400 text-sm font-semibold flex items-center gap-1 group-hover:gap-2 transition-all">
                     Start <ArrowRight className="w-4 h-4" />
@@ -429,9 +453,9 @@ const Home = () => {
                   <div className="w-14 h-14 rounded-xl bg-orange-500/10 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-orange-500/20 transition-all duration-300">
                     <Users className="w-7 h-7 text-orange-400 group-hover:text-orange-300 transition-colors" />
                   </div>
-                  <h3 className="text-xl font-bold mb-2 group-hover:text-orange-400 transition-colors">Job Board</h3>
+                  <h3 className="text-xl font-bold mb-2 group-hover:text-orange-400 transition-colors">Career Current 💼</h3>
                   <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                    Connecting talent with opportunities
+                    Tech Job Board and Career Roadmaps
                   </p>
                   <div className="text-orange-400 text-sm font-semibold flex items-center gap-1 group-hover:gap-2 transition-all">
                     Explore <ArrowRight className="w-4 h-4" />
@@ -619,123 +643,70 @@ const Home = () => {
       </section>
 
       {/* FROM OUR DEVELOPER COMMUNITY */}
-      <section className="py-24 bg-muted/20 border-t border-border">
-        <div className="container mx-auto px-6 md:px-12 lg:px-24">
-          <div className="flex flex-col md:flex-row items-end justify-between mb-12 gap-6">
-            <div>
-              <h2 className="text-3xl md:text-5xl font-bold mb-4">From Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Developer Community</span></h2>
-              <p className="text-muted-foreground">Fresh insights, tutorials, and experiences from developers worldwide</p>
+      <section className="py-24 border-t border-border">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold mb-4">
+              From Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Developer Community</span>
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
+              Fresh insights, tutorials, and experiences from developers worldwide
+            </p>
+          </div>
+
+          {loading ? (
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+              <p className="text-muted-foreground mt-4">Loading articles...</p>
             </div>
-            <div className="flex items-center gap-4">
-              <Link href="/blogs" className="text-primary font-semibold hover:underline decoration-2 underline-offset-4 flex items-center gap-1">
-                Browse All Posts <ArrowRight className="w-4 h-4" />
-              </Link>
-
-
-              {/* Carousel Navigation */}
-              {latestPosts.length > postsPerSlide && (
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={prevSlide}
-                    disabled={!canGoPrev}
-                    className={`p-2 rounded-lg border border-border transition-all ${canGoPrev
-                      ? 'hover:bg-secondary/10 hover:border-primary cursor-pointer'
-                      : 'opacity-30 cursor-not-allowed'
-                      }`}
-                    aria-label="Previous posts"
-                  >
-                    <ArrowRight className="w-5 h-5 rotate-180" />
-                  </button>
-                  <span className="text-sm text-muted-foreground font-mono">
-                    {currentSlide + 1} / {totalSlides}
-                  </span>
-                  <button
-                    onClick={nextSlide}
-                    disabled={!canGoNext}
-                    className={`p-2 rounded-lg border border-border transition-all ${canGoNext
-                      ? 'hover:bg-secondary/10 hover:border-primary cursor-pointer'
-                      : 'opacity-30 cursor-not-allowed'
-                      }`}
-                    aria-label="Next posts"
-                  >
-                    <ArrowRight className="w-5 h-5" />
-                  </button>
-                </div>
-              )}
+          ) : latestPosts.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">No published articles yet. Check back soon!</p>
             </div>
-          </div>
-        </div>
-
-        {loading ? (
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-            <p className="text-muted-foreground mt-4">Loading articles...</p>
-          </div>
-        ) : latestPosts.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">No published articles yet. Check back soon!</p>
-          </div>
-        ) : (
-          <div className="relative overflow-hidden">
-            <div
-              className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-              style={{
-                display: 'grid'
-              }}
-            >
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {visiblePosts.map((post) => (
-                <Link href={`/blogs/${post.slug}`} key={post.id} className="group">
-                  <div className="rounded-3xl overflow-hidden border border-border/50 bg-card shadow-lg hover:shadow-2xl transition-all duration-300 h-full flex flex-col">
-                    <div className="relative h-60 overflow-hidden">
-                      {post.mainImage ? (
-                        <Image
-                          src={post.mainImage}
-                          alt={post.title}
-                          fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
-                          <BookOpen className="w-16 h-16 text-muted-foreground" />
-                        </div>
-                      )}
-                      {post.categories && post.categories[0] && (
-                        <div className="absolute top-4 left-4">
-                          <span className="px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-xs font-semibold border border-white/10">
-                            {post.categories[0].name}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="p-8 flex flex-col flex-grow">
-                      {post.tags && post.tags.length > 0 && (
-                        <div className="flex gap-2 mb-4 flex-wrap">
-                          {post.tags.slice(0, 3).map(tag => (
-                            <span key={tag} className="text-xs font-medium text-muted-foreground bg-secondary/10 px-2 py-1 rounded">#{tag}</span>
-                          ))}
-                        </div>
-                      )}
-                      <h3 className="text-xl font-bold mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary transition-all">
-                        {post.title}
-                      </h3>
-                      {post.excerpt && (
-                        <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{post.excerpt}</p>
-                      )}
-                      <div className="mt-auto pt-4 flex items-center justify-between text-sm text-muted-foreground border-t border-border/50">
-                        <span className="flex items-center gap-1"><BookOpen className="w-4 h-4" /> {post.readTime || 5} min read</span>
-                        <span>Read Article →</span>
+                <Link
+                  href={`/blogs/${post.slug}`}
+                  key={post.id}
+                  className="group relative overflow-hidden rounded-xl border border-border bg-card hover:border-primary/50 hover:shadow-xl transition-all duration-300">
+                  <div className="relative h-48 overflow-hidden">
+                    {post.mainImage ? (
+                      <Image
+                        src={post.mainImage}
+                        alt={post.title}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
+                        <BookOpen className="w-12 h-12 text-muted-foreground" />
                       </div>
+                    )}
+                  </div>
+                  <div className="p-5">
+                    <h3 className="text-lg font-bold mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+                      {post.title}
+                    </h3>
+                    {post.excerpt && (
+                      <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
+                        {post.excerpt}
+                      </p>
+                    )}
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                      <span>{post.readTime || 5} min read</span>
+                      <span className="text-primary font-semibold">Read →</span>
                     </div>
                   </div>
                 </Link>
               ))}
             </div>
-          </div>
-        )}
-      </section>
+          )}
+        </div>
+      </section >
 
       {/* MULTI-PATH CTA */}
-      <section className="py-20 border-t border-border bg-gradient-to-b from-background to-muted/20">
+      < section className="py-20 border-t border-border bg-gradient-to-b from-background to-muted/20" >
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-3xl md:text-5xl font-bold mb-6">
             Ready to Get Started?
@@ -755,7 +726,7 @@ const Home = () => {
               <div className="font-bold mb-1">Use Tools</div>
               <div className="text-xs text-muted-foreground">Free utilities</div>
             </Link>
-            <Link href="/blogs" className="p-6 rounded-xl border border-border bg-card hover:border-primary hover:bg-primary/5 transition-all group">
+            <Link href="/dashboard/posts/new" className="p-6 rounded-xl border border-border bg-card hover:border-primary hover:bg-primary/5 transition-all group">
               <div className="text-3xl mb-2">✍️</div>
               <div className="font-bold mb-1">Write</div>
               <div className="text-xs text-muted-foreground">Share knowledge</div>
@@ -767,9 +738,9 @@ const Home = () => {
             </Link>
           </div>
         </div>
-      </section>
+      </section >
 
-    </div>
+    </div >
   );
 };
 

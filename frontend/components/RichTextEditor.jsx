@@ -33,6 +33,9 @@ const lowlight = createLowlight(common);
 export default function RichTextEditor({ content, onChange, placeholder = "Start writing..." }) {
     const [showTOCDialog, setShowTOCDialog] = useState(false);
     const [selectedHeadings, setSelectedHeadings] = useState([2, 3]); // Default H2 and H3
+    const [showLinkDialog, setShowLinkDialog] = useState(false);
+    const [linkUrl, setLinkUrl] = useState('');
+    const [linkText, setLinkText] = useState('');
     const { showAlert, dialogState, handleClose, handleConfirm } = useDialog();
 
     const editor = useEditor({
@@ -115,10 +118,34 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
     };
 
     const addLink = () => {
-        const url = window.prompt('Enter URL:');
-        if (url) {
-            editor.chain().focus().setLink({ href: url }).run();
+        const { from, to } = editor.state.selection;
+        const selectedText = editor.state.doc.textBetween(from, to);
+        setLinkText(selectedText || '');
+        setLinkUrl('');
+        setShowLinkDialog(true);
+    };
+
+    const handleLinkInsert = () => {
+        if (!linkUrl.trim()) {
+            showAlert('Please enter a valid URL.', { title: 'Invalid URL' });
+            return;
         }
+
+        // If user provided custom text, update selection
+        if (linkText.trim() && linkText !== editor.state.doc.textBetween(editor.state.selection.from, editor.state.selection.to)) {
+            editor.chain().focus()
+                .insertContent(linkText)
+                .setTextSelection({ from: editor.state.selection.from - linkText.length, to: editor.state.selection.from })
+                .setLink({ href: linkUrl })
+                .run();
+        } else {
+            // Just apply link to existing selection
+            editor.chain().focus().setLink({ href: linkUrl }).run();
+        }
+
+        setShowLinkDialog(false);
+        setLinkUrl('');
+        setLinkText('');
     };
 
     const setTextColor = () => {
@@ -599,6 +626,68 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
                     </div>
                 </div>
             )}
+
+            {/* Link Dialog */}
+            {showLinkDialog && (
+                <div className="flex-none p-4 border-b border-border bg-muted/30">
+                    <h3 className="text-sm font-semibold mb-3">Insert Link</h3>
+                    <div className="space-y-3">
+                        <div>
+                            <label className="text-xs text-muted-foreground mb-1 block">Link Text (optional)</label>
+                            <input
+                                type="text"
+                                value={linkText}
+                                onChange={(e) => setLinkText(e.target.value)}
+                                placeholder="Leave empty to use selection"
+                                className="w-full px-3 py-2 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                                autoFocus={!linkText}
+                            />
+                        </div>
+                        <div>
+                            <label className="text-xs text-muted-foreground mb-1 block">URL *</label>
+                            <input
+                                type="url"
+                                value={linkUrl}
+                                onChange={(e) => setLinkUrl(e.target.value)}
+                                placeholder="https://example.com or /internal-link"
+                                className="w-full px-3 py-2 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                                autoFocus={!!linkText}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        e.preventDefault();
+                                        handleLinkInsert();
+                                    }
+                                }}
+                            />
+                            <p className="text-xs text-muted-foreground mt-1">
+                                💡 Tip: Use /blogs/slug for internal links
+                            </p>
+                        </div>
+                        <div className="flex gap-2">
+                            <Button
+                                type="button"
+                                size="sm"
+                                onClick={handleLinkInsert}
+                            >
+                                Insert Link
+                            </Button>
+                            <Button
+                                type="button"
+                                size="sm"
+                                variant="outline"
+                                onClick={() => {
+                                    setShowLinkDialog(false);
+                                    setLinkUrl('');
+                                    setLinkText('');
+                                }}
+                            >
+                                Cancel
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
 
             {/* Editor - Scrollable content area */}
             <div className="flex-1 overflow-y-auto">

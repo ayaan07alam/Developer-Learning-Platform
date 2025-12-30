@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Calendar, Clock } from 'lucide-react';
+import { API_BASE_URL } from '@/lib/api-client';
 
 const RelatedBlogs = ({ currentPost }) => {
     const [relatedPosts, setRelatedPosts] = useState([]);
@@ -13,7 +14,7 @@ const RelatedBlogs = ({ currentPost }) => {
             try {
                 // Since we don't have a direct related posts API, we'll fetch all and filter
                 // In a production app with many posts, this should be a backend endpoint
-                const response = await fetch('http://localhost:8080/api/post');
+                const response = await fetch(`${API_BASE_URL}/api/post`);
                 if (response.ok) {
                     const allPosts = await response.json();
 

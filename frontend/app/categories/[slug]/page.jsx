@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { Calendar, Clock, ArrowLeft } from 'lucide-react';
+import { API_BASE_URL } from '@/lib/api-client';
 
 export default function CategoryPostsPage() {
     const params = useParams();
@@ -20,12 +21,12 @@ export default function CategoryPostsPage() {
     const fetchCategoryAndPosts = async () => {
         try {
             // Fetch category details
-            const categoryResponse = await fetch(`http://localhost:8080/api/categories/${slug}`);
+            const categoryResponse = await fetch(`${API_BASE_URL}/api/categories/${slug}`);
             const categoryData = await categoryResponse.json();
             setCategory(categoryData);
 
             // Fetch all posts and filter by category
-            const postsResponse = await fetch('http://localhost:8080/api/posts');
+            const postsResponse = await fetch(`${API_BASE_URL}/api/posts`);
             const allPosts = await postsResponse.json();
 
             // Filter posts that have this category

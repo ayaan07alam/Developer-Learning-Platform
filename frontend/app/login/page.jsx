@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from "framer-motion";
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -13,6 +13,17 @@ export default function LoginPage() {
     const [loading, setLoading] = useState(false);
     const { login, loginWithGoogle } = useAuth();
     const router = useRouter();
+    // Get redirect URL from query params if available (using window.location because useSearchParams might be strict)
+    const [redirectUrl, setRedirectUrl] = useState(null);
+
+    useEffect(() => {
+        // Extract redirect param from URL manually or via searchParams
+        const params = new URLSearchParams(window.location.search);
+        const redirect = params.get('redirect');
+        if (redirect) {
+            setRedirectUrl(redirect);
+        }
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -23,7 +34,14 @@ export default function LoginPage() {
 
         if (result.success) {
             // Redirect back to the page they were on
-            const returnUrl = sessionStorage.getItem('returnUrl');
+            // Redirect strategy:
+            // 1. Query param 'redirect' (highest priority)
+            // 2. sessionStorage 'returnUrl' (legacy support)
+            // 3. Default to dashboard/write if user is capable (optional but user-friendly)
+            // 4. Default to home
+
+            const returnUrl = redirectUrl || sessionStorage.getItem('returnUrl');
+
             if (returnUrl && returnUrl !== '/login' && returnUrl !== '/register') {
                 router.push(returnUrl);
                 sessionStorage.removeItem('returnUrl');

@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Save, Eye, Trash2 } from 'lucide-react';
 import CustomDialog from '@/components/CustomDialog';
 import { useDialog } from '@/lib/useDialog';
+import { API_BASE_URL } from '@/lib/api-client';
 
 export default function NewPostPage() {
     const router = useRouter();
@@ -96,7 +97,7 @@ export default function NewPostPage() {
 
     const fetchCategories = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/categories');
+            const response = await fetch(`${API_BASE_URL}/api/categories`);
             const data = await response.json();
             setCategories(data);
         } catch (error) {
@@ -123,8 +124,8 @@ export default function NewPostPage() {
             // Use PUT for updates, POST for creation
             const method = isUpdate ? 'PUT' : 'POST';
             const url = isUpdate
-                ? `http://localhost:8080/api/posts/${createdPostId}`
-                : 'http://localhost:8080/api/posts';
+                ? `${API_BASE_URL}/api/posts/${createdPostId}`
+                : `${API_BASE_URL}/api/posts`;
 
             console.log(`[${requestId}] Sending ${method} to ${url}`);
 

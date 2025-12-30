@@ -7,6 +7,7 @@ import { Plus, Edit, Trash2, Eye, EyeOff, Heart, MessageCircle, ChevronDown } fr
 import Link from 'next/link';
 import CustomDialog from '@/components/CustomDialog';
 import { useDialog } from '@/lib/useDialog';
+import { API_BASE_URL } from '@/lib/api-client';
 
 export default function PostsListPage() {
     const router = useRouter();
@@ -29,7 +30,7 @@ export default function PostsListPage() {
         try {
             console.log('Fetching posts...');
             // GET /api/posts is public, no auth header needed
-            const response = await fetch('http://localhost:8080/api/posts');
+            const response = await fetch(`${API_BASE_URL}/api/posts`);
 
             console.log('Response status:', response.status);
 
@@ -57,7 +58,7 @@ export default function PostsListPage() {
         if (!confirmed) return;
 
         try {
-            const response = await fetch(`http://localhost:8080/api/posts/${id}`, {
+            const response = await fetch(`${API_BASE_URL}/api/posts/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -79,7 +80,7 @@ export default function PostsListPage() {
         const endpoint = post.status === 'PUBLISHED' ? 'unpublish' : 'publish';
 
         try {
-            const response = await fetch(`http://localhost:8080/api/posts/${post.id}/${endpoint}`, {
+            const response = await fetch(`${API_BASE_URL}/api/posts/${post.id}/${endpoint}`, {
                 method: 'PATCH',
                 headers: {
                     'Authorization': `Bearer ${token}`

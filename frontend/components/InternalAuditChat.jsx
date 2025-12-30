@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { MessageSquare, Send, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { API_BASE_URL } from '@/lib/api-client';
 
 export default function InternalAuditChat({ postId }) {
     const { user, token } = useAuth();
@@ -21,7 +22,7 @@ export default function InternalAuditChat({ postId }) {
 
     const fetchComments = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/api/reviews/${postId}/chat`, {
+            const response = await fetch(`${API_BASE_URL}/api/reviews/${postId}/chat`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -42,8 +43,9 @@ export default function InternalAuditChat({ postId }) {
         if (!newComment.trim()) return;
 
         setSending(true);
+        setSending(true);
         try {
-            const response = await fetch(`http://localhost:8080/api/reviews/${postId}/chat`, {
+            const response = await fetch(`${API_BASE_URL}/api/reviews/${postId}/chat`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

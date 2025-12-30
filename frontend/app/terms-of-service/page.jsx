@@ -8,13 +8,13 @@ const TermsOfService = () => {
 
       <h2 className="text-2xl font-semibold mt-8">AGREEMENT TO OUR LEGAL TERMS</h2>
       <p className="mt-4">
-        We are IntelForGeeks ("Company," "we," "us," "our"). We operate the website https://intelforgeeks.com, as well as any other related products and services that refer or link to these legal terms (the "Legal Terms") (collectively, the "Services").
+        We are RuntimeRiver ("Company," "we," "us," "our"). We operate the website https://RuntimeRiver.com, as well as any other related products and services that refer or link to these legal terms (the "Legal Terms") (collectively, the "Services").
       </p>
       <p className="mt-4">
-        You can contact us by email at contact@intelforgeeks.com.
+        You can contact us by email at contact@RuntimeRiver.com.
       </p>
       <p className="mt-4">
-        These Legal Terms constitute a legally binding agreement made between you, whether personally or on behalf of an entity ("you"), and IntelForGeeks, concerning your access to and use of the Services. You agree that by accessing the Services, you have read, understood, and agreed to be bound by all of these Legal Terms. IF YOU DO NOT AGREE WITH ALL OF THESE LEGAL TERMS, THEN YOU ARE EXPRESSLY PROHIBITED FROM USING THE SERVICES AND YOU MUST DISCONTINUE USE IMMEDIATELY.
+        These Legal Terms constitute a legally binding agreement made between you, whether personally or on behalf of an entity ("you"), and RuntimeRiver, concerning your access to and use of the Services. You agree that by accessing the Services, you have read, understood, and agreed to be bound by all of these Legal Terms. IF YOU DO NOT AGREE WITH ALL OF THESE LEGAL TERMS, THEN YOU ARE EXPRESSLY PROHIBITED FROM USING THE SERVICES AND YOU MUST DISCONTINUE USE IMMEDIATELY.
       </p>
       <p className="mt-4">
         Supplemental terms and conditions or documents that may be posted on the Services from time to time are hereby expressly incorporated herein by reference. We reserve the right, in our sole discretion, to make changes or modifications to these Legal Terms at any time and for any reason. We will alert you about any changes by updating the "Last updated" date of these Legal Terms, and you waive any right to receive specific notice of each such change. It is your responsibility to periodically review these Legal Terms to stay informed of updates. You will be subject to, and will be deemed to have been made aware of and to have accepted, the changes in any revised Legal Terms by your continued use of the Services after the date such revised Legal Terms are posted.
@@ -75,7 +75,7 @@ const TermsOfService = () => {
         Except as set out in this section or elsewhere in our Legal Terms, no part of the Services and no Content or Marks may be copied, reproduced, aggregated, republished, uploaded, posted, publicly displayed, encoded, translated, transmitted, distributed, sold, licensed, or otherwise exploited for any commercial purpose whatsoever, without our express prior written permission.
       </p>
       <p className="mt-4">
-        If you wish to make any use of the Services, Content, or Marks other than as set out in this section or elsewhere in our Legal Terms, please address your request to: contact@intelforgeeks.com. If we ever grant you the permission to post, reproduce, or publicly display any part of our Services or Content, you must identify us as the owners or licensors of the Services, Content, or Marks and ensure that any copyright or proprietary notice appears or is visible on posting, reproducing, or displaying our Content.
+        If you wish to make any use of the Services, Content, or Marks other than as set out in this section or elsewhere in our Legal Terms, please address your request to: contact@RuntimeRiver.com. If we ever grant you the permission to post, reproduce, or publicly display any part of our Services or Content, you must identify us as the owners or licensors of the Services, Content, or Marks and ensure that any copyright or proprietary notice appears or is visible on posting, reproducing, or displaying our Content.
       </p>
       <p className="mt-4">
         We reserve all rights not expressly granted to you in and to the Services, Content, and Marks.
@@ -264,7 +264,7 @@ const TermsOfService = () => {
       <p className="mt-4">
         In order to resolve a complaint regarding the Services or to receive further information regarding use of the Services, please contact us at:
       </p>
-      <p className="mt-4">contact@IntelForgeeks</p>
+      <p className="mt-4">contact@runtimeriver.dev</p>
     </div>
   );
 };

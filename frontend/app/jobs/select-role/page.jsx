@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Briefcase, Search, ArrowRight } from 'lucide-react';
+import { API_BASE_URL } from '@/lib/api-client';
 
 export default function SelectRolePage() {
     const router = useRouter();
@@ -13,7 +14,7 @@ export default function SelectRolePage() {
         setError('');
 
         try {
-            const response = await fetch('http://localhost:8080/api/users/select-job-role', {
+            const response = await fetch(`${API_BASE_URL}/api/users/select-job-role`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -46,7 +47,7 @@ export default function SelectRolePage() {
                 {/* Header */}
                 <div className="text-center mb-12">
                     <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent to-primary">
-                        Welcome to IntelforGeeks Jobs
+                        Welcome to RuntimeRiver Jobs
                     </h1>
                     <p className="text-xl text-muted-foreground">
                         Choose your role to get started

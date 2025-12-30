@@ -7,6 +7,7 @@ import Sidebar from "@/components/sidebar";
 import { PenTool, FileText, TrendingUp, FileEdit, FolderOpen } from "lucide-react";
 import ImprovementDraftsSection from "@/components/ImprovementDraftsSection";
 import ContentManagementSection from "@/components/ContentManagementSection";
+import { API_BASE_URL } from "@/lib/api-client";
 
 export default function DashboardPage() {
     const router = useRouter();
@@ -52,7 +53,7 @@ export default function DashboardPage() {
     const fetchStats = async () => {
         try {
             // Regular users should see only their stats, not system-wide
-            const response = await fetch('http://localhost:8080/api/content/my-stats', {
+            const response = await fetch(`${API_BASE_URL}/api/content/my-stats`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')} `
                 }

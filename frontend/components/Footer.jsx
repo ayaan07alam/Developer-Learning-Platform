@@ -5,25 +5,25 @@ import { Github, Twitter, Linkedin, Mail, Terminal, Heart, Code2 } from "lucide-
 
 const Footer = () => {
   return (
-    <footer className="relative bg-background border-t border-border overflow-hidden pt-20 pb-10">
-      {/* Background Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 pointer-events-none" />
+    <footer className="relative bg-background border-t border-border overflow-hidden pt-16 pb-8">
+      {/* Background Gradient - Subtle */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-muted/20 pointer-events-none" />
 
       <div className="container relative mx-auto px-6 z-10">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16">
 
           {/* Brand Column (Left - 4 cols) */}
           <div className="md:col-span-4 space-y-6">
             <Link href="/" className="flex items-center gap-2 group">
-              <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 group-hover:bg-primary/20 transition-all text-primary">
+              <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-cyan-400/10 border border-cyan-400/20 group-hover:bg-cyan-400/20 transition-all text-cyan-400">
                 <Terminal className="w-5 h-5" />
               </div>
               <span className="text-2xl font-bold tracking-tight text-foreground">
-                IntelFor<span className="text-primary">Geeks</span>
+                Runtime<span className="text-cyan-400">River</span>
               </span>
             </Link>
             <p className="text-muted-foreground leading-relaxed max-w-sm">
-              The comprehensive developer ecosystem. Open source tools, in-depth tutorials, and career opportunities for the modern engineer.
+              Where knowledge flows & code runs. Deep-dive tutorials, powerful tools, and live execution in one flow.
             </p>
             <div className="flex gap-4 pt-2">
               {[
@@ -87,10 +87,10 @@ const Footer = () => {
         </div>
 
         {/* Newsletter Section */}
-        <div className="relative rounded-2xl bg-muted/20 border border-white/5 p-8 mb-20 backdrop-blur-sm">
+        <div className="relative rounded-2xl bg-gradient-to-r from-primary/5 to-secondary/5 border border-border p-8 md:p-10 mb-12">
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div>
-              <h3 className="text-xl font-bold mb-2">Subscribe to our newsletter</h3>
+              <h3 className="text-2xl font-bold mb-2">Subscribe to our newsletter</h3>
               <p className="text-muted-foreground text-sm">Join 10,000+ developers receiving the latest tech news.</p>
             </div>
             <div className="flex gap-2">
@@ -109,7 +109,7 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-border/50 flex flex-col md:flex-row items-center justify-between text-xs text-muted-foreground">
           <div className="flex items-center gap-1 mb-4 md:mb-0">
-            <span>© 2026 IntelForgeeks Inc.</span>
+            <span>© 2026 RuntimeRiver. All rights reserved.</span>
             <span className="mx-2">•</span>
             <span className="flex items-center gap-1">
               Made with <Heart className="w-3 h-3 text-red-500 fill-red-500 animate-pulse" /> by Developers

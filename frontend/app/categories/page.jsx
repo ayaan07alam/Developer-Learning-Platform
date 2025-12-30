@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Folder, FileText } from 'lucide-react';
+import { API_BASE_URL } from '@/lib/api-client';
 
 export default function CategoriesPage() {
     const [categories, setCategories] = useState([]);
@@ -13,7 +14,7 @@ export default function CategoriesPage() {
 
     const fetchCategories = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/categories');
+            const response = await fetch(`${API_BASE_URL}/api/categories`);
             const data = await response.json();
             setCategories(data);
         } catch (error) {

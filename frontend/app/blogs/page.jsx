@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from "framer-motion";
 import Link from 'next/link';
+import { API_BASE_URL } from '@/lib/api-client';
 
 const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
@@ -14,7 +15,7 @@ const Blogs = () => {
 
   const fetchBlogs = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/posts?status=PUBLISHED');
+      const response = await fetch(`${API_BASE_URL}/api/posts?status=PUBLISHED`);
       if (!response.ok) {
         throw new Error('Failed to fetch blogs');
       }

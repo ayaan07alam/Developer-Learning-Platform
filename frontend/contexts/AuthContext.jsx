@@ -1,5 +1,6 @@
 "use client";
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { API_BASE_URL } from '@/lib/api-client';
 
 const AuthContext = createContext(null);
 
@@ -29,7 +30,7 @@ export const AuthProvider = ({ children }) => {
 
     const fetchCurrentUser = async (authToken) => {
         try {
-            const response = await fetch('http://localhost:8080/api/auth/me', {
+            const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
                 headers: {
                     'Authorization': `Bearer ${authToken}`
                 }
@@ -52,7 +53,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (email, password) => {
         try {
-            const response = await fetch('http://localhost:8080/api/auth/login', {
+            const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -77,7 +78,7 @@ export const AuthProvider = ({ children }) => {
 
     const register = async (email, password, displayName) => {
         try {
-            const response = await fetch('http://localhost:8080/api/auth/register', {
+            const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -108,13 +109,13 @@ export const AuthProvider = ({ children }) => {
 
     const updateUsername = async (newUsername) => {
         try {
-            const response = await fetch('http://localhost:8080/api/auth/update-username', {
+            const response = await fetch(`${API_BASE_URL}/api/auth/update-username`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({ displayName: newDisplayName })
+                body: JSON.stringify({ username: newUsername })
             });
 
             if (response.ok) {
@@ -133,12 +134,12 @@ export const AuthProvider = ({ children }) => {
 
     const loginWithGoogle = async (credential) => {
         try {
-            const response = await fetch('http://localhost:8080/api/auth/google', {
+            const response = await fetch(`${API_BASE_URL}/api/auth/google`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ credential })
+                body: JSON.stringify({ token: googleToken })
             });
 
             if (response.ok) {

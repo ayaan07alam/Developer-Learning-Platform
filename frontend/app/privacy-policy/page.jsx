@@ -9,16 +9,16 @@ const PrivacyPolicy = () => {
             <p className="text-gray-600">Last updated December 28, 2025</p>
 
             <p className="mt-4">
-                This privacy notice for IntelForGeeks.com ("<strong>we</strong>," "<strong>us</strong>," or "<strong>our</strong>"), describes how and why we might collect, store, use, and/or share ("<strong>process</strong>") your information when you use our services ("<strong>Services</strong>"), such as when you:
+                This privacy notice for RuntimeRiver ("<strong>we</strong>," "<strong>us</strong>," or "<strong>our</strong>"), describes how and why we might collect, store, use, and/or share ("<strong>process</strong>") your information when you use our services ("<strong>Services</strong>"), such as when you:
             </p>
 
             <ul className="list-disc ml-8 mt-4">
-                <li>Visit our website at IntelForGeeks.com, or any website of ours that links to this privacy notice</li>
+                <li>Visit our website at RuntimeRiver, or any website of ours that links to this privacy notice</li>
                 <li>Engage with us in other related ways, including any sales, marketing, or events</li>
             </ul>
 
             <p className="mt-4">
-                <strong>Questions or concerns?</strong> Reading this privacy notice will help you understand your privacy rights and choices. If you do not agree with our policies and practices, please do not use our Services. If you still have any questions or concerns, please contact us at <a href="mailto:contact@intelforgeeks.com" className="text-primary hover:underline">contact@intelforgeeks.com</a>.
+                <strong>Questions or concerns?</strong> Reading this privacy notice will help you understand your privacy rights and choices. If you do not agree with our policies and practices, please do not use our Services. If you still have any questions or concerns, please contact us at <a href="mailto:contact@RuntimeRiver" className="text-primary hover:underline">contact@RuntimeRiver</a>.
             </p>
 
             <h2 className="text-2xl font-semibold mt-8">SUMMARY OF KEY POINTS</h2>
@@ -261,7 +261,7 @@ const PrivacyPolicy = () => {
 
             <h2 id="section-14" className="text-2xl font-semibold mt-8">14. HOW CAN YOU CONTACT US ABOUT THIS NOTICE?</h2>
             <p className="mt-4">
-                If you have questions or comments about this notice, you may email us at <a href="mailto:contact@intelforgeeks.com" className="text-primary hover:underline">contact@intelforgeeks.com</a>.
+                If you have questions or comments about this notice, you may email us at <a href="mailto:contact@RuntimeRiver" className="text-primary hover:underline">contact@RuntimeRiver</a>.
             </p>
 
             <h2 id="section-15" className="text-2xl font-semibold mt-8">15. HOW CAN YOU REVIEW, UPDATE, OR DELETE THE DATA WE COLLECT FROM YOU?</h2>

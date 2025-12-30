@@ -28,13 +28,13 @@ export async function generateMetadata({ params }) {
 
     if (!post) {
         return {
-            title: 'Article Not Found | IntelForgeeks',
+            title: 'Article Not Found | RuntimeRiver',
             description: 'The requested article could not be found.'
         };
     }
 
-    const metaTitle = post.metaTitle ? `${post.metaTitle} | IntelForgeeks` : `${post.title} | IntelForgeeks`;
-    const metaDescription = post.metaDescription || post.excerpt || post.smallDescription?.slice(0, 160) || `Read ${post.title} on IntelForgeeks.`;
+    const metaTitle = post.metaTitle ? `${post.metaTitle} | RuntimeRiver` : `${post.title} | RuntimeRiver`;
+    const metaDescription = post.metaDescription || post.excerpt || post.smallDescription?.slice(0, 160) || `Read ${post.title} on RuntimeRiver.`;
 
     return {
         title: metaTitle,
@@ -44,24 +44,24 @@ export async function generateMetadata({ params }) {
             title: metaTitle,
             description: metaDescription,
             type: 'article',
-            url: `https://www.intelforgeeks.com/blogs/${params.slug}`,
+            url: `https://www.runtimeriver.dev/blogs/${params.slug}`,
             images: [
                 {
-                    url: post.mainImage || 'https://www.intelforgeeks.com/og-default.jpg',
+                    url: post.mainImage || 'https://www.runtimeriver.dev/og-default.jpg',
                     width: 1200,
                     height: 630,
                     alt: post.title,
                 },
             ],
             publishedTime: post.publishedAt || post.createdAt,
-            authors: [post.createdBy?.displayName || 'IntelForgeeks Author'],
+            authors: [post.createdBy?.displayName || 'RuntimeRiver Team'],
             tags: post.tags,
         },
         twitter: {
             card: 'summary_large_image',
             title: metaTitle,
             description: metaDescription,
-            images: [post.mainImage || 'https://www.intelforgeeks.com/og-default.jpg'],
+            images: [post.mainImage || 'https://www.runtimeriver.dev/og-default.jpg'],
         }
     };
 }

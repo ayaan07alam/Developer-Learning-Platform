@@ -5,6 +5,7 @@ import { Plus, Briefcase, Eye, Edit, Trash2, XCircle, Users, RefreshCw } from 'l
 import Link from 'next/link';
 import CustomDialog from '@/components/CustomDialog';
 import { useDialog } from '@/lib/useDialog';
+import { API_BASE_URL } from '@/lib/api-client';
 
 export default function EmployerDashboard() {
     const router = useRouter();
@@ -19,7 +20,7 @@ export default function EmployerDashboard() {
 
     const fetchMyJobs = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/jobs/my-jobs', {
+            const response = await fetch(`${API_BASE_URL}/api/jobs/my-jobs`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 },
@@ -48,7 +49,7 @@ export default function EmployerDashboard() {
         if (!confirmed) return;
 
         try {
-            const response = await fetch('http://localhost:8080/api/users/change-job-role', {
+            const response = await fetch(`${API_BASE_URL}/api/users/change-job-role`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -80,7 +81,7 @@ export default function EmployerDashboard() {
         if (!confirmed) return;
 
         try {
-            const response = await fetch(`http://localhost:8080/api/jobs/${jobId}`, {
+            const response = await fetch(`${API_BASE_URL}/api/jobs/${jobId}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -97,7 +98,7 @@ export default function EmployerDashboard() {
 
     const handleCloseJob = async (jobId) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/jobs/${jobId}/close`, {
+            const response = await fetch(`${API_BASE_URL}/api/jobs/${jobId}/close`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,

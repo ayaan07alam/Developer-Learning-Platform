@@ -10,6 +10,7 @@ import Link from 'next/link';
 import InternalAuditChat from '@/components/InternalAuditChat';
 import CustomDialog from '@/components/CustomDialog';
 import { useDialog } from '@/lib/useDialog';
+import { API_BASE_URL } from '@/lib/api-client';
 
 export default function EditPostPage() {
     const router = useRouter();
@@ -55,7 +56,7 @@ export default function EditPostPage() {
 
     const fetchCategories = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/categories');
+            const response = await fetch(`${API_BASE_URL}/api/categories`);
             const data = await response.json();
             setCategories(data);
         } catch (error) {
@@ -66,7 +67,7 @@ export default function EditPostPage() {
     const fetchPost = async () => {
         try {
             console.log('Fetching post:', params.id);
-            const response = await fetch(`http://localhost:8080/api/posts/${params.id}`, {
+            const response = await fetch(`${API_BASE_URL}/api/posts/${params.id}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -99,7 +100,7 @@ export default function EditPostPage() {
     const fetchOrCreateRevision = async (post) => {
         try {
             // Check if there's an active draft
-            const revisionRes = await fetch(`http://localhost:8080/api/revisions/posts/${post.id}/active`, {
+            const revisionRes = await fetch(`${API_BASE_URL}/api/revisions/posts/${post.id}/active`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
@@ -111,7 +112,7 @@ export default function EditPostPage() {
                 loadRevisionData(revision);
             } else {
                 // Create new revision
-                const createRes = await fetch(`http://localhost:8080/api/revisions/posts/${post.id}`, {
+                const createRes = await fetch(`${API_BASE_URL}/api/revisions/posts/${post.id}`, {
                     method: 'POST',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
@@ -178,7 +179,7 @@ export default function EditPostPage() {
                 // Working with a revision
                 if (targetAction === 'PUBLISHED') {
                     // Publish the revision (apply changes to live post)
-                    const response = await fetch(`http://localhost:8080/api/revisions/${revisionId}/publish`, {
+                    const response = await fetch(`${API_BASE_URL}/api/revisions/${revisionId}/publish`, {
                         method: 'POST',
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
@@ -192,7 +193,7 @@ export default function EditPostPage() {
                     setRevisionId(null);
                 } else {
                     // Save revision draft
-                    const response = await fetch(`http://localhost:8080/api/revisions/${revisionId}`, {
+                    const response = await fetch(`${API_BASE_URL}/api/revisions/${revisionId}`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
@@ -213,7 +214,7 @@ export default function EditPostPage() {
                 }
             } else {
                 // Normal post update
-                const response = await fetch(`http://localhost:8080/api/posts/${params.id}`, {
+                const response = await fetch(`${API_BASE_URL}/api/posts/${params.id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -266,7 +267,7 @@ export default function EditPostPage() {
         if (!confirmed) return;
 
         try {
-            const response = await fetch(`http://localhost:8080/api/revisions/${revisionId}`, {
+            const response = await fetch(`${API_BASE_URL}/api/revisions/${revisionId}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

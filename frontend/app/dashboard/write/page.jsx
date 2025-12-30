@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import CustomDialog from "@/components/CustomDialog";
 import { useDialog } from "@/lib/useDialog";
+import { API_BASE_URL } from "@/lib/api-client";
 
 export default function WriterDashboardPage() {
     const { user, isAuthenticated, loading: authLoading } = useAuth();
@@ -30,7 +31,9 @@ export default function WriterDashboardPage() {
     useEffect(() => {
         if (!authLoading) {
             if (!isAuthenticated) {
-                router.push('/login?redirect=/dashboard/write');
+                // Set return URL for both query param and backup storage
+                sessionStorage.setItem('returnUrl', '/dashboard/posts/new');
+                router.push('/login?redirect=/dashboard/posts/new');
                 return;
             }
 
@@ -48,7 +51,7 @@ export default function WriterDashboardPage() {
     const fetchSubmissions = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:8080/api/posts/my-submissions', {
+            const response = await fetch(`${API_BASE_URL}/api/posts/my-submissions`, {
                 headers: {
                     'Authorization': `Bearer ${token} `,
                     'Content-Type': 'application/json'
@@ -72,7 +75,7 @@ export default function WriterDashboardPage() {
     const fetchDeletionRequests = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:8080/api/admin/deletion-requests/my-requests', {
+            const response = await fetch(`${API_BASE_URL}/api/admin/deletion-requests/my-requests`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
@@ -140,7 +143,7 @@ export default function WriterDashboardPage() {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:8080/api/posts/${postId}/submit`, {
+            const response = await fetch(`${API_BASE_URL}/api/posts/${postId}/submit`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -174,7 +177,7 @@ export default function WriterDashboardPage() {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:8080/api/posts/${postId}/unsubmit`, {
+            const response = await fetch(`${API_BASE_URL}/api/posts/${postId}/unsubmit`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -233,7 +236,7 @@ export default function WriterDashboardPage() {
         setDeletingId(post.id);
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:8080/api/posts/${post.id}`, {
+            const response = await fetch(`${API_BASE_URL}/api/posts/${post.id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -270,7 +273,7 @@ export default function WriterDashboardPage() {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:8080/api/posts/${selectedPost.id}/request-deletion`, {
+            const response = await fetch(`${API_BASE_URL}/api/posts/${selectedPost.id}/request-deletion`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,

@@ -13,6 +13,7 @@ import RelatedBlogs from '@/components/RelatedBlogs';
 import { notFound } from 'next/navigation';
 import CustomDialog from '@/components/CustomDialog';
 import { useDialog } from '@/lib/useDialog';
+import { API_BASE_URL } from '@/lib/api-client';
 
 const BlogPost = ({ initialPost }) => {
     const params = useParams();
@@ -24,7 +25,7 @@ const BlogPost = ({ initialPost }) => {
     useEffect(() => {
         const fetchPost = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/api/posts/slug/${params.slug}`);
+                const response = await fetch(`${API_BASE_URL}/api/posts/slug/${params.slug}`);
                 if (!response.ok) {
                     throw new Error('Post not found');
                 }

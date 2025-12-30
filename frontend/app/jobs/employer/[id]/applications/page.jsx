@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, Mail, Phone, FileText, Calendar, User } from 'lucide-react';
 import Link from 'next/link';
+import { API_BASE_URL } from '@/lib/api-client';
 
 export default function ApplicationsPage() {
     const params = useParams();
@@ -18,7 +19,7 @@ export default function ApplicationsPage() {
     const fetchJobAndApplications = async () => {
         try {
             // Fetch job details
-            const jobResponse = await fetch(`http://localhost:8080/api/jobs/${params.id}`, {
+            const jobResponse = await fetch(`${API_BASE_URL}/api/jobs/${params.id}`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 },
@@ -30,7 +31,7 @@ export default function ApplicationsPage() {
             }
 
             // Fetch applications
-            const appsResponse = await fetch(`http://localhost:8080/api/jobs/${params.id}/applications`, {
+            const appsResponse = await fetch(`${API_BASE_URL}/api/jobs/${params.id}/applications`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 },

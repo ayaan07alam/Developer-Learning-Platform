@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { X, ArrowRight } from "lucide-react";
+import { API_BASE_URL } from "@/lib/api-client";
 
 const Learn = () => {
   const [selectedId, setSelectedId] = useState(null);
@@ -16,7 +17,7 @@ const Learn = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/categories');
+      const response = await fetch(`${API_BASE_URL}/api/categories`);
       const data = await response.json();
 
       const customCategories = [

@@ -7,6 +7,7 @@ import { MessageCircle, Check, X, AlertTriangle, Trash2, RefreshCw } from 'lucid
 import { formatDistanceToNow } from 'date-fns';
 import CustomDialog from '@/components/CustomDialog';
 import { useDialog } from '@/lib/useDialog';
+import { API_BASE_URL } from '@/lib/api-client';
 
 export default function CommentsPage() {
     const [comments, setComments] = useState([]);
@@ -29,7 +30,7 @@ export default function CommentsPage() {
 
     const fetchStats = async () => {
         try {
-            const res = await fetch('http://localhost:8080/api/admin/comments/stats', {
+            const res = await fetch(`${API_BASE_URL}/api/admin/comments/stats`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();
@@ -43,8 +44,8 @@ export default function CommentsPage() {
         setLoading(true);
         try {
             const url = filter === 'ALL'
-                ? 'http://localhost:8080/api/admin/comments'
-                : `http://localhost:8080/api/admin/comments?status=${filter}`;
+                ? `${API_BASE_URL}/api/admin/comments`
+                : `${API_BASE_URL}/api/admin/comments?status=${filter}`;
 
             const res = await fetch(url, {
                 headers: { 'Authorization': `Bearer ${token}` }
@@ -61,7 +62,7 @@ export default function CommentsPage() {
 
     const handleAction = async (commentId, action) => {
         try {
-            const res = await fetch(`http://localhost:8080/api/admin/comments/${commentId}/${action}`, {
+            const res = await fetch(`${API_BASE_URL}/api/admin/comments/${commentId}/${action}`, {
                 method: 'PUT',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -87,7 +88,7 @@ export default function CommentsPage() {
         if (!confirmed) return;
 
         try {
-            const res = await fetch(`http://localhost:8080/api/admin/comments/${commentId}`, {
+            const res = await fetch(`${API_BASE_URL}/api/admin/comments/${commentId}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

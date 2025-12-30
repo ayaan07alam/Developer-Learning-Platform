@@ -4,8 +4,8 @@ import Image from "next/image";
 import Hero from "@/components/Home";
 
 export const metadata = {
-  title: "IntelForgeeks - Developer Tools, Blog, Tutorials & Jobs | Complete Developer Ecosystem",
-  description: "Your complete developer platform: 40+ free tools (PDF, Excel, Image, Code), tech blog platform, interactive tutorials, and job board. Write, learn, build, and connect - all in one place.",
+  title: "RuntimeRiver - Write Blogs, Run Code & Access Dev Tools",
+  description: "The open platform for developers. Write and share technical articles, compile code in 18+ languages, and access free dev tools. Join the community flow.",
   keywords: [
     "developer tools",
     "free developer tools",
@@ -24,21 +24,21 @@ export const metadata = {
     "tech jobs",
     "developer ecosystem"
   ],
-  authors: [{ name: "IntelForgeeks" }],
-  creator: "IntelForgeeks",
-  publisher: "IntelForgeeks",
+  authors: [{ name: "RuntimeRiver" }],
+  creator: "RuntimeRiver",
+  publisher: "RuntimeRiver",
   openGraph: {
-    title: "IntelForgeeks - Complete Developer Ecosystem",
-    description: "40+ free tools, tech blog, tutorials & jobs for developers",
-    url: "https://www.intelforgeeks.com",
-    siteName: "IntelForgeeks",
+    title: "RuntimeRiver - Write & Run Code",
+    description: "Write articles, run code, and share knowledge with the global developer community.",
+    url: "https://www.runtimeriver.com",
+    siteName: "RuntimeRiver",
     locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "IntelForgeeks - Developer Tools, Blog & More",
-    description: "40+ free tools, tech blog, tutorials & jobs - everything developers need",
+    title: "RuntimeRiver - The Open Dev Community",
+    description: "Write blogs, run code, and grow your career. Open for all contributors.",
   },
   robots: {
     index: true,
@@ -52,7 +52,7 @@ export const metadata = {
     },
   },
   alternates: {
-    canonical: "https://www.intelforgeeks.com",
+    canonical: "https://www.runtimeriver.dev",
   },
 };
 

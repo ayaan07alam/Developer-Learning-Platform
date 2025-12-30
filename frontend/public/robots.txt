@@ -15,4 +15,4 @@ Disallow: /verify-email/
 Allow: /api/seo/
 
 # Sitemap location
-Sitemap: https://www.intelforgeeks.com/sitemap.xml
+Sitemap: https://www.runtimeriver.com/sitemap.xml

@@ -9,6 +9,7 @@ import ContentManagementSection from "@/components/ContentManagementSection";
 import Link from "next/link";
 import CustomDialog from "@/components/CustomDialog";
 import { useDialog } from "@/lib/useDialog";
+import { API_BASE_URL } from "@/lib/api-client";
 
 export default function AdminDashboard() {
     const router = useRouter();
@@ -48,13 +49,13 @@ export default function AdminDashboard() {
             const token = localStorage.getItem('token');
 
             // Fetch user count
-            const usersResponse = await fetch('http://localhost:8080/api/admin/users', {
+            const usersResponse = await fetch(`${API_BASE_URL}/api/admin/users`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const usersData = await usersResponse.json();
 
             // Fetch post stats
-            const postsResponse = await fetch('http://localhost:8080/api/content/stats', {
+            const postsResponse = await fetch(`${API_BASE_URL}/api/content/stats`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const postsData = await postsResponse.json();
@@ -78,7 +79,7 @@ export default function AdminDashboard() {
         setLoadingRequests(true);
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:8080/api/admin/deletion-requests', {
+            const response = await fetch(`${API_BASE_URL}/api/admin/deletion-requests`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (response.ok) {
@@ -102,7 +103,7 @@ export default function AdminDashboard() {
         setProcessingId(requestId);
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:8080/api/admin/deletion-requests/${requestId}/approve`, {
+            const response = await fetch(`${API_BASE_URL}/api/admin/deletion-requests/${requestId}/approve`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -137,7 +138,7 @@ export default function AdminDashboard() {
         setProcessingId(requestId);
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:8080/api/admin/deletion-requests/${requestId}/deny`, {
+            const response = await fetch(`${API_BASE_URL}/api/admin/deletion-requests/${requestId}/deny`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

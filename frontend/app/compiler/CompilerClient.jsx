@@ -1,30 +1,18 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { Controlled as CodeMirror } from 'react-codemirror2';
-import { Play, Loader2, Copy, Check, Terminal, Trash2, Download } from 'lucide-react';
+import CodeMirror from '@uiw/react-codemirror';
+import { javascript } from '@codemirror/lang-javascript';
+import { python } from '@codemirror/lang-python';
+import { java } from '@codemirror/lang-java';
+import { cpp } from '@codemirror/lang-cpp';
+import { oneDark } from '@codemirror/theme-one-dark';
+import { Play, Loader2, Copy, Check, Terminal, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { executeCode, getSupportedLanguages } from '@/lib/pistonApi';
-import { cn } from '@/lib/utils';
-
-// Import CodeMirror styles and modes
-if (typeof window !== 'undefined') {
-    require('codemirror/lib/codemirror.css');
-    require('codemirror/theme/material.css');
-    require('codemirror/mode/javascript/javascript');
-    require('codemirror/mode/python/python');
-    require('codemirror/mode/clike/clike'); // Java, C++, C#
-    require('codemirror/mode/go/go');
-    require('codemirror/mode/rust/rust');
-    require('codemirror/mode/php/php');
-    require('codemirror/mode/ruby/ruby');
-    require('codemirror/mode/shell/shell');
-    require('codemirror/mode/swift/swift');
-    require('codemirror/mode/r/r');
-}
 
 const DEFAULT_CODE = {
     javascript: `// Write your JavaScript code here
-console.log("Hello from IntelForgeeks Compiler!");
+console.log("Hello from RuntimeRiver!");
 
 function sum(a, b) {
     return a + b;
@@ -32,7 +20,7 @@ function sum(a, b) {
 
 console.log("Sum of 5 + 3 =", sum(5, 3));`,
     python: `# Write your Python code here
-print("Hello from IntelForgeeks Compiler!")
+print("Hello from RuntimeRiver!")
 
 def greet(name):
     return f"Welcome, {name}!"
@@ -40,24 +28,24 @@ def greet(name):
 print(greet("Developer"))`,
     java: `public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello from IntelForgeeks Compiler!");
+        System.out.println("Hello from RuntimeRiver!");
     }
 }`,
     cpp: `#include <iostream>
 using namespace std;
 
 int main() {
-    cout << "Hello from IntelForgeeks Compiler!" << endl;
+    cout << "Hello from RuntimeRiver!" << endl;
     return 0;
 }`,
     c: `#include <stdio.h>
 
 int main() {
-    printf("Hello from IntelForgeeks Compiler!\\n");
+    printf("Hello from RuntimeRiver!\\n");
     return 0;
 }`,
     typescript: `// Write your TypeScript code here
-console.log("Hello from IntelForgeeks Compiler!");
+console.log("Hello from RuntimeRiver!");
 
 function greet(name: string): string {
     return \`Hello, \${name}!\`;
@@ -68,25 +56,25 @@ console.log(greet("Developer"));`,
 import "fmt"
 
 func main() {
-    fmt.Println("Hello from IntelForgeeks Compiler!")
+    fmt.Println("Hello from RuntimeRiver!")
 }`,
     rust: `fn main() {
-    println!("Hello from IntelForgeeks Compiler!");
+    println!("Hello from RuntimeRiver!");
 }`,
     php: `<?php
-echo "Hello from IntelForgeeks Compiler!";
+echo "Hello from RuntimeRiver!";
 ?>`,
     csharp: `using System;
 
 class Program {
     static void Main() {
-        Console.WriteLine("Hello from IntelForgeeks Compiler!");
+        Console.WriteLine("Hello from RuntimeRiver!");
     }
 }`,
-    ruby: `puts "Hello from IntelForgeeks Compiler!"`,
-    swift: `print("Hello from IntelForgeeks Compiler!")`,
-    r: `print("Hello from IntelForgeeks Compiler!")`,
-    bash: `echo "Hello from IntelForgeeks Compiler!"`
+    ruby: `puts "Hello from RuntimeRiver!"`,
+    swift: `print("Hello from RuntimeRiver!")`,
+    r: `print("Hello from RuntimeRiver!")`,
+    bash: `echo "Hello from RuntimeRiver!"`
 };
 
 export default function CompilerPage() {
@@ -105,8 +93,6 @@ export default function CompilerPage() {
     const handleLanguageChange = (e) => {
         const newLang = e.target.value;
         setLanguage(newLang);
-        // Preserve code if it was modified, otherwise switch to default for that language if available
-        // For simplicity, we'll just switch to default if specific default exists, otherwise keep current
         if (DEFAULT_CODE[newLang]) {
             setCode(DEFAULT_CODE[newLang]);
         }
@@ -146,25 +132,22 @@ export default function CompilerPage() {
         setError(null);
     };
 
-    // Helper to map Piston languages to CodeMirror modes
-    const getMode = (lang) => {
-        const map = {
-            javascript: 'javascript',
-            python: 'python',
-            java: 'text/x-java',
-            cpp: 'text/x-c++src',
-            c: 'text/x-csrc',
-            csharp: 'text/x-csharp',
-            go: 'go',
-            rust: 'rust',
-            php: 'php',
-            ruby: 'ruby',
-            bash: 'shell',
-            swift: 'swift',
-            r: 'r',
-            typescript: 'javascript' // TS mode usually requires addon or just use JS
-        };
-        return map[lang] || 'javascript';
+    // Get language extension
+    const getLanguageExtension = () => {
+        switch (language) {
+            case 'javascript':
+            case 'typescript':
+                return [javascript({ jsx: true, typescript: language === 'typescript' })];
+            case 'python':
+                return [python()];
+            case 'java':
+                return [java()];
+            case 'cpp':
+            case 'c':
+                return [cpp()];
+            default:
+                return [];
+        }
     };
 
     if (!mounted) return (
@@ -229,7 +212,7 @@ export default function CompilerPage() {
                                 <div className="w-3 h-3 rounded-full bg-red-500" />
                                 <div className="w-3 h-3 rounded-full bg-yellow-500" />
                                 <div className="w-3 h-3 rounded-full bg-green-500" />
-                                <span className="ml-2 text-xs text-muted-foreground font-mono">main.{language === 'c++' ? 'cpp' : language.replace('sharp', 'cs')}</span>
+                                <span className="ml-2 text-xs text-muted-foreground font-mono">main.{language === 'cpp' ? 'cpp' : language.replace('sharp', 'cs')}</span>
                             </div>
                             <Button
                                 variant="ghost"
@@ -242,31 +225,37 @@ export default function CompilerPage() {
                             </Button>
                         </div>
 
-                        <div className="flex-grow overflow-hidden relative text-base">
+                        <div className="flex-grow overflow-hidden">
                             <CodeMirror
-                                key={language}
                                 value={code}
-                                options={{
-                                    mode: getMode(language),
-                                    theme: 'material',
+                                height="100%"
+                                theme={oneDark}
+                                extensions={getLanguageExtension()}
+                                onChange={(value) => setCode(value)}
+                                style={{ fontSize: '14px', height: '100%' }}
+                                basicSetup={{
                                     lineNumbers: true,
-                                    lineWrapping: true,
-                                    smartIndent: true,
+                                    highlightActiveLineGutter: true,
+                                    highlightSpecialChars: true,
                                     foldGutter: true,
-                                    gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
-                                    autoCloseBrackets: true,
-                                    matchBrackets: true,
+                                    drawSelection: true,
+                                    dropCursor: true,
+                                    allowMultipleSelections: true,
+                                    indentOnInput: true,
+                                    bracketMatching: true,
+                                    closeBrackets: true,
+                                    autocompletion: true,
+                                    rectangularSelection: true,
+                                    crosshairCursor: true,
+                                    highlightActiveLine: true,
+                                    highlightSelectionMatches: true,
+                                    closeBracketsKeymap: true,
+                                    searchKeymap: true,
+                                    foldKeymap: true,
+                                    completionKeymap: true,
+                                    lintKeymap: true,
                                 }}
-                                onBeforeChange={(editor, data, value) => {
-                                    setCode(value);
-                                }}
-                                className="h-full w-full"
                             />
-                            {/* CSS override for full height */}
-                            <style jsx global>{`
-                                .react-codemirror2 { height: 100%; }
-                                .CodeMirror { height: 100%; font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 14px; }
-                            `}</style>
                         </div>
                     </div>
 
@@ -321,5 +310,3 @@ export default function CompilerPage() {
         </div>
     );
 }
-
-// Add default export for page

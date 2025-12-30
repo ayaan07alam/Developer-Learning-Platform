@@ -46,7 +46,7 @@ export default function RegisterPage() {
                         Create Account
                     </h1>
                     <p className="text-muted-foreground mb-8">
-                        Join IntelForgeeks to start your journey
+                        Join RuntimeRiver to start your journey
                     </p>
 
                     {error && (

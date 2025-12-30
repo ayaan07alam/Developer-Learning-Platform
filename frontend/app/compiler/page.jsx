@@ -3,7 +3,7 @@ import CompilerClient from './CompilerClient';
 import { API_BASE_URL } from '@/lib/api-client';
 
 export const metadata = {
-    title: 'Online Compiler & IDE - Run Python, Java, C++, Go, Rust | IntelForgeeks',
+    title: 'Online Compiler & IDE - Run Python, Java, C++, Go, Rust | RuntimeRiver',
     description: 'Free, fast, and powerful Online Compiler and IDE. Run code instantly in 18+ programming languages including Python, Java, C++, JavaScript, Rust, Go, and more. No installation required.',
     keywords: [
         'online compiler',
@@ -20,25 +20,25 @@ export const metadata = {
         'web based ide'
     ],
     alternates: {
-        canonical: 'https://www.intelforgeeks.com/compiler',
+        canonical: 'https://www.RuntimeRiver.com/compiler',
     },
     openGraph: {
-        title: 'Online Compiler & IDE - Run Code Instantly | IntelForgeeks',
+        title: 'Online Compiler & IDE - Run Code Instantly | RuntimeRiver',
         description: 'Write and execute code in 18+ languages directly in your browser. Fast, free, and no setup needed.',
-        url: 'https://www.intelforgeeks.com/compiler',
+        url: 'https://www.RuntimeRiver.com/compiler',
         type: 'website',
         images: [
             {
-                url: 'https://www.intelforgeeks.com/og-compiler.jpg', // You might want to create this image later
+                url: 'https://www.RuntimeRiver.com/og-compiler.jpg', // You might want to create this image later
                 width: 1200,
                 height: 630,
-                alt: 'IntelForgeeks Online Compiler Interface',
+                alt: 'RuntimeRiver Online Compiler Interface',
             },
         ],
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'Run Code Online in 18+ Languages - IntelForgeeks Compiler',
+        title: 'Run Code Online in 18+ Languages - RuntimeRiver Compiler',
         description: 'Python, Java, C++, Rust, Go and more. The fastest way to specific code snippets online.',
     }
 };
@@ -47,7 +47,7 @@ export default function CompilerPage() {
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
-        "name": "IntelForgeeks Online Compiler",
+        "name": "RuntimeRiver Online Compiler",
         "applicationCategory": "DeveloperApplication",
         "operatingSystem": "Any",
         "offers": {
@@ -133,7 +133,7 @@ export default function CompilerPage() {
                         <div className="space-y-4">
                             <div className="bg-card p-5 rounded-lg border border-border">
                                 <h3 className="font-semibold text-lg mb-2">Is this online compiler free?</h3>
-                                <p className="text-muted-foreground">Yes, the IntelForgeeks Online Compiler is 100% free to use for learning, testing, and running code snippets.</p>
+                                <p className="text-muted-foreground">Yes, the RuntimeRiver Online Compiler is 100% free to use for learning, testing, and running code snippets.</p>
                             </div>
                             <div className="bg-card p-5 rounded-lg border border-border">
                                 <h3 className="font-semibold text-lg mb-2">Do I need to install anything?</h3>

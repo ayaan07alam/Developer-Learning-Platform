@@ -8,6 +8,7 @@ import ContentManagementSection from "@/components/ContentManagementSection";
 import { FileText, Users, FolderOpen, Plus, Edit, Eye, Clock } from 'lucide-react';
 import PostStatusBadge from '@/components/PostStatusBadge';
 import Link from 'next/link';
+import { API_BASE_URL } from '@/lib/api-client';
 
 export default function EditorDashboard() {
     const router = useRouter();
@@ -32,7 +33,7 @@ export default function EditorDashboard() {
     const fetchDashboardData = async () => {
         try {
             // Fetch posts created by this editor
-            const response = await fetch('http://localhost:8080/api/posts', {
+            const response = await fetch(`${API_BASE_URL}/api/posts`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 },

@@ -1,5 +1,6 @@
 // Replacement for Sanity Client to fetch from Spring Boot
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+import { API_BASE_URL } from './api-client';
+const API_BASE = API_BASE_URL;
 
 export async function springFetch(endpoint) {
     try {
@@ -22,9 +23,7 @@ export const client = {
         // This is a naive adapter. We need to replace specific queries manually.
         // But for drop-in replacement, we can inspect the query string.
 
-        if (process.env.NODE_ENV === 'development') {
-            console.log("Mock Client Fetch:", query);
-        }
+
 
         if (query.includes('*[_type == "post"]')) {
             return await springFetch('/post');

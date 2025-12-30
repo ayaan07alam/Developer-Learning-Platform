@@ -1,7 +1,7 @@
 // Generate JSON-LD Schema markup for SEO
 // Supports Article, Author, Breadcrumb, and Organization schemas
 
-export function generateArticleSchema(post, siteUrl = 'https://intelforgeeks.com') {
+export function generateArticleSchema(post, siteUrl = 'https://www.runtimeriver.dev') {
     const schema = {
         "@context": "https://schema.org",
         "@type": "Article",
@@ -12,12 +12,12 @@ export function generateArticleSchema(post, siteUrl = 'https://intelforgeeks.com
         "dateModified": post.updatedAt || post.createdAt,
         "author": {
             "@type": "Person",
-            "name": post.author?.username || post.author?.email || "IntelForgeeks Team",
+            "name": post.author?.username || post.author?.email || "RuntimeRiver Team",
             "url": post.author ? `${siteUrl}/author/${post.author.slug || post.author.id}` : siteUrl
         },
         "publisher": {
             "@type": "Organization",
-            "name": "IntelForgeeks",
+            "name": "RuntimeRiver",
             "logo": {
                 "@type": "ImageObject",
                 "url": `${siteUrl}/logo.png`
@@ -42,7 +42,7 @@ export function generateArticleSchema(post, siteUrl = 'https://intelforgeeks.com
     return schema;
 }
 
-export function generateBreadcrumbSchema(breadcrumbs, siteUrl = 'https://intelforgeeks.com') {
+export function generateBreadcrumbSchema(breadcrumbs, siteUrl = 'https://www.runtimeriver.dev') {
     return {
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
@@ -55,7 +55,7 @@ export function generateBreadcrumbSchema(breadcrumbs, siteUrl = 'https://intelfo
     };
 }
 
-export function generateAuthorSchema(author, siteUrl = 'https://intelforgeeks.com') {
+export function generateAuthorSchema(author, siteUrl = 'https://www.runtimeriver.dev') {
     return {
         "@context": "https://schema.org",
         "@type": "Person",
@@ -67,27 +67,27 @@ export function generateAuthorSchema(author, siteUrl = 'https://intelforgeeks.co
     };
 }
 
-export function generateOrganizationSchema(siteUrl = 'https://intelforgeeks.com') {
+export function generateOrganizationSchema(siteUrl = 'https://www.runtimeriver.dev') {
     return {
         "@context": "https://schema.org",
         "@type": "Organization",
-        "name": "IntelForgeeks",
+        "name": "RuntimeRiver",
         "url": siteUrl,
         "logo": `${siteUrl}/logo.png`,
         "description": "A modern tech blog covering programming, web development, and software engineering",
         "sameAs": [
-            "https://twitter.com/IntelForgeeks",
-            "https://github.com/IntelForgeeks",
-            "https://linkedin.com/company/intelforgeeks"
+            "https://twitter.com/RuntimeRiver",
+            "https://github.com/RuntimeRiver",
+            "https://linkedin.com/company/runtimeriver"
         ]
     };
 }
 
-export function generateWebsiteSchema(siteUrl = 'https://intelforgeeks.com') {
+export function generateWebsiteSchema(siteUrl = 'https://www.runtimeriver.dev') {
     return {
         "@context": "https://schema.org",
         "@type": "WebSite",
-        "name": "IntelForgeeks",
+        "name": "RuntimeRiver",
         "url": siteUrl,
         "description": "Learn programming, web development, and software engineering",
         "potentialAction": {
@@ -114,7 +114,7 @@ export function injectSchema(schema) {
 }
 
 // Generate multiple schemas at once
-export function generateBlogPostSchemas(post, siteUrl = 'https://intelforgeeks.com') {
+export function generateBlogPostSchemas(post, siteUrl = 'https://www.runtimeriver.dev') {
     const schemas = [];
 
     // Article schema

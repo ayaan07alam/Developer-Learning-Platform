@@ -4,6 +4,7 @@ import { Clock, FileEdit, CheckCircle, XCircle, Eye, Trash2 } from 'lucide-react
 import Link from 'next/link';
 import CustomDialog from './CustomDialog';
 import { useDialog } from '@/lib/useDialog';
+import { API_BASE_URL } from '@/lib/api-client';
 
 export default function ImprovementDraftsSection({ userId }) {
     const [drafts, setDrafts] = useState([]);
@@ -16,7 +17,7 @@ export default function ImprovementDraftsSection({ userId }) {
 
     const fetchImprovementDrafts = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/content/improvement-drafts', {
+            const response = await fetch(`${API_BASE_URL}/api/content/improvement-drafts`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
@@ -41,7 +42,7 @@ export default function ImprovementDraftsSection({ userId }) {
         if (!confirmed) return;
 
         try {
-            const response = await fetch(`http://localhost:8080/api/revisions/${id}`, {
+            const response = await fetch(`${API_BASE_URL}/api/revisions/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`

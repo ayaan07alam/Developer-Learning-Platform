@@ -16,11 +16,11 @@ const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
 
 export const metadata = {
   title: {
-    template: '%s - IntelForgeeks.com',
-    default: 'IntelForgeeks.com',
+    template: '%s - RuntimeRiver',
+    default: 'RuntimeRiver - Code, Content & Community',
   },
-  description: 'At IntelForgeeks, we cover everything tech. From detailed tutorials and the latest tech news to essential roadmaps and innovative tools, we provide the resources you need to navigate the tech landscape.',
-  applicationName: 'IntelForgeeks.com',
+  description: 'The open developer ecosystem. Read and **write** technical articles, run code instantly, and build your profile. Join 10,000+ developers contributing to the flow.',
+  applicationName: 'RuntimeRiver',
   referrer: 'origin-when-cross-origin',
   keywords: ["Next.js",
     "React",
@@ -61,29 +61,29 @@ export const metadata = {
     "tech career roadmap",
     "coding for beginners",
     "tech tutorials for professionals"],
-  authors: [{ name: 'IntelForgeeks.com' }, { name: 'IntelForgeeks.com', url: 'https://www.intelforgeeks.com' }],
-  creator: 'IntelForgeeks.com',
-  publisher: 'IntelForgeeks.com',
+  authors: [{ name: 'RuntimeRiver' }, { name: 'RuntimeRiver', url: 'https://www.runtimeriver.dev' }],
+  creator: 'RuntimeRiver',
+  publisher: 'RuntimeRiver',
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
   og: {
-    url: 'https://www.intelforgeeks.com',
+    url: 'https://www.runtimeriver.dev',
     type: 'website',
-    title: 'IntelForgeeks.com - Explore the Tech World',
-    description: 'Discover in-depth articles on new tech trends, tutorials, and tools at IntelForgeeks.com.',
-    image: 'https://www.intelforgeeks.com/og-image.jpg',
-    site_name: 'IntelForgeeks.com'
+    title: 'RuntimeRiver - Code, Content & Community',
+    description: 'Read and **write** technical articles, run code instantly, and build your profile. The open community for developers.',
+    image: 'https://www.runtimeriver.dev/og-image.jpg',
+    site_name: 'RuntimeRiver'
   },
   twitter: {
     card: 'summary_large_image',
-    site: '@IntelForgeeks',
-    title: 'IntelForgeeks.com - Explore the Tech World',
-    description: 'Discover in-depth articles on new tech trends, tutorials, and tools at IntelForgeeks.com.',
-    image: 'https://www.intelforgeeks.com/twitter-image.jpg',
-    creator: '@IntelForgeeks'
+    site: '@RuntimeRiver',
+    title: 'RuntimeRiver - Read, Write, Run',
+    description: 'Read articles, write your own, and run code instantly.',
+    image: 'https://www.runtimeriver.dev/twitter-image.jpg',
+    creator: '@RuntimeRiver'
   },
 
 }
@@ -126,7 +126,7 @@ export default function RootLayout({ children }) {
                 defaultTheme="dark"
                 enableSystem
                 disableTransitionOnChange
-                storageKey="intelforgeeks-theme"
+                storageKey="runtimeriver-theme"
               >
                 <Header></Header>
 
