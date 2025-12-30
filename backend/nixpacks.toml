@@ -1,2 +1,5 @@
-[phases]
-build = "mvn clean install -DskipTests"
+[phases.build]
+cmds = ["./mvnw clean install -DskipTests"]
+
+[phases.setup]
+nixPkgs = ["openjdk17"]
