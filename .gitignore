@@ -38,7 +38,7 @@ backend/*.log
 .env.production.local
 
 # Application properties with sensitive credentials
-backend/src/main/resources/application.properties
+# backend/src/main/resources/application.properties
 
 # Database
 *.db
