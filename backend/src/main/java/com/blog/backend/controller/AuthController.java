@@ -247,7 +247,7 @@ public class AuthController {
             }
 
             newUser.setDisplayName(finalUsername);
-            newUser.setPassword(null); // No password for OAuth users
+            newUser.setPassword(""); // Empty string for OAuth users (satisfies NOT NULL)
             newUser.setOauthProvider("GOOGLE");
             newUser.setOauthId(payload.getSubject());
             newUser.setRole(Role.VIEWER);
