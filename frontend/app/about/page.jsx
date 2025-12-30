@@ -4,12 +4,12 @@ export const metadata = {
   og: {
     title: 'About Us - RuntimeRiver',
     description: 'Learn about our mission, values, and team at RuntimeRiver.',
-    image: 'https://runtimeriver.dev/about-og-image.jpg',
+    image: 'https://runtimeriver.com/about-og-image.jpg',
   },
   twitter: {
     title: 'About Us - RuntimeRiver',
     description: 'Learn about our mission, values, and team at RuntimeRiver.',
-    image: 'https://runtimeriver.dev/about-twitter-image.jpg',
+    image: 'https://runtimeriver.com/about-twitter-image.jpg',
   }
 }
 
