@@ -4,6 +4,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { Calendar, Clock, ArrowLeft } from 'lucide-react';
 import { API_BASE_URL } from '@/lib/api-client';
+import LoadingPage from '@/components/Loader/Loader';
 
 export default function CategoryPostsPage() {
     const params = useParams();
@@ -56,7 +57,7 @@ export default function CategoryPostsPage() {
         return (
             <div className="min-h-screen pt-24 pb-12">
                 <div className="container mx-auto px-6">
-                    <div className="text-center">Loading...</div>
+                    <LoadingPage fullScreen={false} />
                 </div>
             </div>
         );

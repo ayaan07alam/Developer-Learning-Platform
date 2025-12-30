@@ -14,6 +14,7 @@ import { notFound } from 'next/navigation';
 import CustomDialog from '@/components/CustomDialog';
 import { useDialog } from '@/lib/useDialog';
 import { API_BASE_URL } from '@/lib/api-client';
+import LoadingPage from '@/components/Loader/Loader';
 
 const BlogPost = ({ initialPost }) => {
     const params = useParams();
@@ -46,14 +47,7 @@ const BlogPost = ({ initialPost }) => {
     }, [params.slug, initialPost]);
 
     if (loading) {
-        return (
-            <div className="min-h-screen pt-24 pb-12 bg-background flex items-center justify-center">
-                <div className="text-center">
-                    <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent mb-4"></div>
-                    <p className="text-muted-foreground">Loading article...</p>
-                </div>
-            </div>
-        );
+        return <LoadingPage fullScreen={false} />;
     }
 
     if (error || !post) {

@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { X, ArrowRight } from "lucide-react";
 import { API_BASE_URL } from "@/lib/api-client";
+import LoadingPage from "@/components/Loader/Loader";
 
 const Learn = () => {
   const [selectedId, setSelectedId] = useState(null);
@@ -127,7 +128,9 @@ const Learn = () => {
           className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4"
         >
           {loading ? (
-            <div className="col-span-full text-center py-12 text-muted-foreground">Loading...</div>
+            <div className="col-span-full">
+              <LoadingPage fullScreen={false} />
+            </div>
           ) : categories.length === 0 ? (
             <div className="col-span-full text-center py-12 text-muted-foreground">No categories available</div>
           ) : (

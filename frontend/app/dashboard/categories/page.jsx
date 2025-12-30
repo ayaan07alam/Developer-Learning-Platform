@@ -7,6 +7,7 @@ import { Plus, Edit, Trash2 } from 'lucide-react';
 import CustomDialog from '@/components/CustomDialog';
 import { useDialog } from '@/lib/useDialog';
 import { API_BASE_URL } from '@/lib/api-client';
+import LoadingPage from '@/components/Loader/Loader';
 
 export default function CategoriesPage() {
     const { user } = useAuth();
@@ -110,7 +111,7 @@ export default function CategoriesPage() {
     };
 
     if (loading) {
-        return <div className="p-8">Loading...</div>;
+        return <LoadingPage fullScreen={false} />;
     }
 
     return (
