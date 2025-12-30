@@ -26,6 +26,7 @@ public class User implements UserDetails {
     @Column(unique = true, nullable = false)
     private String email;
 
+    @com.fasterxml.jackson.annotation.JsonIgnore
     @Column(nullable = false)
     private String password;
 
@@ -38,8 +39,10 @@ public class User implements UserDetails {
 
     private String profilePhoto;
 
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private String oauthProvider;
 
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private String oauthId;
 
     private Boolean active = true;

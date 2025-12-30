@@ -116,7 +116,7 @@ public class Post {
 
     private LocalDateTime approvedAt; // When post was approved for publishing
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "post_categories", joinColumns = @JoinColumn(name = "post_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories = new HashSet<>();
 
@@ -138,12 +138,12 @@ public class Post {
     @Column(name = "show_toc")
     private Boolean showToc = true; // Whether to display TOC on live site
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<FAQ> faqs = new ArrayList<>();
 
     // Internal comments for team discussion
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnoreProperties("post")
+    @JsonIgnore
     private List<PostInternalComment> internalComments = new ArrayList<>();
 
     // Revisions - drafts of this post when editing published content
