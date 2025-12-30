@@ -54,6 +54,7 @@ const quotes = [
 const Home = () => {
   const [latestPosts, setLatestPosts] = useState([]);
   const [trendingPosts, setTrendingPosts] = useState([]);
+  const [categoryCount, setCategoryCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [currentQuote, setCurrentQuote] = useState(0);
@@ -61,7 +62,20 @@ const Home = () => {
 
   useEffect(() => {
     fetchLatestPosts();
+    fetchCategories();
   }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/categories`);
+      if (response.ok) {
+        const data = await response.json();
+        setCategoryCount(data.length);
+      }
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
 
   const fetchLatestPosts = async () => {
     try {
@@ -247,8 +261,8 @@ const Home = () => {
                   <div className="text-xs text-muted-foreground">Free Tools</div>
                 </div>
                 <div className="text-center p-4 rounded-xl bg-card/30 border border-border/50">
-                  <div className="text-2xl font-black text-blue-500 mb-1">4</div>
-                  <div className="text-xs text-muted-foreground">Tech Stacks</div>
+                  <div className="text-2xl font-black text-blue-500 mb-1">{categoryCount > 0 ? categoryCount : '4'}</div>
+                  <div className="text-xs text-muted-foreground">Categories</div>
                 </div>
                 <div className="text-center p-4 rounded-xl bg-card/30 border border-border/50">
                   <div className="text-2xl font-black text-purple-500 mb-1">∞</div>
