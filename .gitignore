@@ -13,9 +13,7 @@ frontend/*.tsbuildinfo
 
 # Java / Maven / Spring Boot
 backend/target/
-backend/.mvn/
-backend/mvnw
-backend/mvnw.cmd
+
 backend/.settings/
 backend/.classpath
 backend/.project
