@@ -22,7 +22,7 @@ const LANGUAGE_VERSIONS = {
     bash: { language: 'bash', version: '5.2.0' }
 };
 
-export async function executeCode(code, language) {
+export async function executeCode(code, language, stdin = "") {
     try {
         const langConfig = LANGUAGE_VERSIONS[language.toLowerCase()];
 
@@ -47,7 +47,7 @@ export async function executeCode(code, language) {
                         content: code
                     }
                 ],
-                stdin: '',
+                stdin: stdin,
                 args: [],
                 compile_timeout: 10000,
                 run_timeout: 3000,
