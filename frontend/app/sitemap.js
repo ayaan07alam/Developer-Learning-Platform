@@ -9,7 +9,7 @@ async function fetchSlugs() {
         const posts = await response.json();
         return posts.map(post => ({
             slug: post.slug,
-            category: post.category?.name?.toLowerCase() || 'general',
+            category: post.categories?.[0]?.name?.toLowerCase() || 'general',
             updated_Date: new Date(post.updatedAt || post.publishedAt || Date.now())
         }));
     } catch (error) {

@@ -95,7 +95,7 @@ const Home = () => {
 
         // Filter for "Trending" category
         const trendingOnly = sortedByDate.filter(post =>
-          post.category && post.category.name && post.category.name.toLowerCase() === 'trending'
+          post.categories && post.categories.some(cat => cat.name && cat.name.toLowerCase() === 'trending')
         );
 
         // If we have trending posts, use them. Otherwise fallback to latest (optional, but good for empty state)
