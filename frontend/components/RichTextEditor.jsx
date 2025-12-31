@@ -11,7 +11,7 @@ import { TextStyle } from '@tiptap/extension-text-style';
 import { Color } from '@tiptap/extension-color';
 import Highlight from '@tiptap/extension-highlight';
 import Subscript from '@tiptap/extension-subscript';
-import Subscript from '@tiptap/extension-subscript';
+
 import Superscript from '@tiptap/extension-superscript';
 import Table from '@tiptap/extension-table';
 import TableCell from '@tiptap/extension-table-cell';
@@ -77,7 +77,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
                 multicolor: true,
             }),
             Subscript,
-            Subscript,
+
             Superscript,
             Table.configure({
                 resizable: true,
