@@ -64,8 +64,9 @@ export default function BlogContent({ htmlContent }) {
 
             // Apply container styles
             table.style.width = '100%';
-            table.style.background = '#f3f0ff';
-            table.style.border = '1px solid #e0d7ff';
+            table.style.height = 'auto'; // ensure height matches content
+            table.style.background = 'hsl(var(--card))'; // Use theme card color
+            table.style.border = '1px solid hsl(var(--border))';
             table.style.padding = '24px';
             table.style.borderRadius = '12px';
             table.style.margin = '32px 0';
@@ -81,37 +82,56 @@ export default function BlogContent({ htmlContent }) {
                 headerDiv.style.gap = '12px';
                 headerDiv.style.marginBottom = '20px';
                 headerDiv.style.paddingBottom = '16px';
-                headerDiv.style.borderBottom = '1px solid #e0d7ff';
+                headerDiv.style.borderBottom = '1px solid hsl(var(--border))';
 
                 // Style icon and title
                 const icon = headerDiv.querySelector('span:first-child');
                 const title = headerDiv.querySelector('span:last-child');
                 if (icon) {
                     icon.style.fontSize = '20px';
-                    icon.style.color = '#6b21a8';
+                    icon.style.color = 'hsl(var(--primary))'; // Cyan
                 }
                 if (title) {
                     title.style.fontSize = '18px';
                     title.style.fontWeight = '600';
-                    title.style.color = '#1f2937';
+                    title.style.color = 'hsl(var(--foreground))';
                 }
             }
+
+            // Remove bullets from any lists inside the TOC cells
+            const lists = firstCell.querySelectorAll('ul, ol');
+            lists.forEach(list => {
+                list.style.listStyle = 'none';
+                list.style.paddingLeft = '0';
+                list.style.margin = '0';
+            });
+
+            const listItems = firstCell.querySelectorAll('li');
+            listItems.forEach(li => {
+                li.style.listStyle = 'none';
+                li.style.marginTop = '8px'; // Add some spacing
+                // Force removal of markers if prose adds them
+                li.className = (li.className || '') + ' list-none';
+            });
 
             // Style all links
             const links = firstCell.querySelectorAll('a');
             links.forEach(link => {
-                link.style.color = '#7c3aed';
+                link.style.color = 'hsl(var(--primary))'; // Cyan
                 link.style.textDecoration = 'none';
                 link.style.display = 'inline-block';
                 link.style.padding = '4px 0';
                 link.style.fontSize = '15px';
+                link.style.opacity = '0.9';
 
                 // Add hover effect
                 link.addEventListener('mouseenter', () => {
-                    link.style.color = '#5b21b6';
+                    link.style.opacity = '1';
+                    link.style.textDecoration = 'underline';
                 });
                 link.addEventListener('mouseleave', () => {
-                    link.style.color = '#7c3aed';
+                    link.style.opacity = '0.9';
+                    link.style.textDecoration = 'none';
                 });
             });
 
@@ -119,7 +139,7 @@ export default function BlogContent({ htmlContent }) {
             const button = firstCell.querySelector('button');
             if (button) {
                 button.style.background = 'transparent';
-                button.style.color = '#7c3aed';
+                button.style.color = 'hsl(var(--primary))';
                 button.style.border = 'none';
                 button.style.padding = '8px 0';
                 button.style.cursor = 'pointer';
