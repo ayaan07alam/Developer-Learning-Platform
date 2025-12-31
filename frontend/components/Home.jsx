@@ -264,8 +264,8 @@ const Home = () => {
                   } else if (query.includes('job')) {
                     window.location.href = '/jobs';
                   } else {
-                    // Default to blogs with search
-                    window.location.href = `/blogs?search=${encodeURIComponent(query)}`;
+                    // Default to global search
+                    window.location.href = `/search?q=${encodeURIComponent(query)}`;
                   }
                 }} className="relative group">
                   <input

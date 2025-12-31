@@ -255,6 +255,11 @@ export default function NewPostPage() {
             .replace(/^-|-$/g, '');
     };
 
+    // Calculate word count
+    const wordCount = formData.content
+        ? formData.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().split(/\s+/).filter(w => w.length > 0).length
+        : 0;
+
     const handleTitleChange = (e) => {
         const title = e.target.value;
         setFormData({
@@ -308,6 +313,9 @@ export default function NewPostPage() {
                             </div>
                         )}
                         <div className="flex items-center gap-3">
+                            <span className="text-sm text-muted-foreground font-medium mr-2">
+                                {wordCount} words
+                            </span>
                             <Button
                                 type="button"
                                 variant="outline"

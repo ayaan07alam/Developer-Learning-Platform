@@ -311,6 +311,11 @@ export default function EditPostPage() {
         }
     };
 
+    // Calculate word count
+    const wordCount = formData.content
+        ? formData.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().split(/\s+/).filter(w => w.length > 0).length
+        : 0;
+
     if (!isAuthenticated) {
         return null;
     }
@@ -359,7 +364,10 @@ export default function EditPostPage() {
                                 {formData.status.replace('_', ' ')}
                             </span>
                         </div>
-                        <div className="flex gap-3">
+                        <div className="flex items-center gap-3">
+                            <span className="text-sm text-muted-foreground font-medium mr-2">
+                                {wordCount} words
+                            </span>
                             <Button
                                 onClick={() => handleSubmit(formData.status)} // Keep current status
                                 disabled={saving || !formData.title || !formData.content}
