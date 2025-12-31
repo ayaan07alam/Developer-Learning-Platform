@@ -206,28 +206,56 @@
   }
 
 /* TipTap Table Styles */
+/* TipTap Table Styles - Premium Design */
 .ProseMirror table {
-  border-collapse: collapse;
-  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
   width: 100%;
-  margin: 0;
+  margin: 1.5rem 0;
   overflow: hidden;
+  border-radius: 0.5rem;
+  border: 1px solid hsl(var(--border));
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
 }
 
 .ProseMirror td,
 .ProseMirror th {
   min-width: 1em;
-  border: 1px solid hsl(var(--border));
-  padding: 8px;
+  padding: 12px 16px;
   vertical-align: top;
   box-sizing: border-box;
   position: relative;
+  border-bottom: 1px solid hsl(var(--border));
+  border-right: 1px solid hsl(var(--border));
+  transition: background-color 0.2s;
 }
 
 .ProseMirror th {
-  font-weight: bold;
+  font-weight: 600;
   text-align: left;
   background-color: hsl(var(--muted));
+  color: hsl(var(--foreground));
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+}
+
+.ProseMirror tr:last-child td {
+  border-bottom: none;
+}
+
+.ProseMirror tr td:last-child,
+.ProseMirror tr th:last-child {
+  border-right: none;
+}
+
+/* Zebra Striping */
+.ProseMirror tr:nth-child(even) td {
+  background-color: hsla(var(--muted), 0.3);
+}
+
+.ProseMirror tr:hover td {
+  background-color: hsla(var(--primary), 0.05);
 }
 
 .ProseMirror .selectedCell:after {
@@ -235,7 +263,7 @@
   position: absolute;
   content: "";
   left: 0; right: 0; top: 0; bottom: 0;
-  background: rgba(200, 200, 255, 0.4);
+  background: hsla(var(--primary), 0.2);
   pointer-events: none;
 }
 
@@ -245,12 +273,20 @@
   top: 0;
   bottom: 0;
   width: 4px;
-  background-color: #adf;
+  background-color: hsl(var(--primary));
+  opacity: 0;
   pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.ProseMirror th:hover .column-resize-handle,
+.ProseMirror td:hover .column-resize-handle {
+  opacity: 0.5;
 }
 
 .ProseMirror p {
   margin: 0;
+  line-height: 1.5;
 }
 
 
