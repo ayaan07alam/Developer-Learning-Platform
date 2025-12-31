@@ -30,7 +30,7 @@ import { useDialog } from '@/lib/useDialog';
 // Initialize lowlight with common languages
 const lowlight = createLowlight(common);
 
-export default function RichTextEditor({ content, onChange, placeholder = "Start writing..." }) {
+export default function RichTextEditor({ content, onChange, placeholder = "Start writing...", onRequestImage, onEditorReady }) {
     const [showTOCDialog, setShowTOCDialog] = useState(false);
     const [selectedHeadings, setSelectedHeadings] = useState([2, 3]); // Default H2 and H3
     const [showLinkDialog, setShowLinkDialog] = useState(false);
@@ -95,9 +95,18 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
             },
         ],
         content,
+        // CRITICAL: We need this to ensure content can be set externally later if needed
+        onTransaction: ({ editor }) => {
+            // Optional: track transaction
+        },
         immediatelyRender: false,
         onUpdate: ({ editor }) => {
             onChange(editor.getHTML());
+        },
+        onCreate: ({ editor }) => {
+            if (onEditorReady) {
+                onEditorReady(editor);
+            }
         },
         editorProps: {
             attributes: {
@@ -106,11 +115,22 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
         },
     });
 
+    // Also update reference if it changes (rare but possible)
+    useEffect(() => {
+        if (editor && onEditorReady) {
+            onEditorReady(editor);
+        }
+    }, [editor, onEditorReady]);
+
     if (!editor) {
         return null;
     }
 
     const addImage = () => {
+        if (onRequestImage) {
+            onRequestImage();
+            return;
+        }
         const url = window.prompt('Enter image URL:');
         if (url) {
             editor.chain().focus().setImage({ src: url }).run();

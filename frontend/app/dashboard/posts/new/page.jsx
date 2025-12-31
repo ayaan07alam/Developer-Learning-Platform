@@ -8,6 +8,7 @@ import FAQBuilder from '@/components/FAQBuilder';
 import { Button } from '@/components/ui/button';
 import { Save, Eye, Trash2 } from 'lucide-react';
 import CustomDialog from '@/components/CustomDialog';
+import MediaLibrary from '@/components/MediaLibrary';
 import { useDialog } from '@/lib/useDialog';
 import { API_BASE_URL } from '@/lib/api-client';
 
@@ -24,6 +25,16 @@ export default function NewPostPage() {
     const [hasChanges, setHasChanges] = useState(true); // Track if form has unsaved changes
     const [lastSubmittedData, setLastSubmittedData] = useState(null); // Track last submitted state
     const { showAlert, dialogState, handleClose, handleConfirm } = useDialog();
+
+    // Media Library Modal State
+    const [showMediaModal, setShowMediaModal] = useState(false);
+    // Callback to handle what happens when an image is selected
+    // If null, it means we are just viewing the library (though usually we select)
+    // We store the handler here to reuse the modal for both Featured Image and RichText
+    const [onMediaSelect, setOnMediaSelect] = useState(null);
+
+    // Editor Reference
+    const editorRef = useRef(null);
 
     // Track if a post has been created (to switch from POST to PUT)
     const [createdPostId, setCreatedPostId] = useState(null);
@@ -251,6 +262,30 @@ export default function NewPostPage() {
             title,
             slug: generateSlug(title)
         });
+    };
+
+    // Media Library Handlers
+    const openMediaForFeaturedImage = () => {
+        setOnMediaSelect(() => (url) => {
+            setFormData(prev => ({ ...prev, mainImage: url }));
+            setShowMediaModal(false);
+        });
+        setShowMediaModal(true);
+    };
+
+    const openMediaForEditor = () => {
+        setOnMediaSelect(() => (url) => {
+            editorRef.current?.chain().focus().setImage({ src: url }).run();
+            setShowMediaModal(false);
+        });
+        setShowMediaModal(true);
+    };
+
+    const handleMediaSelect = (url) => {
+        if (onMediaSelect) {
+            onMediaSelect(url);
+        }
+        setShowMediaModal(false);
     };
 
     if (!isAuthenticated || !user?.role || !['USER', 'VIEWER', 'WRITER', 'EDITOR', 'ADMIN'].includes(user.role)) {
@@ -509,13 +544,23 @@ export default function NewPostPage() {
                         {/* Featured Image */}
                         <div>
                             <label className="block text-sm font-medium mb-2">Featured Image URL</label>
-                            <input
-                                type="url"
-                                value={formData.mainImage}
-                                onChange={(e) => setFormData({ ...formData, mainImage: e.target.value })}
-                                className="w-full px-4 py-2 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                                placeholder="https://example.com/image.jpg"
-                            />
+                            <div className="flex gap-2">
+                                <input
+                                    type="url"
+                                    value={formData.mainImage}
+                                    onChange={(e) => setFormData({ ...formData, mainImage: e.target.value })}
+                                    className="w-full px-4 py-2 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                                    placeholder="https://example.com/image.jpg"
+                                />
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={openMediaForFeaturedImage}
+                                    className="shrink-0"
+                                >
+                                    Select Image
+                                </Button>
+                            </div>
                             {formData.mainImage && (
                                 <div className="mt-2">
                                     <img
@@ -546,6 +591,8 @@ export default function NewPostPage() {
                                 content={formData.content}
                                 onChange={(content) => setFormData({ ...formData, content })}
                                 placeholder="Start writing your post..."
+                                onRequestImage={openMediaForEditor}
+                                onEditorReady={(editor) => { editorRef.current = editor; }}
                             />
                         </div>
                     </div>
@@ -564,6 +611,30 @@ export default function NewPostPage() {
                 cancelText={dialogState.cancelText}
                 variant={dialogState.variant}
             />
+
+            {/* Media Library Modal */}
+            {showMediaModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+                    <div className="bg-background rounded-xl shadow-2xl w-full max-w-4xl max-h-[85vh] overflow-hidden flex flex-col border border-border">
+                        <div className="flex items-center justify-between p-4 border-b border-border">
+                            <h2 className="text-lg font-semibold">Media Library</h2>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setShowMediaModal(false)}
+                            >
+                                ✕
+                            </Button>
+                        </div>
+                        <div className="flex-1 overflow-y-auto p-4">
+                            <MediaLibrary
+                                isModal={true}
+                                onSelect={handleMediaSelect}
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
         </div >
     );
 }
