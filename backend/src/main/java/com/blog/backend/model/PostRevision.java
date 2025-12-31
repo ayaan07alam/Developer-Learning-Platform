@@ -98,6 +98,7 @@ public class PostRevision {
 
     // FAQs for this revision
     @OneToMany(mappedBy = "revision", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("displayOrder ASC")
     private List<RevisionFAQ> faqs = new ArrayList<>();
 
     // Timestamps

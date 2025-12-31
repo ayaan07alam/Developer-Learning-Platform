@@ -140,6 +140,7 @@ public class Post {
         private Boolean showToc = true; // Whether to display TOC on live site
 
         @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+        @OrderBy("displayOrder ASC")
         private List<FAQ> faqs = new ArrayList<>();
 
         // Internal comments for team discussion
