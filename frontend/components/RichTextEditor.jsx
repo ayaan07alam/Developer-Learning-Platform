@@ -11,7 +11,12 @@ import { TextStyle } from '@tiptap/extension-text-style';
 import { Color } from '@tiptap/extension-color';
 import Highlight from '@tiptap/extension-highlight';
 import Subscript from '@tiptap/extension-subscript';
+import Subscript from '@tiptap/extension-subscript';
 import Superscript from '@tiptap/extension-superscript';
+import Table from '@tiptap/extension-table';
+import TableCell from '@tiptap/extension-table-cell';
+import TableHeader from '@tiptap/extension-table-header';
+import TableRow from '@tiptap/extension-table-row';
 import { common, createLowlight } from 'lowlight';
 import {
     Bold, Italic, List, ListOrdered, Heading1, Heading2, Heading3,
@@ -19,7 +24,8 @@ import {
     ListTree, Strikethrough, Underline as UnderlineIcon,
     AlignLeft, AlignCenter, AlignRight, AlignJustify,
     Minus, Superscript as SuperscriptIcon, Subscript as SubscriptIcon,
-    Eraser, Palette, Highlighter
+    Eraser, Palette, Highlighter, Table as TableIcon, Trash2, Plus,
+    ArrowDown, ArrowRight, ArrowUp, ArrowLeft, Merge, Split
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
@@ -71,7 +77,14 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
                 multicolor: true,
             }),
             Subscript,
+            Subscript,
             Superscript,
+            Table.configure({
+                resizable: true,
+            }),
+            TableRow,
+            TableHeader,
+            TableCell,
             // Custom extension to allow divs with inline styles (for TOC)
             {
                 name: 'customDiv',
@@ -579,6 +592,20 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
 
                     <div className="w-px h-6 bg-border mx-1" />
 
+                    {/* Table */}
+                    <Button
+                        type="button"
+                        onClick={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}
+                        variant={editor.isActive('table') ? 'default' : 'ghost'}
+                        size="sm"
+                        className="h-8 w-8 p-0"
+                        title="Insert Table"
+                    >
+                        <TableIcon className="w-4 h-4" />
+                    </Button>
+
+                    <div className="w-px h-6 bg-border mx-1" />
+
                     {/* Undo/Redo */}
                     <Button
                         type="button"
@@ -601,6 +628,146 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
                         <Redo className="w-4 h-4" />
                     </Button>
                 </div>
+
+                {/* Table Context Menu - only visible when table is active */}
+                {editor.isActive('table') && (
+                    <div className="flex flex-wrap items-center gap-1 p-2 border-t border-border bg-muted/20">
+                        <span className="text-xs text-muted-foreground mr-2 font-medium">Table Tools:</span>
+
+                        <Button
+                            type="button"
+                            onClick={() => editor.chain().focus().addColumnBefore().run()}
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 px-2 text-xs"
+                            title="Add Column Before"
+                        >
+                            <Plus className="w-3 h-3 mr-1" /> Col Left
+                        </Button>
+                        <Button
+                            type="button"
+                            onClick={() => editor.chain().focus().addColumnAfter().run()}
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 px-2 text-xs"
+                            title="Add Column After"
+                        >
+                            <Plus className="w-3 h-3 mr-1" /> Col Right
+                        </Button>
+                        <Button
+                            type="button"
+                            onClick={() => editor.chain().focus().deleteColumn().run()}
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 px-2 text-xs text-red-500 hover:text-red-600"
+                            title="Delete Column"
+                        >
+                            <Trash2 className="w-3 h-3 mr-1" /> Col
+                        </Button>
+
+                        <div className="w-px h-4 bg-border mx-1" />
+
+                        <Button
+                            type="button"
+                            onClick={() => editor.chain().focus().addRowBefore().run()}
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 px-2 text-xs"
+                            title="Add Row Before"
+                        >
+                            <Plus className="w-3 h-3 mr-1" /> Row Above
+                        </Button>
+                        <Button
+                            type="button"
+                            onClick={() => editor.chain().focus().addRowAfter().run()}
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 px-2 text-xs"
+                            title="Add Row After"
+                        >
+                            <Plus className="w-3 h-3 mr-1" /> Row Below
+                        </Button>
+                        <Button
+                            type="button"
+                            onClick={() => editor.chain().focus().deleteRow().run()}
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 px-2 text-xs text-red-500 hover:text-red-600"
+                            title="Delete Row"
+                        >
+                            <Trash2 className="w-3 h-3 mr-1" /> Row
+                        </Button>
+
+                        <div className="w-px h-4 bg-border mx-1" />
+
+                        <Button
+                            type="button"
+                            onClick={() => editor.chain().focus().toggleHeaderColumn().run()}
+                            variant={editor.isActive('tableHeader') ? 'secondary' : 'ghost'}
+                            size="sm"
+                            className="h-7 px-2 text-xs"
+                            title="Toggle Header Column"
+                        >
+                            H-Col
+                        </Button>
+                        <Button
+                            type="button"
+                            onClick={() => editor.chain().focus().toggleHeaderRow().run()}
+                            variant={editor.isActive('tableHeader') ? 'secondary' : 'ghost'}
+                            size="sm"
+                            className="h-7 px-2 text-xs"
+                            title="Toggle Header Row"
+                        >
+                            H-Row
+                        </Button>
+                        <Button
+                            type="button"
+                            onClick={() => editor.chain().focus().toggleHeaderCell().run()}
+                            variant={'ghost'}
+                            size="sm"
+                            className="h-7 px-2 text-xs"
+                            title="Toggle Header Cell"
+                        >
+                            H-Cell
+                        </Button>
+
+                        <div className="w-px h-4 bg-border mx-1" />
+
+                        <Button
+                            type="button"
+                            onClick={() => editor.chain().focus().mergeCells().run()}
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 px-2 text-xs"
+                            title="Merge Cells"
+                        >
+                            Merge
+                        </Button>
+                        <Button
+                            type="button"
+                            onClick={() => editor.chain().focus().splitCell().run()}
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 px-2 text-xs"
+                            title="Split Cell"
+                        >
+                            Split
+                        </Button>
+
+                        <div className="w-px h-4 bg-border mx-1" />
+
+                        <Button
+                            type="button"
+                            onClick={() => editor.chain().focus().deleteTable().run()}
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 px-2 text-xs text-red-600 hover:bg-red-100 dark:hover:bg-red-900/20"
+                            title="Delete Table"
+                        >
+                            Delete Table
+                        </Button>
+                    </div>
+                )}
             </div>
 
             {/* TOC Dialog */}
