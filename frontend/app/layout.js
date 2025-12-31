@@ -95,16 +95,16 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <Script id="next"
+      <Script id="ga-script"
         async
-        src={`https://www.googletagmanager.com/gtag/js?id=G-T0D68EHC4S`}>
+        src={`https://www.googletagmanager.com/gtag/js?id=G-S7LJXQ788V`}>
       </Script>
-      <Script id="next">
+      <Script id="ga-init">
         {
           `window.dataLayer = window.dataLayer || [];
                     function gtag(){dataLayer.push(arguments);}
                     gtag('js', new Date());
-                    gtag('config', 'G-T0D68EHC4S');`
+                    gtag('config', 'G-S7LJXQ788V');`
         }
       </Script>
       <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5593264837587690"
