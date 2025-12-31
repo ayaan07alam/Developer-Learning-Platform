@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FileText, Upload, Download, Loader2, Check, X, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import ProcessingOverlay from '@/components/Tools/ProcessingOverlay';
 
 import { API_BASE_URL } from '@/lib/api-client';
 
@@ -106,7 +107,8 @@ export default function PDFToWordPage() {
                         </label>
                     </motion.div>
                 ) : (
-                    <div className="space-y-6">
+                    <div className="space-y-6 relative rounded-xl overflow-hidden">
+                        <ProcessingOverlay isProcessing={converting} message="Converting PDF to Word..." />
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -133,14 +135,7 @@ export default function PDFToWordPage() {
                             disabled={converting}
                             className="w-full h-12 text-lg"
                         >
-                            {converting ? (
-                                <>
-                                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                                    Converting...
-                                </>
-                            ) : (
-                                'Convert to Word'
-                            )}
+                            {converting ? 'Converting...' : 'Convert to Word'}
                         </Button>
 
                         {converted && (

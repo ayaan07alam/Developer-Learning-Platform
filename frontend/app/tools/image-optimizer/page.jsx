@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Upload, Download, Image as ImageIcon, Check, X, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import ProcessingOverlay from '@/components/Tools/ProcessingOverlay';
 
 import { API_BASE_URL } from '@/lib/api-client';
 
@@ -157,7 +158,9 @@ export default function ImageConverterPage() {
                         </label>
                     </motion.div>
                 ) : (
-                    <div className="space-y-6">
+                    <div className="space-y-6 relative rounded-xl overflow-hidden">
+                        <ProcessingOverlay isProcessing={converting} message={`Converting to ${format.toUpperCase()}...`} />
+
                         {/* Preview */}
                         <motion.div
                             initial={{ opacity: 0 }}
@@ -201,16 +204,7 @@ export default function ImageConverterPage() {
                                 disabled={converting}
                                 className="flex-1 h-12 text-lg"
                             >
-                                {converting ? (
-                                    <>
-                                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                                        Converting...
-                                    </>
-                                ) : (
-                                    <>
-                                        Convert to {format.toUpperCase()}
-                                    </>
-                                )}
+                                {converting ? 'Converting...' : `Convert to ${format.toUpperCase()}`}
                             </Button>
                         </div>
 
