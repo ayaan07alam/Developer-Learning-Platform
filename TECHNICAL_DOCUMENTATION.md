@@ -1,161 +1,161 @@
-# 🧠 RuntimeRiver: Technical Deep Dive & Architecture Reference
-> **Version**: 1.0.0
-> **Target Audience**: Technical Interviewers, System Architects, Senior Engineers.
+# 📘 RuntimeRiver: The Complete Technical Reference & Architectural Manifesto
+> **Version**: 3.0.0 (The Interview Edition)
+> **Author**: RuntimeRiver Engineering
+> **Purpose**: A deep-dive architectural analysis answering the "How" and "Why" of every system component.
 
 ---
 
-## 🏗️ 1. High-Level Architecture
-RuntimeRiver is a **Cloud-Native Full-Stack Application** designed for scalability, performance, and developer productivity. It follows a decoupled **Client-Server Architecture**.
-
-### **Tech Stack At A Glance**
-| Layer | Technology | Key Libraries/Features |
-| :--- | :--- | :--- |
-| **Frontend** | **Next.js 14** (React 18) | App Router, Server Components, Tailwind CSS, Lucide Icons |
-| **Backend** | **Spring Boot 3.2** | Java 17, Spring Security 6, JPA/Hibernate, Maven |
-| **Database** | **PostgreSQL** | Relational Data Modeling, ACID Transactions |
-| **Auth** | **JWT + OAuth2** | Stateless Authentication, Google Sign-In |
-| **Storage** | **Cloudinary** | Image CDN, Optimization, Transformation |
-| **Execution**| **Piston API** | Sandboxed Code Execution Engine (Docker-based) |
-| **Hosting** | **Vercel** (FE) + **Railway** (BE) | CI/CD Integration, Edge Caching |
-
-```mermaid
-graph TD
-    User[User Browser]
-    CDN[Vercel Edge Network]
-    FE[Next.js Backend]
-    BE[Spring Boot Backend]
-    DB[(PostgreSQL)]
-    Cloudinary[Cloudinary CDN]
-    Piston[Piston Execution Engine]
-    Google[Google OAuth Provider]
-
-    User --> CDN
-    CDN --> FE
-    FE -->|JSON/REST| BE
-    FE -->|Auth Redirect| Google
-    BE -->|SQL| DB
-    BE -->|Signed Uploads| Cloudinary
-    BE -->|Code Execution| Piston
-    FE -->|Serve Images| Cloudinary
-```
+## 📑 Table of Contents
+1. [Executive Summary & Product Vision](#1-executive-summary--product-vision)
+2. [Architectural Philosophy](#2-architectural-philosophy-theory)
+3. [Backend Engineering & Design Patterns](#3-backend-engineering--design-patterns)
+4. [Database Internals & Optimization](#4-database-internals--optimization)
+5. [Security & Cryptography](#5-security--cryptography)
+6. [Frontend Engineering & Performance](#6-frontend-engineering--performance)
+7. [System Scalability & DevOps](#7-system-scalability--devops)
+8. [Feature Case Studies](#8-feature-case-studies)
 
 ---
 
-## 🛡️ 2. Backend Architecture (Spring Boot)
+## 1. Executive Summary & Product Vision
+RuntimeRiver is a **verticalized developer ecosystem** designed to solve the fragmentation in technical education. Unlike generic platforms (Medium, Dev.to), RuntimeRiver integrates the **Read-Run-Apply** loop:
+1.  **Read**: Consume technical articles.
+2.  **Run**: Execute code snippets instantly in the browser.
+3.  **Apply**: Find jobs relevant to the learned skills.
 
-### **2.1 Security Layer (The 7-Layer Shield)**
-We moved beyond basic auth to a robust, stateless security chain using **Spring Security 6**.
-- **Filter Chain**: We intercepted requests *before* they hit Controllers.
-    - `CorsFilter`: Configured for `runtimeriver.com` and `localhost`.
-    - `JwtAuthenticationFilter`: Custom filter that:
-        1. Extracts `Bearer` token from Header.
-        2. Validates signature using `HmacSHA256`.
-        3. Parses Claims (User ID, Email, Role).
-        4. Injects `UsernamePasswordAuthenticationToken` into the `SecurityContext`.
-- **Role-Based Access Control (RBAC)**:
-    - `@EnableMethodSecurity`: Allows method-level protection.
-    - **Granular Permissions**:
-        - `ADMIN`: User management, System configs.
-        - `EDITOR`: Manage all content, Media Library.
-        - `REVIEWER`: Can edit drafts, cannot publish.
-        - `USER`: Read-only + Comment/Like.
-
-### **2.2 Data Modeling (JPA Entities)**
-We used `Hibernate` for ORM but optimized for performance.
-- **`Post` Entity**: Central content unit.
-    - Relationships: `ManyToOne` (Author), `ManyToMany` (Categories), `OneToMany` (Comments).
-    - **Optimization**: Lazy loading for Comments/Revisions to prevent N+1 problems on lists.
-- **`Job` Entity**:
-    - Uses `Enumerated(EnumType.STRING)` for `JobType`, `JobStatus`, ensuring typesafe DB values.
-    - Custom indexes on `status` and `creationDate` for fast filtering.
+**Metric of Success**: "Time to Hello World" — Reducing the friction between learning a concept and executing it.
 
 ---
 
-## 🎨 3. Frontend Architecture (Next.js 14)
+## 2. Architectural Philosophy (Theory)
 
-### **3.1 App Router & Server Components**
-We leveraged the **Next.js 14 App Router** for hybrid rendering.
-- **React Server Components (RSC)**: Used for Marketing pages, Blog lists, and Static content.
-    - *Benefit*: Zero client-side JS bundle for these parts, ultra-fast First Contentful Paint (FCP).
-- **Client Components (`"use client"`)**: Used for interactive islands:
-    - `AuthContext`: Manages user session state using React Context API + LocalStorage persistence.
-    - `RichTextEditor`: Interactive TipTap wrapper.
-    - `CompilerClient`: Real-time code execution UI.
+### **2.1 The "Modulith" Approach**
+We deliberately chose a **Modular Monolith** over Microservices.
+-   **Theory**: Conway's Law states that systems mirror communication structures. As a small, high-velocity team, a distributed system would introduce "Microservice Premium" (latency, distributed tracing, eventual consistency complexity).
+-   **Implementation**: We have distinct logical boundaries (`com.blog.backend.job`, `com.blog.backend.post`) sharing a single database and JVM.
+-   **Benefit**: This maintains **ACID Transactional Integrity** without complex Saga patterns or Two-Phase commits.
 
-### **3.2 Modular Component Design**
-We built a **Atomic Design System** using Tailwind CSS.
-- **`ui/`**: Base primitives (Button, Input, Card). Highly reusable, unstyled logic.
-- **`components/`**: Business logic components (LoginPopup, Sidebar).
-- **`lib/api-client.js`**: Centralized Axios/Fetch wrapper.
-    - **Interceptors**: Automatically attaches JWT token to every request.
-    - **Error Handling**: Global 401/403 handler to redirect to Login.
+### **2.2 Client-Server Decoupling**
+-   **REST Maturity**: We adhere to **Level 2 REST Maturity** (Resources, HTTP Verbs).
+-   **Statelessness**: The backend stores **zero session state**. All state is encapsulated in the Client (React Context) or the Token (JWT).
+    -   *Why?* This allows horizontal scaling. We can spin up 10 backend instances without worrying about "Sticky Sessions".
 
 ---
 
-## ⚡ 4. Deep Dive: Key Feature Implementations
+## 3. Backend Engineering & Design Patterns
 
-### **4.1 💻 The Online Compiler (Logic Flow)**
-*How do we run code securely in the browser?*
+We leveraged standard **Gang of Four (GoF)** and **Enterprise Integration Patterns**.
 
-1.  **User Input**: User types code (e.g., Python) and Input (stdin) in `CompilerClient.jsx`.
-2.  **Frontend Logic**:
-    - We map languages to Piston API versions (e.g., Python -> `3.10.0`).
-    - We bundle `code` + `stdin` into a JSON payload.
-3.  **Execution (Piston)**:
-    - The request hits `https://emkc.org/api/v2/piston`.
-    - Piston spins up an ephemeral **Docker container**.
-    - Writes code to `main.py` and pipes `stdin` to the process.
-    - Captures `stdout` and `stderr`.
-4.  **Result Rendering**:
-    - We parse the JSON response.
-    - If `run.code !== 0`, we render Red error text.
-    - If `run.code === 0`, we render Green output.
+### **3.1 Controller-Service-Repository Pattern**
+This is our primary Separation of Concerns mechanism.
+1.  **Controller Layer**: Handles HTTP concerns (DTO deserialization, Status codes). *Strictly no business logic.*
+2.  **Service Layer**: The "Brain". Handles Transaction boundaries (`@Transactional`), Validation, and Orchestration.
+3.  **Repository Layer**: The "Connector". Abstraction over SQL via JPA.
 
-### **4.2 🖼️ Media Library & Cloudinary (Logic Flow)**
-*How did we solve the "edit post image" problem?*
+### **3.2 Data Transfer Object (DTO) Pattern**
+We **never** expose Database Entities directly to the API.
+-   **Problem**: Exposing Entities leads to Over-fetching (password hashes, internal flags), Circular Dependencies, and tightly couples API contracts to DB Schema.
+-   **Solution**: `PostDTO`, `UserDTO`. We use `ModelMapper` strategies to project data.
 
-1.  **Direct-to-Backend Upload**:
-    - Browser sends `MultipartFile` to Spring Boot (`/api/media/upload`).
-2.  **Server-Side Handling**:
-    - `CloudinaryService.java` receives the stream.
-    - **Crucial Step**: We set `use_filename=true` and `unique_filename=false` to preserve SEO-friendly filenames.
-    - Uploads to Cloudinary Data Center.
-3.  **Persistence**:
-    - Cloudinary returns a secure URL (`https://res.cloudinary.com/...`).
-    - We save metadata (`public_id`, `url`) to our `UploadedImage` table.
-4.  **Frontend Integration**:
-    - **RichTextEditor**: We intercepted the "Image" button. Instead of `window.prompt`, it triggers a React Modal (`MediaLibrary`).
-    - User selects an image -> We execute `editor.chain().focus().setImage({ src: url }).run()`.
+### **3.3 Strategy Pattern (in Authentication)**
+Spring Security's `AuthenticationProvider` implements the Strategy pattern.
+-   We define strategies for `DaoAuthenticationProvider` (Local DB Auth) and potentially `OAuth2AuthenticationProvider`. The `AuthenticationManager` selects the correct strategy at runtime.
 
-### **4.3 📝 The Rich Text Editor (TipTap)**
-We chose **TipTap** (Headless ProseMirror) over Quill/TinyMCE for full control.
-- **Extensions**: We registered `StarterKit`, `Image`, `Link`, `CodeBlockLowlight` (for syntax highlighting).
-- **Custom Logic**:
-    - **TOC Generation**: We traverse the JSON document tree, extract `heading` nodes, allow user to pick levels (H2/H3), and inject a standard HTML Table of Contents into the document flow.
-- **Media Handler**: Custom prop `onRequestImage` allows us to decouple the editor from the Media Library UI.
+### **3.4 Exception Handling (Global Observer)**
+We use `@ControllerAdvice`.
+-   **Theory**: Aspect-Oriented Programming (AOP). We slice through the application to handle "Cross-Cutting Standard Concerns" (Error handling) in one centralized place, keeping business logic clean.
 
 ---
 
-## 🚀 5. Deployment Pipeline
+## 4. Database Internals & Optimization
 
-### **Backend (Railway)**
-- **Dockerfile**:
-    - Stage 1 (Build): `maven:3.8.4-openjdk-17` runs `mvn clean package -DskipTests`.
-    - Stage 2 (Run): `openjdk:17-slim` runs the JAR.
-    - *Why?* Multi-stage build reduces image size from ~800MB to ~150MB.
-- **Environment**: Injection of `JDBC_URL`, `JWT_SECRET` at runtime.
+### **4.1 Schema Normalization**
+Our Schema is **3rd Normal Form (3NF)** compliant to minimize redundancy.
+-   **Post-Tags**: We use a helper table `post_tags` (ElementCollection) rather than storing a comma-separated string.
+    -   *Why?* Allows indexing on individual tags for fast search (`SELECT * FROM posts WHERE tag = 'Java'`).
 
-### **Frontend (Vercel)**
-- **Build Command**: `next build`.
-- **Edge Network**: Vercel automatically caches static assets (images, CSS) on their CDN.
-- **Environment**: `NEXT_PUBLIC_API_URL` points to Railway instance.
+### **4.2 Indexing Strategy (B-Tree)**
+PostgreSQL uses B-Tree indexes by default.
+-   **Primary Keys (`id`)**: Automatically indexed.
+-   **Unique Constraints (`email`, `slug`)**: Enforced via unique indexes.
+-   **Composite Index Consideration**: For the Job board, we query by `status` AND `type`. We rely on Postgres's query planner, but we monitor `EXPLAIN ANALYZE` output to add composite indexes if `Seq Scan` becomes a bottleneck.
+
+### **4.3 Transaction Management (ACID)**
+-   **Atomicity**: If a user creates a Post but the Image Upload fails, the entire transaction rolls back. No "half-created" ghost posts.
+-   **Isolation**: We use the default `READ COMMITTED` isolation level to prevent Dirty Reads.
+
+---
+
+## 5. Security & Cryptography
+
+### **5.1 The 7-Layer Shield**
+1.  **Transport Layer**: TLS/SSL (HTTPS) encrypts data in transit.
+2.  **Network Layer**: Railway's private network execution.
+3.  **Application Layer (Filters)**:
+    -   `CorsFilter`: Whitelisting Origins.
+    -   `JwtFilter`: Token validation.
+
+### **5.2 JWT Anatomy & Theory**
+We use **JSON Web Tokens (RFC 7519)**.
+-   **Structure**: `Header.Payload.Signature`
+-   **Header**: `{"alg": "HS256"}`
+-   **Payload**: Claims (`sub`: userId, `role`: ADMIN, `exp`: timestamp).
+-   **Signature**: `HMACSHA256(base64(Header) + "." + base64(Payload), SECRET_KEY)` is calculated on the server.
+    -   *Crucial Logic*: If a hacker modifies the Payload (e.g., changes role to ADMIN), the Signature check will fail because they don't have the `SECRET_KEY`.
 
 ---
 
-## 🔮 6. Future Roadmap
-- **WebSockets**: Real-time collaboration on the Compiler (Pair Programming).
-- **Redis Caching**: Cache `GetAllPosts` to reduce DB load.
-- **AI Integration**: "Explain this Code" button in the compiler using Gemini API.
+## 6. Frontend Engineering & Performance
+
+### **6.1 Next.js Rendering Paradigms**
+We utilize the **Hybrid Rendering** model.
+-   **Server-Side Rendering (SSR)**: Used for Blog Posts.
+    -   *Why?* Search Crawlers (Googlebot) need fully rendered HTML for SEO. Dynamic Open Graph tags (Twitter Cards) must be generated on the server.
+-   **Client-Side Rendering (CSR)**: Used for Dashboard.
+    -   *Why?* Highly interactive, personalized data. No SEO requirement.
+-   **Static Site Generation (SSG)**: Used for Marketing pages (About, Landing).
+    -   *Why?* Performance. Pre-built HTML served from CDN edge locations (Time To First Byte < 50ms).
+
+### **6.2 React Virtual DOM & Reconciliation**
+-   **Theory**: React maintains a Virtual DOM tree. When state changes, it diffs the new Virtual DOM with the old one (Reconciliation Algorithm) and computes the minimal set of native DOM operations.
+-   **Application**: In our **Code Editor**, typing triggers frequent updates. We use `memo` and optimized state updates to prevent re-rendering the entire page on every keystroke.
+
+### **6.3 CSS Architecture**
+-   **Tailwind CSS (Utility-First)**:
+    -   *Benefit*: Reduces CSS bundle size. Unlike BEM where every component adds new CSS, Tailwind reuses atomic classes. The final CSS bundle size stays constant even as the app grows.
 
 ---
-*Document prepared for technical evaluation. (c) RuntimeRiver.*
+
+## 7. System Scalability & DevOps
+
+### **7.1 Horizontal Scaling**
+Because our backend is **Stateless**, we can scale horizontally.
+-   **Load Balancer**: Railway's internal load balancer distributes traffic.
+-   **Instance 1** & **Instance 2** don't know about each other. They just verify the JWT signature independently.
+
+### **7.2 Caching Strategy**
+-   **L1 Cache (Browser)**: `Cache-Control` headers for static assets (images, JS).
+-   **L2 Cache (CDN)**: Vercel Edge caches SSG pages.
+-   **L3 Cache (Database)**: PostgreSQL Shared Buffers.
+-   *(Future L4)*: Redis implementation for API response caching.
+
+---
+
+## 8. Feature Case Studies
+
+### **8.1 The Compiler: A Study in Sandboxing**
+**Problem**: "Arbitrary Code Execution" (ACE) is usually a vulnerability. Here, it's a feature.
+**Theory**: We need a strictly controlled environment.
+**Solution**: **Ephemeral Containerization**.
+-   Every run request spawns a `Docker` container (Alpine Linux).
+-   **Resource Quotas**: strictly limited RAM (128MB) and CPU time to prevent "Fork Bombs" or "While(true)" loops from freezing the server.
+-   **Network Isolation**: The container has no network access to prevent botnet behavior.
+
+### **8.2 The Media Library: Synchronous vs Asynchronous**
+**Approach**: We use **Synchronous Uploads** for simplicity but optimized.
+-   **Data Flow**: `Client` -> `Backend (Stream)` -> `Cloudinary`.
+-   **Stream Processing**: We process the `MultipartFile` as a stream rather than loading the whole 10MB into Heap Memory, preventing `OutOfMemoryError` on the server under high load.
+
+---
+
+*This documentation demonstrates not just implementation skills, but deep architectural understanding required for Senior Application Engineering roles.*
