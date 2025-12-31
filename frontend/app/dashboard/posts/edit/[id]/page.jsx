@@ -207,7 +207,8 @@ export default function EditPostPage() {
                     });
 
                     if (!response.ok) {
-                        throw new Error('Failed to save revision');
+                        const errorData = await response.json().catch(() => ({}));
+                        throw new Error(errorData.message || errorData.error || 'Failed to save revision');
                     }
 
                     setSuccessMessage('✅ Draft saved successfully!');

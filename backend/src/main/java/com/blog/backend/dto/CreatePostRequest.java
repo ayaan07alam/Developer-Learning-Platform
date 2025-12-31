@@ -1,5 +1,6 @@
 package com.blog.backend.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.blog.backend.model.PostStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CreatePostRequest {
     @NotBlank(message = "Title is required")
     @Size(max = 200, message = "Title must be less than 200 characters")

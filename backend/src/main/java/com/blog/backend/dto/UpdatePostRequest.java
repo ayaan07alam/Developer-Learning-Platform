@@ -1,5 +1,6 @@
 package com.blog.backend.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.blog.backend.model.PostStatus;
 import lombok.Data;
 
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UpdatePostRequest {
     private String title;
     private String slug;
