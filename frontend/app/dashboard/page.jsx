@@ -4,9 +4,10 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import Sidebar from "@/components/sidebar";
-import { PenTool, FileText, TrendingUp, FileEdit, FolderOpen } from "lucide-react";
+import { PenTool, FileText, TrendingUp, FileEdit, FolderOpen, Image as ImageIcon } from "lucide-react";
 import ImprovementDraftsSection from "@/components/ImprovementDraftsSection";
 import ContentManagementSection from "@/components/ContentManagementSection";
+import MediaLibrary from "@/components/MediaLibrary";
 import { API_BASE_URL } from "@/lib/api-client";
 
 export default function DashboardPage() {
@@ -78,7 +79,8 @@ export default function DashboardPage() {
     const tabs = [
         { id: 'overview', label: 'Overview', icon: TrendingUp },
         { id: 'drafts', label: 'Improvement Drafts', icon: FileEdit },
-        { id: 'content', label: 'My Content', icon: FolderOpen }
+        { id: 'content', label: 'My Content', icon: FolderOpen },
+        { id: 'media', label: 'Media Library', icon: ImageIcon }
     ];
 
     return (
@@ -197,6 +199,10 @@ export default function DashboardPage() {
 
                     {activeTab === 'content' && (
                         <ContentManagementSection userRole={user?.role} />
+                    )}
+
+                    {activeTab === 'media' && (
+                        <MediaLibrary />
                     )}
                 </div>
             </div>
