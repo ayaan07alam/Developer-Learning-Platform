@@ -24,7 +24,7 @@ import {
     ListTree, Strikethrough, Underline as UnderlineIcon,
     AlignLeft, AlignCenter, AlignRight, AlignJustify,
     Minus, Superscript as SuperscriptIcon, Subscript as SubscriptIcon,
-    Eraser, Palette, Highlighter, Table as TableIcon, Trash2, Plus,
+    Eraser, Palette, Highlighter, Trash2, Plus, Grid,
     ArrowDown, ArrowRight, ArrowUp, ArrowLeft, Merge, Split
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -77,11 +77,10 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
                 multicolor: true,
             }),
             Subscript,
-
             Superscript,
-            Table.configure({
+            Table && Table.configure ? Table.configure({
                 resizable: true,
-            }),
+            }) : undefined,
             TableRow,
             TableHeader,
             TableCell,
@@ -106,7 +105,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
                     ];
                 },
             },
-        ],
+        ].filter(Boolean),
         content,
         // CRITICAL: We need this to ensure content can be set externally later if needed
         onTransaction: ({ editor }) => {
@@ -601,7 +600,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
                         className="h-8 w-8 p-0"
                         title="Insert Table"
                     >
-                        <TableIcon className="w-4 h-4" />
+                        <Grid className="w-4 h-4" />
                     </Button>
 
                     <div className="w-px h-6 bg-border mx-1" />
@@ -771,109 +770,113 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
             </div>
 
             {/* TOC Dialog */}
-            {showTOCDialog && (
-                <div className="flex-none p-4 border-b border-border bg-muted/30">
-                    <h3 className="text-sm font-semibold mb-3">Select Heading Levels for TOC:</h3>
-                    <div className="flex flex-wrap gap-2 mb-3">
-                        {[1, 2, 3, 4, 5, 6].map(level => (
-                            <label key={level} className="flex items-center gap-2 cursor-pointer">
-                                <input
-                                    type="checkbox"
-                                    checked={selectedHeadings.includes(level)}
-                                    onChange={(e) => {
-                                        if (e.target.checked) {
-                                            setSelectedHeadings([...selectedHeadings, level].sort());
-                                        } else {
-                                            setSelectedHeadings(selectedHeadings.filter(h => h !== level));
-                                        }
-                                    }}
-                                    className="rounded border-border"
-                                />
-                                <span className="text-sm">H{level}</span>
-                            </label>
-                        ))}
-                    </div>
-                    <div className="flex gap-2">
-                        <Button
-                            type="button"
-                            size="sm"
-                            onClick={generateTOC}
-                            disabled={selectedHeadings.length === 0}
-                        >
-                            Generate TOC
-                        </Button>
-                        <Button
-                            type="button"
-                            size="sm"
-                            variant="outline"
-                            onClick={() => setShowTOCDialog(false)}
-                        >
-                            Cancel
-                        </Button>
-                    </div>
-                </div>
-            )}
-
-            {/* Link Dialog */}
-            {showLinkDialog && (
-                <div className="flex-none p-4 border-b border-border bg-muted/30">
-                    <h3 className="text-sm font-semibold mb-3">Insert Link</h3>
-                    <div className="space-y-3">
-                        <div>
-                            <label className="text-xs text-muted-foreground mb-1 block">Link Text (optional)</label>
-                            <input
-                                type="text"
-                                value={linkText}
-                                onChange={(e) => setLinkText(e.target.value)}
-                                placeholder="Leave empty to use selection"
-                                className="w-full px-3 py-2 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-                                autoFocus={!linkText}
-                            />
-                        </div>
-                        <div>
-                            <label className="text-xs text-muted-foreground mb-1 block">URL *</label>
-                            <input
-                                type="url"
-                                value={linkUrl}
-                                onChange={(e) => setLinkUrl(e.target.value)}
-                                placeholder="https://example.com or /internal-link"
-                                className="w-full px-3 py-2 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-                                autoFocus={!!linkText}
-                                onKeyDown={(e) => {
-                                    if (e.key === 'Enter') {
-                                        e.preventDefault();
-                                        handleLinkInsert();
-                                    }
-                                }}
-                            />
-                            <p className="text-xs text-muted-foreground mt-1">
-                                💡 Tip: Use /blogs/slug for internal links
-                            </p>
+            {
+                showTOCDialog && (
+                    <div className="flex-none p-4 border-b border-border bg-muted/30">
+                        <h3 className="text-sm font-semibold mb-3">Select Heading Levels for TOC:</h3>
+                        <div className="flex flex-wrap gap-2 mb-3">
+                            {[1, 2, 3, 4, 5, 6].map(level => (
+                                <label key={level} className="flex items-center gap-2 cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        checked={selectedHeadings.includes(level)}
+                                        onChange={(e) => {
+                                            if (e.target.checked) {
+                                                setSelectedHeadings([...selectedHeadings, level].sort());
+                                            } else {
+                                                setSelectedHeadings(selectedHeadings.filter(h => h !== level));
+                                            }
+                                        }}
+                                        className="rounded border-border"
+                                    />
+                                    <span className="text-sm">H{level}</span>
+                                </label>
+                            ))}
                         </div>
                         <div className="flex gap-2">
                             <Button
                                 type="button"
                                 size="sm"
-                                onClick={handleLinkInsert}
+                                onClick={generateTOC}
+                                disabled={selectedHeadings.length === 0}
                             >
-                                Insert Link
+                                Generate TOC
                             </Button>
                             <Button
                                 type="button"
                                 size="sm"
                                 variant="outline"
-                                onClick={() => {
-                                    setShowLinkDialog(false);
-                                    setLinkUrl('');
-                                    setLinkText('');
-                                }}
+                                onClick={() => setShowTOCDialog(false)}
                             >
                                 Cancel
                             </Button>
                         </div>
                     </div>
-                </div>
-            )}
+                )
+            }
+
+            {/* Link Dialog */}
+            {
+                showLinkDialog && (
+                    <div className="flex-none p-4 border-b border-border bg-muted/30">
+                        <h3 className="text-sm font-semibold mb-3">Insert Link</h3>
+                        <div className="space-y-3">
+                            <div>
+                                <label className="text-xs text-muted-foreground mb-1 block">Link Text (optional)</label>
+                                <input
+                                    type="text"
+                                    value={linkText}
+                                    onChange={(e) => setLinkText(e.target.value)}
+                                    placeholder="Leave empty to use selection"
+                                    className="w-full px-3 py-2 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                                    autoFocus={!linkText}
+                                />
+                            </div>
+                            <div>
+                                <label className="text-xs text-muted-foreground mb-1 block">URL *</label>
+                                <input
+                                    type="url"
+                                    value={linkUrl}
+                                    onChange={(e) => setLinkUrl(e.target.value)}
+                                    placeholder="https://example.com or /internal-link"
+                                    className="w-full px-3 py-2 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                                    autoFocus={!!linkText}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            e.preventDefault();
+                                            handleLinkInsert();
+                                        }
+                                    }}
+                                />
+                                <p className="text-xs text-muted-foreground mt-1">
+                                    💡 Tip: Use /blogs/slug for internal links
+                                </p>
+                            </div>
+                            <div className="flex gap-2">
+                                <Button
+                                    type="button"
+                                    size="sm"
+                                    onClick={handleLinkInsert}
+                                >
+                                    Insert Link
+                                </Button>
+                                <Button
+                                    type="button"
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => {
+                                        setShowLinkDialog(false);
+                                        setLinkUrl('');
+                                        setLinkText('');
+                                    }}
+                                >
+                                    Cancel
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
 
 
             {/* Editor - Scrollable content area */}
@@ -893,7 +896,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
                 cancelText={dialogState.cancelText}
                 variant={dialogState.variant}
             />
-        </div>
+        </div >
     );
 }
 
