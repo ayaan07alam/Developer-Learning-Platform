@@ -144,22 +144,24 @@
 
   .toc-icon {
     font-size: 20px;
-    color: #6b21a8;
+    color: hsl(var(--primary));
   }
 
   .toc-title {
     font-size: 18px;
     font-weight: 600;
-    color: #1f2937;
+    color: hsl(var(--foreground));
     margin: 0;
   }
 
   .dark .toc-title {
-    color: #e5e7eb;
+    color: hsl(var(--foreground));
   }
 
-  .toc-list {
-    list-style: none;
+  .toc-list,
+  .toc-list ul,
+  .toc-list li {
+    list-style: none !important;
     padding: 0;
     margin: 0;
   }
@@ -169,29 +171,34 @@
   }
 
   .toc-link {
-    color: #7c3aed;
+    color: hsl(var(--primary));
     text-decoration: none;
     display: inline-block;
     padding: 4px 0;
     transition: color 0.2s;
     font-size: 15px;
+    opacity: 0.9;
   }
 
   .dark .toc-link {
-    color: #a78bfa;
+    color: hsl(var(--primary));
+    opacity: 0.8;
   }
 
   .toc-link:hover {
-    color: #5b21b6;
+    color: hsl(var(--primary));
+    opacity: 1;
+    text-decoration: underline;
   }
 
   .dark .toc-link:hover {
-    color: #c4b5fd;
+    color: hsl(var(--primary));
+    opacity: 1;
   }
 
   .toc-toggle-btn {
     background: transparent;
-    color: #7c3aed;
+    color: hsl(var(--primary));
     border: none;
     padding: 8px 0;
     cursor: pointer;
