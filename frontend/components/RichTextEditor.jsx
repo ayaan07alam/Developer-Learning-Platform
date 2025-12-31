@@ -275,19 +275,13 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
             const visibleHeadings = showViewMore ? headings.slice(0, 10) : headings;
             const hiddenHeadings = showViewMore ? headings.slice(10) : [];
 
-            let tocHTML = `
-<div class="table-of-contents">
-    <div class="toc-header">
-        <span class="toc-icon">☰</span>
-        <span class="toc-title">Table of Contents</span>
-    </div>
-    <ul class="toc-list">`;
+            let tocHTML = '<table data-toc="true" style="width:100%;background:#f3f0ff;border:1px solid #e0d7ff;padding:24px;border-radius:12px;margin:32px 0;box-shadow:0 1px 3px rgba(0,0,0,0.05);border-collapse:separate;border-spacing:0;"><tr><td><div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid #e0d7ff;"><span style="font-size:20px;color:#6b21a8;">☰</span><span style="font-size:18px;font-weight:600;color:#1f2937;">Table of Contents</span></div><ul style="list-style:none;padding:0;margin:0;">';
 
             visibleHeadings.forEach((heading, index) => {
                 const indent = (heading.level - 2) * 20;
                 const icon = heading.level === 2 ? '▸' : '•';
-                const paddingStyle = indent > 0 ? ` style="padding-left:${indent}px"` : '';
-                tocHTML += `<li class="toc-item"${paddingStyle}><a href="#${heading.id}" class="toc-link">${icon} ${heading.text}</a></li>`;
+                const marginStyle = indent > 0 ? ` style="margin-left:${indent}px;margin-top:12px;"` : ' style="margin-top:12px;"';
+                tocHTML += `<li${marginStyle}><a href="#${heading.id}" style="color:#7c3aed;text-decoration:none;display:inline-block;padding:4px 0;font-size:15px;">${icon} ${heading.text}</a></li>`;
             });
 
             if (showViewMore) {
@@ -295,14 +289,14 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
                 hiddenHeadings.forEach((heading) => {
                     const indent = (heading.level - 2) * 20;
                     const icon = heading.level === 2 ? '▸' : '•';
-                    const paddingStyle = indent > 0 ? ` style="padding-left:${indent}px"` : '';
-                    tocHTML += `<li class="toc-item"${paddingStyle}><a href="#${heading.id}" class="toc-link">${icon} ${heading.text}</a></li>`;
+                    const marginStyle = indent > 0 ? ` style="margin-left:${indent}px;margin-top:12px;"` : ' style="margin-top:12px;"';
+                    tocHTML += `<li${marginStyle}><a href="#${heading.id}" style="color:#7c3aed;text-decoration:none;display:inline-block;padding:4px 0;font-size:15px;">${icon} ${heading.text}</a></li>`;
                 });
                 tocHTML += '</div>';
-                tocHTML += `<button id="toc-toggle-btn" class="toc-toggle-btn" onclick="const hidden = document.getElementById('toc-hidden-items'); const btn = document.getElementById('toc-toggle-btn'); if (hidden.style.display === 'none') { hidden.style.display = 'block'; btn.textContent = 'View less ↑'; } else { hidden.style.display = 'none'; btn.textContent = 'View all ↓'; }">View all ↓</button>`;
+                tocHTML += `<button id="toc-toggle-btn" style="background:transparent;color:#7c3aed;border:none;padding:8px 0;cursor:pointer;font-size:14px;font-weight:500;margin-top:16px;" onclick="const hidden = document.getElementById('toc-hidden-items'); const btn = document.getElementById('toc-toggle-btn'); if (hidden.style.display === 'none') { hidden.style.display = 'block'; btn.textContent = 'View less ↑'; } else { hidden.style.display = 'none'; btn.textContent = 'View all ↓'; }">View all ↓</button>`;
             }
 
-            tocHTML += '</ul></div>';
+            tocHTML += '</ul></td></tr></table>';
 
             // Insert TOC at current cursor position
             editor.chain().focus().insertContent(tocHTML).run();
