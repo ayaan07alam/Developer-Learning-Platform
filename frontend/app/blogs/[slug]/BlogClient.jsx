@@ -113,12 +113,15 @@ const BlogPost = ({ initialPost }) => {
 
                                 <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-6">
                                     <span className="flex items-center gap-1">
-                                        📅 {new Date(post.publishedAt || post.createdAt).toLocaleDateString('en-US', {
+                                        📅 {new Date(post.updatedAt || post.publishedAt || post.createdAt).toLocaleDateString('en-US', {
                                             year: 'numeric',
                                             month: 'long',
                                             day: 'numeric'
                                         })}
                                     </span>
+                                    {post.updatedAt && post.publishedAt && new Date(post.updatedAt) > new Date(post.publishedAt) && (
+                                        <span className="text-xs ml-1">(Updated)</span>
+                                    )}
                                     <span>•</span>
                                     <span>{post.readTime} min read</span>
                                 </div>
