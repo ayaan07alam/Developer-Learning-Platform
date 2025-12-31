@@ -271,7 +271,7 @@ export default function CompilerPage() {
                                 value={stdin}
                                 onChange={(e) => setStdin(e.target.value)}
                                 className="flex-grow p-4 bg-background resize-none focus:outline-none font-mono text-sm"
-                                placeholder={`Enter input here (e.g., for Java Scanner or Python input())...\n\nExample:\n25\nJohn Doe`}
+                                placeholder={`This shell is non-interactive. You must provide ALL inputs beforehand.\n\nExample for:\nScanner sc = new Scanner(System.in);\nint a = sc.nextInt();\nint b = sc.nextInt();\n\nInput here:\n10\n20\n\n(Press Run after entering input)`}
                             />
                         </div>
 
