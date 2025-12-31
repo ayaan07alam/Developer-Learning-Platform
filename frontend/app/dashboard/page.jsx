@@ -76,12 +76,14 @@ export default function DashboardPage() {
         );
     }
 
-    const tabs = [
+    const allTabs = [
         { id: 'overview', label: 'Overview', icon: TrendingUp },
         { id: 'drafts', label: 'Improvement Drafts', icon: FileEdit },
         { id: 'content', label: 'My Content', icon: FolderOpen },
-        { id: 'media', label: 'Media Library', icon: ImageIcon }
+        { id: 'media', label: 'Media Library', icon: ImageIcon, roles: ['ADMIN', 'EDITOR'] }
     ];
+
+    const tabs = allTabs.filter(tab => !tab.roles || tab.roles.includes(user?.role));
 
     return (
         <div className="min-h-screen bg-background">
