@@ -28,10 +28,13 @@ public class CloudinaryService {
         this.cloudinary = new Cloudinary(config);
     }
 
-    public Map uploadFile(MultipartFile file) {
+    public Map<?, ?> uploadFile(MultipartFile file) {
         try {
             File uploadedFile = convertMultiPartToFile(file);
-            Map uploadResult = cloudinary.uploader().upload(uploadedFile, ObjectUtils.emptyMap());
+            Map<?, ?> uploadResult = cloudinary.uploader().upload(uploadedFile,
+                    ObjectUtils.asMap(
+                            "use_filename", true,
+                            "unique_filename", false));
             uploadedFile.delete();
             return uploadResult;
         } catch (Exception e) {

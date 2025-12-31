@@ -31,7 +31,7 @@ public class MediaController {
             }
 
             // Upload to Cloudinary
-            Map result = cloudinaryService.uploadFile(file);
+            Map<?, ?> result = cloudinaryService.uploadFile(file);
 
             String url = (String) result.get("secure_url");
             String publicId = (String) result.get("public_id");
