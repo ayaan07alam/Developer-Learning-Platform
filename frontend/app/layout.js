@@ -65,6 +65,9 @@ export const metadata = {
   authors: [{ name: 'RuntimeRiver' }, { name: 'RuntimeRiver', url: 'https://www.runtimeriver.com' }],
   creator: 'RuntimeRiver',
   publisher: 'RuntimeRiver',
+  verification: {
+    google: 'aeNpbPn8hSJRS59Qdhdb-h4OPd1O-zzdguVsm1aUVA8',
+  },
   formatDetection: {
     email: false,
     address: false,
