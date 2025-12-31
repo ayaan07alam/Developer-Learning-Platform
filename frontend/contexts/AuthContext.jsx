@@ -40,12 +40,19 @@ export const AuthProvider = ({ children }) => {
                 const userData = await response.json();
                 setUser(userData);
             } else {
-                // Token invalid, clear it
-                logout();
+                // Only logout if it's an authentication error (401/403)
+                // Do NOT logout on 500 server errors
+                if (response.status === 401 || response.status === 403) {
+                    console.log('Token expired or invalid, logging out');
+                    logout();
+                } else {
+                    console.error('Failed to fetch user data, but keeping session:', response.status);
+                    // Optionally set an error state here, but don't destroy session
+                }
             }
         } catch (error) {
             console.error('Error fetching user:', error);
-            logout();
+            // Don't logout on network errors
         } finally {
             setLoading(false);
         }
