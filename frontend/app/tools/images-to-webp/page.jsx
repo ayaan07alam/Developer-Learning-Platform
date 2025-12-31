@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Image as ImageIcon, Upload, Download, Loader2, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import ProcessingOverlay from '@/components/Tools/ProcessingOverlay';
 
 import { API_BASE_URL } from '@/lib/api-client';
 
@@ -86,7 +87,9 @@ export default function ImagesToWEBPPage() {
                         />
                     </label>
                 ) : (
-                    <div className="space-y-6">
+                    <div className="space-y-6 relative rounded-xl overflow-hidden">
+                        <ProcessingOverlay isProcessing={converting} message="Converting to WEBP..." />
+
                         {preview && (
                             <div className="p-4 rounded-xl bg-card border border-border">
                                 <img src={preview} alt="Preview" className="max-h-64 mx-auto rounded-lg" />
@@ -94,14 +97,7 @@ export default function ImagesToWEBPPage() {
                         )}
 
                         <Button onClick={handleConvert} disabled={converting} className="w-full h-12">
-                            {converting ? (
-                                <>
-                                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                                    Converting...
-                                </>
-                            ) : (
-                                'Convert to WEBP'
-                            )}
+                            {converting ? 'Converting...' : 'Convert to WEBP'}
                         </Button>
 
                         {converted && (

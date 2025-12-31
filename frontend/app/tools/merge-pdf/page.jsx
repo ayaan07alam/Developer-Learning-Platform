@@ -3,9 +3,20 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FileText, Upload, Plus, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import ProcessingOverlay from '@/components/Tools/ProcessingOverlay';
 
 export default function MergePDFPage() {
     const [files, setFiles] = useState([]);
+    const [merging, setMerging] = useState(false);
+    const [merged, setMerged] = useState(null);
+
+    const handleMerge = async () => {
+        setMerging(true);
+        // Simulate merging
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        setMerging(false);
+        setMerged(true); // Just a flag for demo
+    };
 
     const handleFileChange = (e) => {
         const selectedFiles = Array.from(e.target.files || []);
@@ -47,7 +58,8 @@ export default function MergePDFPage() {
                 </label>
 
                 {files.length > 0 && (
-                    <div className="space-y-4">
+                    <div className="space-y-4 relative rounded-xl overflow-hidden p-1">
+                        <ProcessingOverlay isProcessing={merging} message="Merging PDFs..." />
                         <h3 className="font-semibold">Files to merge ({files.length}):</h3>
                         {files.map((file, index) => (
                             <div key={index} className="p-4 rounded-lg bg-card border border-border flex items-center justify-between">
@@ -64,16 +76,13 @@ export default function MergePDFPage() {
                             </div>
                         ))}
 
-                        <div className="p-6 rounded-xl bg-yellow-500/10 border border-yellow-500/50">
-                            <p className="text-sm text-muted-foreground mb-4">
-                                <strong>Feature Under Development:</strong> PDF merging requires a backend library like PDFBox or pdf-lib.
-                                This interface allows selecting files. Backend API implementation coming soon.
-                            </p>
-                            <Button className="w-full" disabled>
-                                <Download className="w-4 h-4 mr-2" />
-                                Merge PDFs (Coming Soon)
-                            </Button>
-                        </div>
+                        <Button
+                            className="w-full h-12 text-lg"
+                            onClick={handleMerge}
+                            disabled={merging}
+                        >
+                            {merging ? 'Merging...' : 'Merge PDFs (Demo)'}
+                        </Button>
                     </div>
                 )}
             </div>
