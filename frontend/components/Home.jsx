@@ -51,6 +51,30 @@ const quotes = [
   { text: "Any fool can write code that a computer can understand. Good programmers write code that humans can understand.", author: "Martin Fowler", type: "tech" }
 ];
 
+// Robust Image Component that handles errors and fallbacks
+const PostImage = ({ src, title }) => {
+  const [error, setError] = useState(false);
+
+  if (error || !src) {
+    return (
+      <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
+        <BookOpen className="w-12 h-12 text-muted-foreground" />
+      </div>
+    );
+  }
+
+  return (
+    <Image
+      src={src}
+      alt={title || "Post ID"}
+      fill
+      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+      className="object-cover group-hover:scale-105 transition-transform duration-500"
+      onError={() => setError(true)}
+    />
+  );
+};
+
 const Home = () => {
   const [latestPosts, setLatestPosts] = useState([]);
   const [trendingPosts, setTrendingPosts] = useState([]);
@@ -320,18 +344,9 @@ const Home = () => {
                   key={post.id}
                   className="group relative overflow-hidden rounded-xl border border-border bg-card hover:border-primary/50 hover:shadow-xl transition-all duration-300">
                   <div className="relative h-48 overflow-hidden">
-                    {post.mainImage ? (
-                      <Image
-                        src={post.mainImage}
-                        alt={post.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
-                        <BookOpen className="w-12 h-12 text-muted-foreground" />
-                      </div>
-                    )}
+                    <div className="relative h-48 overflow-hidden bg-muted">
+                      <PostImage src={post.mainImage} title={post.title} />
+                    </div>
                   </div>
                   <div className="p-5">
                     <h3 className="text-lg font-bold mb-2 line-clamp-2 group-hover:text-primary transition-colors">
@@ -562,18 +577,9 @@ const Home = () => {
                   key={post.id}
                   className="group relative overflow-hidden rounded-xl border border-border bg-card hover:border-primary/50 hover:shadow-xl transition-all duration-300">
                   <div className="relative h-48 overflow-hidden">
-                    {post.mainImage ? (
-                      <Image
-                        src={post.mainImage}
-                        alt={post.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
-                        <BookOpen className="w-12 h-12 text-muted-foreground" />
-                      </div>
-                    )}
+                    <div className="relative h-48 overflow-hidden bg-muted">
+                      <PostImage src={post.mainImage} title={post.title} />
+                    </div>
                   </div>
                   <div className="p-5">
                     <h3 className="text-lg font-bold mb-2 line-clamp-2 group-hover:text-primary transition-colors">
@@ -700,18 +706,9 @@ const Home = () => {
                   key={post.id}
                   className="group relative overflow-hidden rounded-xl border border-border bg-card hover:border-primary/50 hover:shadow-xl transition-all duration-300">
                   <div className="relative h-48 overflow-hidden">
-                    {post.mainImage ? (
-                      <Image
-                        src={post.mainImage}
-                        alt={post.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
-                        <BookOpen className="w-12 h-12 text-muted-foreground" />
-                      </div>
-                    )}
+                    <div className="relative h-48 overflow-hidden bg-muted">
+                      <PostImage src={post.mainImage} title={post.title} />
+                    </div>
                   </div>
                   <div className="p-5">
                     <h3 className="text-lg font-bold mb-2 line-clamp-2 group-hover:text-primary transition-colors">
