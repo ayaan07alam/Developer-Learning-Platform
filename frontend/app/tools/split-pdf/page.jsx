@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FileText, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import PremiumFileUploader from '@/components/Tools/PremiumFileUploader';
 
 export default function SplitPDFPage() {
     const [file, setFile] = useState(null);
@@ -34,17 +35,14 @@ export default function SplitPDFPage() {
                 </motion.div>
 
                 {!file ? (
-                    <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-border rounded-xl cursor-pointer bg-card hover:bg-accent/50 transition-all">
-                        <Upload className="w-12 h-12 mb-4 text-muted-foreground" />
-                        <p className="mb-2 text-lg font-semibold">Upload PDF to Split</p>
-                        <p className="text-sm text-muted-foreground">PDF files only</p>
-                        <input
-                            type="file"
-                            className="hidden"
-                            accept=".pdf,application/pdf"
-                            onChange={handleFileChange}
-                        />
-                    </label>
+                    <PremiumFileUploader
+                        onFileSelect={(e) => {
+                            handleFileChange({ target: { files: e.target.files } });
+                        }}
+                        accept=".pdf,application/pdf"
+                        label="Upload PDF to Split"
+                        subLabel="PDF files only"
+                    />
                 ) : (
                     <div className="space-y-6">
                         <div className="p-6 rounded-xl bg-card border border-border">

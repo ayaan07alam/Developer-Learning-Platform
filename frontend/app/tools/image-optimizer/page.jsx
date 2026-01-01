@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Upload, Download, Image as ImageIcon, Check, X, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ProcessingOverlay from '@/components/Tools/ProcessingOverlay';
+import PremiumFileUploader from '@/components/Tools/PremiumFileUploader';
 
 import { API_BASE_URL } from '@/lib/api-client';
 
@@ -137,25 +138,15 @@ export default function ImageConverterPage() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
                     >
-                        <label
-                            htmlFor="file-upload"
-                            className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-border rounded-xl cursor-pointer bg-card hover:bg-accent/50 transition-all"
-                        >
-                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                <Upload className="w-12 h-12 mb-4 text-muted-foreground" />
-                                <p className="mb-2 text-lg font-semibold">Click to upload image</p>
-                                <p className="text-sm text-muted-foreground">
-                                    PNG, JPG, GIF, BMP or WEBP
-                                </p>
-                            </div>
-                            <input
-                                id="file-upload"
-                                type="file"
-                                className="hidden"
-                                accept="image/*"
-                                onChange={handleFileChange}
-                            />
-                        </label>
+                        <PremiumFileUploader
+                            onFileSelect={(e) => {
+                                // Simulate event for existing handler
+                                handleFileChange({ target: { files: e.target.files } });
+                            }}
+                            accept="image/*"
+                            label="Click to upload image"
+                            subLabel="PNG, JPG, BMP or WEBP (Max 10MB)"
+                        />
                     </motion.div>
                 ) : (
                     <div className="space-y-6 relative rounded-xl overflow-hidden">

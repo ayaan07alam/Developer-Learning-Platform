@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Table, Upload, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import PremiumFileUploader from '@/components/Tools/PremiumFileUploader';
 
 export default function CSVToExcelPage() {
     const [csvFile, setCSVFile] = useState(null);
@@ -41,17 +42,14 @@ export default function CSVToExcelPage() {
                 </motion.div>
 
                 {!csvFile ? (
-                    <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-border rounded-xl cursor-pointer bg-card hover:bg-accent/50 transition-all">
-                        <Upload className="w-12 h-12 mb-4 text-muted-foreground" />
-                        <p className="mb-2 text-lg font-semibold">Upload CSV File</p>
-                        <p className="text-sm text-muted-foreground">CSV files only</p>
-                        <input
-                            type="file"
-                            className="hidden"
-                            accept=".csv,text/csv"
-                            onChange={handleFileChange}
-                        />
-                    </label>
+                    <PremiumFileUploader
+                        onFileSelect={(e) => {
+                            handleFileChange({ target: { files: e.target.files } });
+                        }}
+                        accept=".csv,text/csv"
+                        label="Upload CSV File"
+                        subLabel="CSV files only"
+                    />
                 ) : (
                     <div className="space-y-6">
                         <div className="p-6 rounded-xl bg-card border border-border">

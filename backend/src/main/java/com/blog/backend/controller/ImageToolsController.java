@@ -137,8 +137,24 @@ public class ImageToolsController {
                         .body(Map.of("error", "Invalid image file"));
             }
 
+            // Get a JPEG ImageWriter
+            javax.imageio.ImageWriter writer = ImageIO.getImageWritersByFormatName("jpg").next();
+            javax.imageio.ImageWriteParam param = writer.getDefaultWriteParam();
+
+            // Configure compression
+            if (param.canWriteCompressed()) {
+                param.setCompressionMode(javax.imageio.ImageWriteParam.MODE_EXPLICIT);
+                param.setCompressionQuality(quality); // 0.0 to 1.0
+            }
+
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            ImageIO.write(image, "jpg", outputStream);
+            javax.imageio.stream.ImageOutputStream ios = ImageIO.createImageOutputStream(outputStream);
+            writer.setOutput(ios);
+            writer.write(null, new javax.imageio.IIOImage(image, null, null), param);
+
+            writer.dispose();
+            ios.close();
+
             byte[] compressedBytes = outputStream.toByteArray();
 
             // Return file info

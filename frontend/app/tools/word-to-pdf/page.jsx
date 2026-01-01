@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { FileText, Upload, Download, Loader2, Check, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ProcessingOverlay from '@/components/Tools/ProcessingOverlay';
+import PremiumFileUploader from '@/components/Tools/PremiumFileUploader';
 
 import { API_BASE_URL } from '@/lib/api-client';
 
@@ -94,21 +95,14 @@ export default function WordToPDFPage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                     >
-                        <label
-                            htmlFor="word-upload"
-                            className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-border rounded-xl cursor-pointer bg-card hover:bg-accent/50 transition-all"
-                        >
-                            <Upload className="w-12 h-12 mb-4 text-muted-foreground" />
-                            <p className="mb-2 text-lg font-semibold">Click to upload Word document</p>
-                            <p className="text-sm text-muted-foreground">DOCX files supported</p>
-                            <input
-                                id="word-upload"
-                                type="file"
-                                className="hidden"
-                                accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                                onChange={handleFileChange}
-                            />
-                        </label>
+                        <PremiumFileUploader
+                            onFileSelect={(e) => {
+                                handleFileChange({ target: { files: e.target.files } });
+                            }}
+                            accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                            label="Click to upload Word document"
+                            subLabel="DOCX files supported"
+                        />
                     </motion.div>
                 ) : (
                     <div className="space-y-6 relative rounded-xl overflow-hidden">

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FileText, Upload, Download, Loader2, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import PremiumFileUploader from '@/components/Tools/PremiumFileUploader';
 
 export default function WordToHTMLPage() {
     const [file, setFile] = useState(null);
@@ -77,17 +78,14 @@ export default function WordToHTMLPage() {
                 </motion.div>
 
                 {!file ? (
-                    <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-border rounded-xl cursor-pointer bg-card hover:bg-accent/50 transition-all">
-                        <Upload className="w-12 h-12 mb-4 text-muted-foreground" />
-                        <p className="mb-2 text-lg font-semibold">Click to upload Word document</p>
-                        <p className="text-sm text-muted-foreground">DOCX files supported</p>
-                        <input
-                            type="file"
-                            className="hidden"
-                            accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                            onChange={handleFileChange}
-                        />
-                    </label>
+                    <PremiumFileUploader
+                        onFileSelect={(e) => {
+                            handleFileChange({ target: { files: e.target.files } });
+                        }}
+                        accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                        label="Click to upload Word document"
+                        subLabel="DOCX files supported"
+                    />
                 ) : (
                     <div className="space-y-6">
                         {converting ? (

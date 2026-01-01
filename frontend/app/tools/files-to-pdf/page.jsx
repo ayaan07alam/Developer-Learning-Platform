@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FileText, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import PremiumFileUploader from '@/components/Tools/PremiumFileUploader';
 
 export default function FilesToPDFPage() {
     const [files, setFiles] = useState([]);
@@ -29,18 +30,15 @@ export default function FilesToPDFPage() {
                     </p>
                 </motion.div>
 
-                <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-border rounded-xl cursor-pointer bg-card hover:bg-accent/50 transition-all">
-                    <Upload className="w-12 h-12 mb-4 text-muted-foreground" />
-                    <p className="mb-2 text-lg font-semibold">Upload Files</p>
-                    <p className="text-sm text-muted-foreground">Images, Word, Excel, PowerPoint</p>
-                    <input
-                        type="file"
-                        className="hidden"
-                        accept=".jpg,.jpeg,.png,.docx,.xlsx,.pptx"
-                        multiple
-                        onChange={handleFileChange}
-                    />
-                </label>
+                <PremiumFileUploader
+                    onFileSelect={(e) => {
+                        handleFileChange({ target: { files: e.target.files } });
+                    }}
+                    accept=".jpg,.jpeg,.png,.docx,.xlsx,.pptx"
+                    multiple={true}
+                    label="Upload Files"
+                    subLabel="Images, Word, Excel, PowerPoint"
+                />
 
                 {files.length > 0 && (
                     <div className="mt-6 space-y-4">

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Presentation, Image as ImageIcon, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import PremiumFileUploader from '@/components/Tools/PremiumFileUploader';
 
 export default function PPTToImagesPage() {
     const [file, setFile] = useState(null);
@@ -33,17 +34,14 @@ export default function PPTToImagesPage() {
                 </motion.div>
 
                 {!file ? (
-                    <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-border rounded-xl cursor-pointer bg-card hover:bg-accent/50 transition-all">
-                        <Upload className="w-12 h-12 mb-4 text-muted-foreground" />
-                        <p className="mb-2 text-lg font-semibold">Upload PowerPoint</p>
-                        <p className="text-sm text-muted-foreground">PPTX files</p>
-                        <input
-                            type="file"
-                            className="hidden"
-                            accept=".pptx,application/vnd.openxmlformats-officedocument.presentationml.presentation"
-                            onChange={handleFileChange}
-                        />
-                    </label>
+                    <PremiumFileUploader
+                        onFileSelect={(e) => {
+                            handleFileChange({ target: { files: e.target.files } });
+                        }}
+                        accept=".pptx,application/vnd.openxmlformats-officedocument.presentationml.presentation"
+                        label="Upload PowerPoint"
+                        subLabel="PPTX files"
+                    />
                 ) : (
                     <div className="space-y-6">
                         <div className="p-6 rounded-xl bg-card border border-border">
@@ -54,8 +52,8 @@ export default function PPTToImagesPage() {
                                         key={fmt}
                                         onClick={() => setFormat(fmt)}
                                         className={`flex-1 p-3 rounded-lg font-medium transition-all ${format === fmt
-                                                ? 'bg-primary text-primary-foreground'
-                                                : 'bg-background border border-border hover:border-primary'
+                                            ? 'bg-primary text-primary-foreground'
+                                            : 'bg-background border border-border hover:border-primary'
                                             }`}
                                     >
                                         {fmt.toUpperCase()}

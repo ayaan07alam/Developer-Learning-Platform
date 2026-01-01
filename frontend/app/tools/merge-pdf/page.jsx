@@ -3,7 +3,10 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FileText, Upload, Plus, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { FileText, Upload, Plus, Download } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import ProcessingOverlay from '@/components/Tools/ProcessingOverlay';
+import PremiumFileUploader from '@/components/Tools/PremiumFileUploader';
 
 export default function MergePDFPage() {
     const [files, setFiles] = useState([]);
@@ -44,18 +47,17 @@ export default function MergePDFPage() {
                     </p>
                 </motion.div>
 
-                <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-border rounded-xl cursor-pointer bg-card hover:bg-accent/50 transition-all mb-6">
-                    <Plus className="w-12 h-12 mb-4 text-muted-foreground" />
-                    <p className="mb-2 text-lg font-semibold">Add PDF Files</p>
-                    <p className="text-sm text-muted-foreground">Click to select multiple PDFs</p>
-                    <input
-                        type="file"
-                        className="hidden"
-                        accept=".pdf,application/pdf"
-                        multiple
-                        onChange={handleFileChange}
-                    />
-                </label>
+                <PremiumFileUploader
+                    onFileSelect={(e) => {
+                        handleFileChange({ target: { files: e.target.files } });
+                    }}
+                    accept=".pdf,application/pdf"
+                    multiple={true}
+                    label="Add PDF Files"
+                    subLabel="Click to select multiple PDFs"
+                    className="mb-6"
+                    icon={Plus}
+                />
 
                 {files.length > 0 && (
                     <div className="space-y-4 relative rounded-xl overflow-hidden p-1">

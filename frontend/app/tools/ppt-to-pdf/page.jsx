@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Presentation, FileText, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import PremiumFileUploader from '@/components/Tools/PremiumFileUploader';
 
 export default function PPTToPDFPage() {
     const [file, setFile] = useState(null);
@@ -32,17 +33,14 @@ export default function PPTToPDFPage() {
                 </motion.div>
 
                 {!file ? (
-                    <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-border rounded-xl cursor-pointer bg-card hover:bg-accent/50 transition-all">
-                        <Upload className="w-12 h-12 mb-4 text-muted-foreground" />
-                        <p className="mb-2 text-lg font-semibold">Upload PowerPoint</p>
-                        <p className="text-sm text-muted-foreground">PPTX files</p>
-                        <input
-                            type="file"
-                            className="hidden"
-                            accept=".pptx,application/vnd.openxmlformats-officedocument.presentationml.presentation"
-                            onChange={handleFileChange}
-                        />
-                    </label>
+                    <PremiumFileUploader
+                        onFileSelect={(e) => {
+                            handleFileChange({ target: { files: e.target.files } });
+                        }}
+                        accept=".pptx,application/vnd.openxmlformats-officedocument.presentationml.presentation"
+                        label="Upload PowerPoint"
+                        subLabel="PPTX files"
+                    />
                 ) : (
                     <div className="space-y-6">
                         <div className="p-6 rounded-xl bg-card border border-border flex items-center gap-3">

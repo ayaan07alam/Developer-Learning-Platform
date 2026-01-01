@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FileText, Upload, Download, Loader2, Check, X, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import PremiumFileUploader from '@/components/Tools/PremiumFileUploader';
 
 import { API_BASE_URL } from '@/lib/api-client';
 
@@ -103,21 +104,14 @@ export default function PDFCompressorPage() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
                     >
-                        <label
-                            htmlFor="pdf-upload"
-                            className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-border rounded-xl cursor-pointer bg-card hover:bg-accent/50 transition-all"
-                        >
-                            <Upload className="w-12 h-12 mb-4 text-muted-foreground" />
-                            <p className="mb-2 text-lg font-semibold">Click to upload PDF</p>
-                            <p className="text-sm text-muted-foreground">Maximum file size: 10MB</p>
-                            <input
-                                id="pdf-upload"
-                                type="file"
-                                className="hidden"
-                                accept=".pdf,application/pdf"
-                                onChange={handleFileChange}
-                            />
-                        </label>
+                        <PremiumFileUploader
+                            onFileSelect={(e) => {
+                                handleFileChange({ target: { files: e.target.files } });
+                            }}
+                            accept=".pdf,application/pdf"
+                            label="Click to upload PDF"
+                            subLabel="Maximum file size: 10MB"
+                        />
                     </motion.div>
                 ) : (
                     <div className="space-y-6">

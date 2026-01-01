@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FileText, Upload, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import PremiumFileUploader from '@/components/Tools/PremiumFileUploader';
 
 export default function MergeWordPage() {
     const [files, setFiles] = useState([]);
@@ -32,18 +33,17 @@ export default function MergeWordPage() {
                     </p>
                 </motion.div>
 
-                <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-border rounded-xl cursor-pointer bg-card hover:bg-accent/50 transition-all mb-6">
-                    <Plus className="w-12 h-12 mb-4 text-muted-foreground" />
-                    <p className="mb-2 text-lg font-semibold">Add Word Documents</p>
-                    <p className="text-sm text-muted-foreground">DOCX files only</p>
-                    <input
-                        type="file"
-                        className="hidden"
-                        accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                        multiple
-                        onChange={handleFileChange}
-                    />
-                </label>
+                <PremiumFileUploader
+                    onFileSelect={(e) => {
+                        handleFileChange({ target: { files: e.target.files } });
+                    }}
+                    accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    multiple={true}
+                    label="Add Word Documents"
+                    subLabel="DOCX files only"
+                    className="mb-6"
+                    icon={Plus}
+                />
 
                 {files.length > 0 && (
                     <div className="space-y-4">

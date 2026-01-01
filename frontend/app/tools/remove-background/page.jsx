@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Image as ImageIcon, Upload, Download, Wand2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ProcessingOverlay from '@/components/Tools/ProcessingOverlay';
+import PremiumFileUploader from '@/components/Tools/PremiumFileUploader';
 
 export default function RemoveBackgroundPage() {
     const [image, setImage] = useState(null);
@@ -91,17 +92,14 @@ export default function RemoveBackgroundPage() {
 
                     <div>
                         {!image ? (
-                            <label className="flex flex-col items-center justify-center h-64 border-2 border-dashed border-border rounded-xl cursor-pointer bg-card hover:bg-accent/50 transition-all">
-                                <Upload className="w-12 h-12 mb-4 text-muted-foreground" />
-                                <p className="mb-2 text-lg font-semibold">Upload Image</p>
-                                <p className="text-sm text-muted-foreground">PNG, JPG, WEBP</p>
-                                <input
-                                    type="file"
-                                    className="hidden"
-                                    accept="image/*"
-                                    onChange={handleImageChange}
-                                />
-                            </label>
+                            <PremiumFileUploader
+                                onFileSelect={(e) => {
+                                    handleImageChange({ target: { files: e.target.files } });
+                                }}
+                                accept="image/*"
+                                label="Upload Image"
+                                subLabel="PNG, JPG, WEBP"
+                            />
                         ) : (
                             <div className="p-4 rounded-xl bg-card border border-border">
                                 <h3 className="font-semibold mb-3">Original:</h3>

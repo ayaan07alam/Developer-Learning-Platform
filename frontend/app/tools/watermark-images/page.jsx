@@ -3,6 +3,7 @@ import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Image as ImageIcon, Upload, Download, Type } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import PremiumFileUploader from '@/components/Tools/PremiumFileUploader';
 
 export default function WatermarkImagesPage() {
     const [image, setImage] = useState(null);
@@ -84,17 +85,14 @@ export default function WatermarkImagesPage() {
                     {/* Upload Section */}
                     <div className="space-y-4">
                         {!image ? (
-                            <label className="flex flex-col items-center justify-center h-64 border-2 border-dashed border-border rounded-xl cursor-pointer bg-card hover:bg-accent/50 transition-all">
-                                <Upload className="w-12 h-12 mb-4 text-muted-foreground" />
-                                <p className="mb-2 text-lg font-semibold">Upload Image</p>
-                                <p className="text-sm text-muted-foreground">All formats supported</p>
-                                <input
-                                    type="file"
-                                    className="hidden"
-                                    accept="image/*"
-                                    onChange={handleImageChange}
-                                />
-                            </label>
+                            <PremiumFileUploader
+                                onFileSelect={(e) => {
+                                    handleImageChange({ target: { files: e.target.files } });
+                                }}
+                                accept="image/*"
+                                label="Upload Image"
+                                subLabel="All formats supported"
+                            />
                         ) : (
                             <div className="p-4 rounded-xl bg-card border border-border">
                                 <img src={image} alt="Original" className="w-full rounded-lg" />
