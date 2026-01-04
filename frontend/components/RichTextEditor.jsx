@@ -321,8 +321,13 @@ const generateTOC = () => {
         visibleHeadings.forEach((heading, index) => {
             const indent = (heading.level - 2) * 40;
             const icon = heading.level === 2 ? '▸' : '•';
-            const marginStyle = indent > 0 ? ` style="margin-left:${indent}px;margin-top:12px;"` : ' style="margin-top:12px;"';
-            tocHTML += `<li${marginStyle}><a href="#${heading.id}" style="color:#7c3aed;text-decoration:none;display:inline-block;padding:4px 0;font-size:15px;">${icon} ${heading.text}</a></li>`;
+            // Move indentation to the anchor tag using padding-left
+            // Keep margin-top on the li for spacing
+            const liStyle = ' style="margin-top:12px;"';
+            // Add padding-right to ensure text doesn't hit edge if overflowing (optional)
+            const aStyle = `color:#7c3aed;text-decoration:none;display:block;padding:4px 0;padding-left:${indent}px;font-size:15px;`;
+
+            tocHTML += `<li${liStyle}><a href="#${heading.id}" style="${aStyle}">${icon} ${heading.text}</a></li>`;
         });
 
         if (showViewMore) {
@@ -330,8 +335,10 @@ const generateTOC = () => {
             hiddenHeadings.forEach((heading) => {
                 const indent = (heading.level - 2) * 40;
                 const icon = heading.level === 2 ? '▸' : '•';
-                const marginStyle = indent > 0 ? ` style="margin-left:${indent}px;margin-top:12px;"` : ' style="margin-top:12px;"';
-                tocHTML += `<li${marginStyle}><a href="#${heading.id}" style="color:#7c3aed;text-decoration:none;display:inline-block;padding:4px 0;font-size:15px;">${icon} ${heading.text}</a></li>`;
+                const liStyle = ' style="margin-top:12px;"';
+                const aStyle = `color:#7c3aed;text-decoration:none;display:block;padding:4px 0;padding-left:${indent}px;font-size:15px;`;
+
+                tocHTML += `<li${liStyle}><a href="#${heading.id}" style="${aStyle}">${icon} ${heading.text}</a></li>`;
             });
             tocHTML += '</div>';
             tocHTML += `<button id="toc-toggle-btn" style="background:transparent;color:#7c3aed;border:none;padding:8px 0;cursor:pointer;font-size:14px;font-weight:500;margin-top:16px;" onclick="const hidden = document.getElementById('toc-hidden-items'); const btn = document.getElementById('toc-toggle-btn'); if (hidden.style.display === 'none') { hidden.style.display = 'block'; btn.textContent = 'View less ↑'; } else { hidden.style.display = 'none'; btn.textContent = 'View all ↓'; }">View all ↓</button>`;
