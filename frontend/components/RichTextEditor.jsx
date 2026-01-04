@@ -278,7 +278,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
             let tocHTML = '<table data-toc="true" style="width:100%;background:#f3f0ff;border:1px solid #e0d7ff;padding:24px;border-radius:12px;margin:32px 0;box-shadow:0 1px 3px rgba(0,0,0,0.05);border-collapse:separate;border-spacing:0;"><tr><td><div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid #e0d7ff;"><span style="font-size:20px;color:#6b21a8;">☰</span><span style="font-size:18px;font-weight:600;color:#1f2937;">Table of Contents</span></div><ul style="list-style:none;padding:0;margin:0;">';
 
             visibleHeadings.forEach((heading, index) => {
-                const indent = (heading.level - 2) * 20;
+                const indent = (heading.level - 2) * 40;
                 const icon = heading.level === 2 ? '▸' : '•';
                 const marginStyle = indent > 0 ? ` style="margin-left:${indent}px;margin-top:12px;"` : ' style="margin-top:12px;"';
                 tocHTML += `<li${marginStyle}><a href="#${heading.id}" style="color:#7c3aed;text-decoration:none;display:inline-block;padding:4px 0;font-size:15px;">${icon} ${heading.text}</a></li>`;
@@ -287,7 +287,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
             if (showViewMore) {
                 tocHTML += '<div id="toc-hidden-items" style="display:none;">';
                 hiddenHeadings.forEach((heading) => {
-                    const indent = (heading.level - 2) * 20;
+                    const indent = (heading.level - 2) * 40;
                     const icon = heading.level === 2 ? '▸' : '•';
                     const marginStyle = indent > 0 ? ` style="margin-left:${indent}px;margin-top:12px;"` : ' style="margin-top:12px;"';
                     tocHTML += `<li${marginStyle}><a href="#${heading.id}" style="color:#7c3aed;text-decoration:none;display:inline-block;padding:4px 0;font-size:15px;">${icon} ${heading.text}</a></li>`;
