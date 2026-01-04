@@ -90,7 +90,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
                 addGlobalAttributes() {
                     return [
                         {
-                            types: ['div'],
+                            types: ['div', 'listItem'],
                             attributes: {
                                 style: {
                                     default: null,
