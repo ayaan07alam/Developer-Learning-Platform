@@ -23,6 +23,11 @@ export const metadata = {
   description: 'The open developer ecosystem. Read and **write** technical articles, run code instantly, and build your profile. Join 10,000+ developers contributing to the flow.',
   applicationName: 'RuntimeRiver',
   referrer: 'origin-when-cross-origin',
+  icons: {
+    icon: '/icon.svg',
+    shortcut: '/icon.svg',
+    apple: '/icon.svg',
+  },
   keywords: ["Next.js",
     "React",
     "JavaScript",
@@ -93,6 +98,14 @@ export const metadata = {
 }
 
 export default function RootLayout({ children }) {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'RuntimeRiver',
+    alternateName: ['Runtime River', 'RuntimeRiver.com'],
+    url: 'https://www.runtimeriver.com',
+  }
+
   return (
     <html lang="en">
       <Script id="ga-script"
@@ -107,6 +120,11 @@ export default function RootLayout({ children }) {
                     gtag('config', 'G-S7LJXQ788V');`
         }
       </Script>
+      <Script
+        id="json-ld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5593264837587690"
         crossorigin="anonymous"></Script>
       <body className={spaceGrotesk.className}>
