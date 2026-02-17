@@ -190,8 +190,10 @@ export default function BlogContent({ htmlContent }) {
     return (
         <div
             ref={contentRef}
-            className="prose prose-base md:prose-lg dark:prose-invert max-w-none text-foreground leading-relaxed space-y-6 
-                       prose-headings:scroll-mt-24
+            className="prose prose-base md:prose-lg dark:prose-invert max-w-none text-foreground leading-normal 
+                       prose-headings:scroll-mt-24 prose-headings:mb-4 prose-headings:mt-8
+                       prose-p:my-3 prose-p:leading-7
+                       prose-ul:my-3 prose-li:my-1
                        prose-a:text-primary prose-a:underline prose-a:decoration-primary/30 
                        hover:prose-a:decoration-primary prose-a:transition-colors
                        prose-a:cursor-pointer"
