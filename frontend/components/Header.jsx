@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Moon, Sun, Menu, X, Terminal, LogOut, User, Search, ChevronDown, LayoutDashboard, Users, MessageSquare, Folder, PenTool } from "lucide-react";
+import { Moon, Sun, Menu, X, Terminal, LogOut, User, Search, ChevronDown, LayoutDashboard, Users, MessageSquare, Folder, PenTool, Bell } from "lucide-react";
+import NotificationBell from "./NotificationBell";
 import {
   Sheet,
   SheetContent,
@@ -60,7 +61,7 @@ const Header = () => {
             <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/30 to-blue-500/30 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </div>
           <div className="flex flex-col">
-            <span className="text-lg md:text-2xl font-bold tracking-tight leading-none bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-500 to-primary bg-[length:200%_auto] animate-gradient">
+            <span className="text-xl md:text-2xl font-bold tracking-tight leading-none bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-500 to-primary bg-[length:200%_auto] animate-gradient">
               Runtime<span className="font-extrabold">River</span>
             </span>
             <span className="hidden md:block text-[10px] text-muted-foreground tracking-wider uppercase">Flow State for Developers</span>
@@ -126,6 +127,11 @@ const Header = () => {
             {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
           </Button>
 
+
+
+          {/* Notification Bell */}
+          {isAuthenticated && <NotificationBell />}
+
           {isAuthenticated ? (
             <>
               {/* User Menu Dropdown - Icon Only */}
@@ -172,6 +178,10 @@ const Header = () => {
                         <Link href="/dashboard/categories" className="flex items-center gap-3 px-4 py-2 hover:bg-muted transition-colors">
                           <Folder className="w-4 h-4" />
                           <span>Categories</span>
+                        </Link>
+                        <Link href="/dashboard/admin/notifications" className="flex items-center gap-3 px-4 py-2 hover:bg-muted transition-colors">
+                          <Bell className="w-4 h-4" />
+                          <span>Broadcast</span>
                         </Link>
                       </>
                     )}
@@ -352,7 +362,7 @@ const Header = () => {
           </Sheet>
         </div>
       </div>
-    </header>
+    </header >
   );
 };
 

@@ -168,7 +168,7 @@ const Home = () => {
         HERO SECTION 
         Cyber-Minimalist: Massive Typography, Left Aligned, Right "Portal"
       */}
-      <section className="relative pt-32 pb-32 lg:pt-48 lg:pb-40 overflow-hidden">
+      <section className="relative pt-24 pb-20 lg:pt-48 lg:pb-40 overflow-hidden">
         {/* Deep River Background */}
         <div className="absolute inset-0 bg-gradient-to-b from-background via-blue-950/5 to-background z-0" />
 
@@ -199,7 +199,7 @@ const Home = () => {
                 WHERE KNOWLEDGE FLOWS & CODE RUNS
               </div>
 
-              <h1 className="text-6xl lg:text-8xl font-black tracking-tighter leading-[0.9] mb-6">
+              <h1 className="text-4xl md:text-6xl lg:text-8xl font-black tracking-tighter leading-[0.9] mb-6">
                 <span className="text-foreground">RUNTIME</span>
                 <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 animate-gradient-x bg-[length:200%_auto]">
@@ -623,12 +623,23 @@ const Home = () => {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -100 }}
                   transition={{ duration: 0.6, ease: "easeInOut" }}
-                  className="min-h-[160px]"
+                  drag="x"
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={0.2}
+                  onDragEnd={(e, { offset, velocity }) => {
+                    const swipe = offset.x;
+                    if (swipe < -50) {
+                      setCurrentQuote((prev) => (prev + 1) % quotes.length);
+                    } else if (swipe > 50) {
+                      setCurrentQuote((prev) => (prev - 1 + quotes.length) % quotes.length);
+                    }
+                  }}
+                  className="min-h-[160px] cursor-grab active:cursor-grabbing touch-pan-y"
                 >
-                  <blockquote className="text-2xl md:text-3xl font-bold mb-6 leading-relaxed">
+                  <blockquote className="text-xl md:text-3xl font-bold mb-6 leading-relaxed select-none">
                     "{quotes[currentQuote].text}"
                   </blockquote>
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between select-none">
                     <div>
                       <p className="text-lg font-semibold text-primary">— {quotes[currentQuote].author}</p>
                       <p className="text-sm text-muted-foreground mt-1">

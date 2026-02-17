@@ -1,9 +1,12 @@
 package com.blog.backend.controller;
 
+import com.blog.backend.model.NotificationType;
+
 import com.blog.backend.dto.UserDTO;
 import com.blog.backend.model.Role;
 import com.blog.backend.model.User;
 import com.blog.backend.repository.UserRepository;
+import com.blog.backend.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +25,9 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private NotificationService notificationService;
 
     // Get all users (ADMIN only)
     @GetMapping
@@ -99,6 +105,12 @@ public class UserController {
             Role newRole = Role.valueOf(roleStr);
             user.setRole(newRole);
             userRepository.save(user);
+
+            // Notify user
+            notificationService.createNotification(
+                    user,
+                    "Your role has been updated to " + newRole.name(),
+                    NotificationType.ROLE_PROMOTION);
 
             UserDTO userDTO = new UserDTO(
                     user.getId(),
