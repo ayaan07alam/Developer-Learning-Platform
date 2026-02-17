@@ -89,9 +89,12 @@ export default function ReadingProgress({ slug }) {
                 />
             </div>
 
-            {/* Scroll Progress Indicator (Circular) */}
-            <div className="fixed bottom-8 left-8 z-40">
-                <div className="relative w-14 h-14">
+            {/* Scroll Progress Indicator (Circular) - Click to scroll top */}
+            <div
+                className="fixed bottom-8 left-8 z-40 cursor-pointer group"
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            >
+                <div className="relative w-14 h-14 transition-transform duration-300 group-hover:scale-110 active:scale-95">
                     {/* Background Circle */}
                     <svg className="transform -rotate-90 w-14 h-14">
                         <circle
@@ -101,7 +104,7 @@ export default function ReadingProgress({ slug }) {
                             stroke="currentColor"
                             strokeWidth="4"
                             fill="none"
-                            className="text-border"
+                            className="text-muted/20"
                         />
                         {/* Progress Circle */}
                         <circle
@@ -113,13 +116,16 @@ export default function ReadingProgress({ slug }) {
                             fill="none"
                             strokeDasharray={`${2 * Math.PI * 24}`}
                             strokeDashoffset={`${2 * Math.PI * 24 * (1 - progress / 100)}`}
-                            className="text-primary transition-all duration-150 ease-out"
+                            className="text-primary transition-all duration-150 ease-out drop-shadow-lg"
                             strokeLinecap="round"
                         />
                     </svg>
-                    {/* Percentage Text */}
+                    {/* Percentage Text / Arrow Icon on Hover */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-xs font-bold">{Math.round(progress)}%</span>
+                        <span className="text-xs font-bold group-hover:hidden">{Math.round(progress)}%</span>
+                        <span className="hidden group-hover:block text-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m18 15-6-6-6 6" /></svg>
+                        </span>
                     </div>
                 </div>
             </div>
