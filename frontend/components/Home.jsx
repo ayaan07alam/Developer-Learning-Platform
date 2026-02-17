@@ -254,13 +254,13 @@ const Home = () => {
                     window.location.href = '/tools';
                   } else if (query.includes('react') || query.includes('javascript') || query.includes('typescript') || query.includes('css')) {
                     const techMap = {
-                      'react': '/react',
-                      'javascript': '/javascript',
-                      'typescript': '/typescript',
-                      'css': '/css'
+                      'react': '/learn',
+                      'javascript': '/learn',
+                      'typescript': '/learn',
+                      'css': '/learn'
                     };
                     const tech = Object.keys(techMap).find(t => query.includes(t));
-                    window.location.href = tech ? techMap[tech] : '/react';
+                    window.location.href = tech ? techMap[tech] : '/learn';
                   } else if (query.includes('job')) {
                     window.location.href = '/jobs';
                   } else {
@@ -284,7 +284,7 @@ const Home = () => {
                   <Link href="/tools/pdf" className="text-xs px-3 py-1 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
                     PDF Tools
                   </Link>
-                  <Link href="/react" className="text-xs px-3 py-1 rounded-full bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 transition-colors">
+                  <Link href="/learn" className="text-xs px-3 py-1 rounded-full bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 transition-colors">
                     React
                   </Link>
                   <Link href="/blogs" className="text-xs px-3 py-1 rounded-full bg-purple-500/10 text-purple-500 hover:bg-purple-500/20 transition-colors">
@@ -753,7 +753,7 @@ const Home = () => {
           </p>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-            <Link href="/react" className="p-6 rounded-xl border border-border bg-card hover:border-primary hover:bg-primary/5 transition-all group">
+            <Link href="/learn" className="p-6 rounded-xl border border-border bg-card hover:border-primary hover:bg-primary/5 transition-all group">
               <div className="text-3xl mb-2">📚</div>
               <div className="font-bold mb-1">Learn</div>
               <div className="text-xs text-muted-foreground">Start tutorials</div>
