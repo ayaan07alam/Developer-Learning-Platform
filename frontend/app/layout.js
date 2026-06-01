@@ -129,7 +129,7 @@ export default function RootLayout({ children }) {
         crossorigin="anonymous"></Script>
       <body className={`${spaceGrotesk.variable} ${spaceGrotesk.className}`}>
         <NextTopLoader
-          color="#4F46E5"
+          color="#007272"
           initialPosition={0.08}
           crawlSpeed={300}
           height={2}

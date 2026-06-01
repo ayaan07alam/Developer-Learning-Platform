@@ -3,73 +3,92 @@
 @tailwind utilities;
 @import 'highlight.js/styles/github-dark.css';
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   RUNTIME RIVER — Design Token System
+   Palette: Teal (River Brand)
+   Light  → #007272 primary  |  Dark → #009494 primary
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 @layer base {
   :root {
-    /* ── Light Mode — Editorial ─────────────────────────────── */
-    --background: 0 0% 100%;
-    --foreground: 222 39% 7%;
+    /* ── Backgrounds ──────────────────────────────────────────── */
+    --background:         0   0%  100%;   /* #FFFFFF           */
+    --card:             180  50%   98%;   /* #F5FDFD teal tint  */
+    --popover:            0   0%  100%;
 
-    --card: 0 0% 99%;
-    --card-foreground: 222 39% 7%;
+    /* ── Text ─────────────────────────────────────────────────── */
+    --foreground:       185  35%   10%;   /* #0F1E1E near-black */
+    --card-foreground:  185  35%   10%;
+    --popover-foreground: 185 35%  10%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 39% 7%;
+    /* ── Brand — Teal ─────────────────────────────────────────── */
+    --primary:          180 100%   22%;   /* #007272            */
+    --primary-foreground: 0   0%  100%;   /* white              */
 
-    --primary: 243 75% 59%;        /* Indigo #4F46E5 */
-    --primary-foreground: 0 0% 100%;
+    /* ── Secondary surfaces ───────────────────────────────────── */
+    --secondary:        180  38%   93%;   /* #E3F5F5 light teal */
+    --secondary-foreground: 180 55% 18%;
 
-    --secondary: 220 14% 96%;
-    --secondary-foreground: 222 39% 11%;
+    /* ── Muted ────────────────────────────────────────────────── */
+    --muted:            180  32%   95%;   /* #EEF8F8            */
+    --muted-foreground: 180  16%   40%;   /* #546464 readable   */
 
-    --muted: 220 14% 96%;
-    --muted-foreground: 220 9% 46%;
+    /* ── Accent (same as primary) ─────────────────────────────── */
+    --accent:           180 100%   22%;
+    --accent-foreground: 0   0%  100%;
 
-    --accent: 243 75% 59%;
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 72% 51%;
+    /* ── Destructive ──────────────────────────────────────────── */
+    --destructive:        0  72%   51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 13% 90%;
-    --input: 220 13% 90%;
-    --ring: 243 75% 59%;
+    /* ── Borders / Inputs ─────────────────────────────────────── */
+    --border:           180  38%   87%;   /* #CEEAEA            */
+    --input:            180  38%   87%;
+    --ring:             180 100%   22%;
 
+    /* ── Shape ────────────────────────────────────────────────── */
     --radius: 0.375rem;
   }
 
   .dark {
-    /* ── Dark Mode — Editorial ──────────────────────────────── */
-    --background: 0 0% 6%;         /* #0f0f0f */
-    --foreground: 0 0% 94%;
+    /* ── Backgrounds ──────────────────────────────────────────── */
+    --background:       180  54%    5%;   /* #061414 deep river */
+    --card:             180  52%    8%;   /* #0A1F1F dark teal  */
+    --popover:          180  54%    6%;   /* #07191 9           */
 
-    --card: 0 0% 9%;               /* #171717 */
-    --card-foreground: 0 0% 94%;
+    /* ── Text ─────────────────────────────────────────────────── */
+    --foreground:       180  12%   93%;   /* #E4EEEE            */
+    --card-foreground:  180  12%   93%;
+    --popover-foreground: 180 12%  93%;
 
-    --popover: 0 0% 8%;
-    --popover-foreground: 0 0% 94%;
+    /* ── Brand — Teal (brighter for dark bg contrast) ─────────── */
+    --primary:          180 100%   29%;   /* #009494            */
+    --primary-foreground: 0   0%  100%;
 
-    --primary: 239 84% 67%;        /* #6366F1 */
-    --primary-foreground: 0 0% 100%;
+    /* ── Secondary surfaces ───────────────────────────────────── */
+    --secondary:        180  52%   12%;   /* #0D2D2D            */
+    --secondary-foreground: 180 12% 88%;
 
-    --secondary: 0 0% 12%;
-    --secondary-foreground: 0 0% 94%;
+    /* ── Muted ────────────────────────────────────────────────── */
+    --muted:            180  50%   12%;   /* #0D2D2D            */
+    --muted-foreground: 180  14%   56%;   /* #7B9090            */
 
-    --muted: 0 0% 12%;
-    --muted-foreground: 0 0% 58%;
+    /* ── Accent ───────────────────────────────────────────────── */
+    --accent:           180 100%   29%;
+    --accent-foreground: 0   0%  100%;
 
-    --accent: 239 84% 67%;
-    --accent-foreground: 0 0% 100%;
+    /* ── Destructive ──────────────────────────────────────────── */
+    --destructive:        0  62%   43%;
+    --destructive-foreground: 180 12% 93%;
 
-    --destructive: 0 72% 51%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 0 0% 16%;
-    --input: 0 0% 16%;
-    --ring: 239 84% 67%;
+    /* ── Borders / Inputs ─────────────────────────────────────── */
+    --border:           180  58%   14%;   /* #0E3333            */
+    --input:            180  58%   14%;
+    --ring:             180 100%   29%;
   }
 }
 
-/* ─── Base reset ─────────────────────────────────────────────────────────── */
+/* ─── Base Reset ────────────────────────────────────────────────────────────── */
 @layer base {
   * {
     @apply border-border;
@@ -80,40 +99,56 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
   }
 
   body {
     @apply bg-background text-foreground;
   }
 
-  /* Dark mode: very faint dot-grid — the X-factor premium texture */
+  /*
+   * X-Factor: Dot-grid texture in dark mode only.
+   * Teal-tinted dots on the deep river background —
+   * gives a structured, premium feel that generic sites don't have.
+   */
   .dark body {
     background-image: radial-gradient(
       circle,
-      hsl(0 0% 22% / 0.35) 1px,
+      hsl(180 58% 14% / 0.65) 1px,
       transparent 1px
     );
     background-size: 28px 28px;
+    background-attachment: local;
   }
 
   h1, h2, h3, h4, h5, h6 {
     letter-spacing: -0.025em;
   }
 
-  /* Selection colour */
+  /* Teal-tinted text selection */
   ::selection {
-    background: hsl(var(--primary) / 0.15);
-    color: hsl(var(--foreground));
+    background-color: hsl(180 100% 22% / 0.14);
+    color: hsl(185 35% 10%);
+  }
+  .dark ::selection {
+    background-color: hsl(180 100% 29% / 0.25);
+    color: hsl(180 12% 93%);
+  }
+
+  /* Smooth focus ring using brand teal */
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
   }
 }
 
-/* ─── Scrollbar ─────────────────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { @apply bg-border rounded-full; }
-::-webkit-scrollbar-thumb:hover { @apply bg-muted-foreground/35; }
+/* ─── Scrollbar (teal-tinted) ───────────────────────────────────────────────── */
+::-webkit-scrollbar             { width: 5px; height: 5px; }
+::-webkit-scrollbar-track       { background: transparent; }
+::-webkit-scrollbar-thumb       { background: hsl(var(--border)); border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: hsl(var(--muted-foreground) / 0.45); }
 
-/* ─── Table of Contents ─────────────────────────────────────────────────── */
+/* ─── Table of Contents ─────────────────────────────────────────────────────── */
 .table-of-contents {
   background: hsl(var(--muted));
   border: 1px solid hsl(var(--border));
@@ -135,8 +170,7 @@
   border-bottom: 1px solid hsl(var(--border));
 }
 
-.toc-icon { font-size: 15px; color: hsl(var(--primary)); }
-
+.toc-icon  { color: hsl(var(--primary)); }
 .toc-title {
   font-size: 14px;
   font-weight: 600;
@@ -147,21 +181,21 @@
 
 .toc-list, .toc-list ul, .toc-list li {
   list-style: none !important;
-  padding: 0; margin: 0;
+  padding: 0;
+  margin: 0;
 }
 
-.toc-item { margin-top: 6px; }
+.toc-item  { margin-top: 6px; }
 
 .toc-link {
   color: hsl(var(--muted-foreground));
   text-decoration: none;
   display: inline-block;
   padding: 2px 0;
-  transition: color 0.15s;
   font-size: 13.5px;
   line-height: 1.5;
+  transition: color 0.15s ease;
 }
-
 .toc-link:hover { color: hsl(var(--primary)); }
 
 .toc-toggle-btn {
@@ -177,8 +211,9 @@
 }
 .toc-toggle-btn:hover { opacity: 0.7; }
 
-/* ─── Prose Tables ──────────────────────────────────────────────────────── */
-.prose table, .ProseMirror table {
+/* ─── Prose Table Styles ────────────────────────────────────────────────────── */
+.prose table,
+.ProseMirror table {
   border-collapse: separate !important;
   border-spacing: 0 !important;
   width: 100%;
@@ -186,13 +221,15 @@
   overflow: hidden;
   border-radius: 8px;
   border: 1px solid hsl(var(--border));
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
   background-color: hsl(var(--card)) !important;
 }
 
-.prose thead, .ProseMirror thead { background-color: hsl(var(--muted)); }
+.prose thead,
+.ProseMirror thead { background-color: hsl(var(--muted)); }
 
-.prose th, .ProseMirror th {
+.prose th,
+.ProseMirror th {
   padding: 11px 16px !important;
   text-align: left;
   font-weight: 600 !important;
@@ -203,9 +240,11 @@
   border-bottom: 1px solid hsl(var(--border));
   border-right: 1px solid hsl(var(--border));
 }
-.prose th:last-child, .ProseMirror th:last-child { border-right: none; }
+.prose th:last-child,
+.ProseMirror th:last-child { border-right: none; }
 
-.prose td, .ProseMirror td {
+.prose td,
+.ProseMirror td {
   padding: 11px 16px !important;
   vertical-align: top;
   border-bottom: 1px solid hsl(var(--border));
@@ -214,52 +253,60 @@
   font-size: 0.875rem;
   transition: background-color 0.12s;
 }
-.prose td:last-child, .ProseMirror td:last-child { border-right: none; }
-.prose tr:last-child td, .ProseMirror tr:last-child td { border-bottom: none; }
-.prose tr:nth-child(even), .ProseMirror tr:nth-child(even) { background: hsl(var(--muted) / 0.45); }
-.prose tr:hover td, .ProseMirror tr:hover td {
-  background-color: hsl(var(--primary) / 0.04) !important;
+.prose td:last-child,
+.ProseMirror td:last-child  { border-right: none; }
+.prose tr:last-child td,
+.ProseMirror tr:last-child td { border-bottom: none; }
+
+.prose tr:nth-child(even),
+.ProseMirror tr:nth-child(even) { background: hsl(var(--muted) / 0.5); }
+
+.prose tr:hover td,
+.ProseMirror tr:hover td {
+  background-color: hsl(var(--primary) / 0.05) !important;
   color: hsl(var(--foreground));
 }
 
 .ProseMirror .selectedCell:after {
-  z-index: 2; position: absolute; content: "";
+  z-index: 2;
+  position: absolute;
+  content: "";
   left: 0; right: 0; top: 0; bottom: 0;
   background: hsl(var(--primary) / 0.08);
   pointer-events: none;
 }
 
 .ProseMirror .column-resize-handle {
-  position: absolute; right: -2px; top: 0; bottom: 0; width: 3px;
-  background-color: hsl(var(--primary)); opacity: 0; pointer-events: none;
+  position: absolute;
+  right: -2px;
+  top: 0; bottom: 0;
+  width: 3px;
+  background-color: hsl(var(--primary));
+  opacity: 0;
+  pointer-events: none;
   transition: opacity 0.15s;
 }
 .ProseMirror th:hover .column-resize-handle,
 .ProseMirror td:hover .column-resize-handle { opacity: 0.5; }
 
-.prose td p, .ProseMirror td p { margin: 0 !important; padding: 0 !important; }
+.prose td p,
+.ProseMirror td p { margin: 0 !important; padding: 0 !important; }
 
-/* ─── X-Factor: Featured article card shimmer border ───────────────────── */
-@keyframes border-spin {
-  to { --angle: 360deg; }
-}
-
-/* ─── Prose reading typography improvements ─────────────────────────────── */
+/* ─── Prose Reading Typography ──────────────────────────────────────────────── */
 .prose {
-  --tw-prose-body: hsl(var(--foreground));
-  --tw-prose-headings: hsl(var(--foreground));
-  --tw-prose-lead: hsl(var(--muted-foreground));
-  --tw-prose-links: hsl(var(--primary));
-  --tw-prose-bold: hsl(var(--foreground));
-  --tw-prose-counters: hsl(var(--muted-foreground));
-  --tw-prose-bullets: hsl(var(--border));
-  --tw-prose-hr: hsl(var(--border));
-  --tw-prose-quotes: hsl(var(--foreground));
+  --tw-prose-body:          hsl(var(--foreground));
+  --tw-prose-headings:      hsl(var(--foreground));
+  --tw-prose-lead:          hsl(var(--muted-foreground));
+  --tw-prose-links:         hsl(var(--primary));
+  --tw-prose-bold:          hsl(var(--foreground));
+  --tw-prose-counters:      hsl(var(--muted-foreground));
+  --tw-prose-bullets:       hsl(var(--border));
+  --tw-prose-hr:            hsl(var(--border));
+  --tw-prose-quotes:        hsl(var(--foreground));
   --tw-prose-quote-borders: hsl(var(--primary));
-  --tw-prose-captions: hsl(var(--muted-foreground));
-  --tw-prose-code: hsl(var(--foreground));
-  --tw-prose-pre-code: hsl(var(--foreground));
-  --tw-prose-pre-bg: hsl(var(--muted));
-  --tw-prose-th-borders: hsl(var(--border));
-  --tw-prose-td-borders: hsl(var(--border));
+  --tw-prose-captions:      hsl(var(--muted-foreground));
+  --tw-prose-code:          hsl(var(--foreground));
+  --tw-prose-pre-bg:        hsl(var(--muted));
+  --tw-prose-th-borders:    hsl(var(--border));
+  --tw-prose-td-borders:    hsl(var(--border));
 }

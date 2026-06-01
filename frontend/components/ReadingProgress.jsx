@@ -74,7 +74,7 @@ export default function ReadingProgress({ slug }) {
                 particleCount: 200,
                 spread: 200,
                 origin: { y: 0.6 },
-                colors: ['#833ab4', '#fd1d1d', '#07e70d']
+                colors: ['#009494', '#007272', '#4ABCBC', '#CEEAEA', '#00BABA']
             });
         }, 1000);
     };
