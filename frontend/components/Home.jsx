@@ -433,7 +433,7 @@ const Home = () => {
                     { value: String(categoryCount || 4), suffix: "", label: "Categories" },
                     { value: "18", suffix: "+", label: "Languages" },
                   ].map(({ value, suffix, label }) => (
-                    <div key={label} className="text-center p-2 rounded-lg bg-muted/50">
+                    <div key={label} className="text-center p-2 rounded-lg bg-secondary">
                       <div className="text-lg font-bold text-foreground">
                         <Counter target={value} suffix={suffix} />
                       </div>
@@ -489,7 +489,7 @@ const Home = () => {
       </section>
 
       {/* ═══ WHAT WE COVER ═══════════════════════════════════════════════════ */}
-      <section className="py-10 border-b border-border bg-muted/25">
+      <section className="py-10 border-b border-border">
         <div className="container mx-auto px-4 md:px-6 max-w-screen-xl">
           <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-8">
             <p className="text-[10.5px] font-semibold text-primary uppercase tracking-[0.14em] shrink-0 sm:w-24">
@@ -534,7 +534,7 @@ const Home = () => {
       )}
 
       {/* ═══ PLATFORM PILLARS ════════════════════════════════════════════════ */}
-      <section className="py-14 border-b border-border bg-muted/25">
+      <section className="py-14 border-b border-border">
         <div className="container mx-auto px-4 md:px-6 max-w-screen-xl">
           <SectionHeader
             label="Platform overview"
@@ -612,7 +612,7 @@ const Home = () => {
       </section>
 
       {/* ═══ LATEST ARTICLES ══════════════════════════════════════════════════ */}
-      <section className="py-14 border-b border-border bg-muted/25">
+      <section className="py-14 border-b border-border">
         <div className="container mx-auto px-4 md:px-6 max-w-screen-xl">
           <SectionHeader
             label="Fresh content"
@@ -675,7 +675,7 @@ const Home = () => {
       </section>
 
       {/* ═══ COMMUNITY ARTICLES ═══════════════════════════════════════════════ */}
-      <section className="py-14 border-b border-border bg-muted/25">
+      <section className="py-14 border-b border-border">
         <div className="container mx-auto px-4 md:px-6 max-w-screen-xl">
           <SectionHeader
             label="Community"

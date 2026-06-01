@@ -73,7 +73,7 @@ const Header = () => {
         </Link>
 
         {/* ── Desktop Nav ── */}
-        <nav className="hidden md:flex items-center gap-0.5">
+        <nav className="hidden md:flex items-center">
           {navLinks.map((link) => (
             <Link
               key={link.name}
@@ -81,10 +81,11 @@ const Header = () => {
               target={link.target}
               rel={link.target === "_blank" ? "noopener noreferrer" : undefined}
               className={cn(
-                "px-3.5 py-2 text-sm font-medium transition-colors rounded-md",
+                "relative px-4 py-5 text-sm font-medium transition-colors",
+                "after:absolute after:bottom-0 after:left-4 after:right-4 after:h-[2px] after:rounded-full after:transition-all after:duration-200",
                 isActive(link.href)
-                  ? "text-primary bg-primary/8"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                  ? "text-foreground after:bg-primary"
+                  : "text-muted-foreground hover:text-foreground after:bg-transparent"
               )}
             >
               {link.name}
@@ -277,8 +278,8 @@ const Header = () => {
                       type="text"
                       placeholder="Search articles..."
                       value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-9 pr-3 py-2 text-sm rounded-md bg-muted border border-border focus:border-primary/50 focus:outline-none transition-all"
+                      onChange={e => setSearchQuery(e.target.value)}
+                      className="w-full pl-9 pr-3 py-2 text-sm bg-secondary border border-border rounded-md focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all"
                     />
                   </form>
                 </div>
