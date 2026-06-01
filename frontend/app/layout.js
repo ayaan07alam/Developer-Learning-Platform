@@ -12,7 +12,7 @@ import { ToastProvider } from "@/contexts/ToastContext";
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import LoginPopup from "@/components/LoginPopup";
 
-const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
+const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
 
 export const metadata = {
   metadataBase: new URL('https://runtimeriver.com'),
@@ -127,18 +127,17 @@ export default function RootLayout({ children }) {
       />
       <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5593264837587690"
         crossorigin="anonymous"></Script>
-      <body className={spaceGrotesk.className}>
+      <body className={`${spaceGrotesk.variable} ${spaceGrotesk.className}`}>
         <NextTopLoader
-          color="rgba(147, 112, 219, 0.8)"
+          color="#4F46E5"
           initialPosition={0.08}
-          crawlSpeed={500}
-          height={4}
+          crawlSpeed={300}
+          height={2}
           crawl={true}
           showSpinner={false}
-          easing="ease-in-out"
-          speed={500}
-          shadow="0 0 20px rgba(147, 112, 219, 0.6), 0 0 40px rgba(147, 112, 219, 0.4)"
-          style={{ backdropFilter: 'blur(8px)' }}
+          easing="ease"
+          speed={300}
+          shadow="none"
         />
         <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
           <AuthProvider>

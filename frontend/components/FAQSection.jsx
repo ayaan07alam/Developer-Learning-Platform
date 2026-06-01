@@ -1,6 +1,7 @@
 "use client";
 import { useState } from 'react';
 import { ChevronDown, HelpCircle } from 'lucide-react';
+import DOMPurify from 'isomorphic-dompurify';
 
 export default function FAQSection({ faqs }) {
     const [openIndex, setOpenIndex] = useState(null);
@@ -49,7 +50,7 @@ export default function FAQSection({ faqs }) {
                                 itemProp="acceptedAnswer"
                                 itemType="https://schema.org/Answer"
                             >
-                                <div itemProp="text" dangerouslySetInnerHTML={{ __html: faq.answer }} />
+                                <div itemProp="text" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(faq.answer) }} />
                             </div>
                         )}
                     </div>

@@ -1,324 +1,265 @@
 @tailwind base;
-  @tailwind components;
-  @tailwind utilities;
-  @import 'highlight.js/styles/github-dark.css';
+@tailwind components;
+@tailwind utilities;
+@import 'highlight.js/styles/github-dark.css';
 
-  @layer base {
-    :root {
-      /* Clean Tech (Light Mode) - Keeping it but sharpening it */
-      --background: 210 40% 98%; /* Ultra light blue-grey */
-      --foreground: 222 47% 11%;
-      
-      --card: 0 0% 100%;
-      --card-foreground: 222 47% 11%;
- 
-      --popover: 0 0% 100%;
-      --popover-foreground: 222 47% 11%;
- 
-      --primary: 190 100% 45%; /* Electric Cyan */
-      --primary-foreground: 210 40% 98%;
- 
-      --secondary: 260 100% 65%; /* Vivid Violet */
-      --secondary-foreground: 210 40% 98%;
- 
-      --muted: 210 40% 96.1%;
-      --muted-foreground: 215.4 16.3% 46.9%;
- 
-      --accent: 190 100% 45%;
-      --accent-foreground: 222 47% 11%;
- 
-      --destructive: 0 84.2% 60.2%;
-      --destructive-foreground: 210 40% 98%;
+@layer base {
+  :root {
+    /* ── Light Mode — Editorial ─────────────────────────────── */
+    --background: 0 0% 100%;
+    --foreground: 222 39% 7%;
 
-      --border: 214.3 31.8% 91.4%;
-      --input: 214.3 31.8% 91.4%;
-      --ring: 190 100% 45%;
- 
-      --radius: 0.5rem;
-    }
+    --card: 0 0% 99%;
+    --card-foreground: 222 39% 7%;
 
-    .dark {
-      /* Nebula (Dark Mode) - Obsidian & Neon */
-      --background: 240 10% 3%; /* #07070b - Deep Obsidian */
-      --foreground: 210 40% 98%;
- 
-      --card: 240 10% 5%; /* Slightly lighter obsidian */
-      --card-foreground: 210 40% 98%;
- 
-      --popover: 240 10% 5%;
-      --popover-foreground: 210 40% 98%;
- 
-      --primary: 190 100% 50%; /* #00f3ff - Cyber Cyan */
-      --primary-foreground: 222 47% 11%;
- 
-      --secondary: 270 100% 60%; /* #9d00ff - Hyper Violet */
-      --secondary-foreground: 210 40% 98%;
- 
-      --muted: 217.2 32.6% 12%;
-      --muted-foreground: 215 20.2% 65.1%;
- 
-      --accent: 270 100% 60%;
-      --accent-foreground: 210 40% 98%;
- 
-      --destructive: 0 62.8% 30.6%;
-      --destructive-foreground: 210 40% 98%;
- 
-      --border: 240 10% 15%; /* Subtle border */
-      --input: 240 10% 15%;
-      --ring: 190 100% 50%;
-    }
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 39% 7%;
+
+    --primary: 243 75% 59%;        /* Indigo #4F46E5 */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 222 39% 11%;
+
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+
+    --accent: 243 75% 59%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 13% 90%;
+    --input: 220 13% 90%;
+    --ring: 243 75% 59%;
+
+    --radius: 0.375rem;
   }
 
-  @layer base {
-    * {
-      @apply border-border;
-    }
-    body {
-      @apply bg-background text-foreground;
-      /* Mesh Gradient Background for standard body */
-      background-image: 
-        radial-gradient(circle at 50% 0%, hsla(var(--primary), 0.15) 0%, transparent 40%),
-        radial-gradient(circle at 0% 50%, hsla(var(--secondary), 0.1) 0%, transparent 30%),
-        radial-gradient(circle at 100% 50%, hsla(var(--accent), 0.1) 0%, transparent 30%);
-      background-attachment: fixed;
-    }
+  .dark {
+    /* ── Dark Mode — Editorial ──────────────────────────────── */
+    --background: 0 0% 6%;         /* #0f0f0f */
+    --foreground: 0 0% 94%;
+
+    --card: 0 0% 9%;               /* #171717 */
+    --card-foreground: 0 0% 94%;
+
+    --popover: 0 0% 8%;
+    --popover-foreground: 0 0% 94%;
+
+    --primary: 239 84% 67%;        /* #6366F1 */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 94%;
+
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 58%;
+
+    --accent: 239 84% 67%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 16%;
+    --input: 0 0% 16%;
+    --ring: 239 84% 67%;
+  }
+}
+
+/* ─── Base reset ─────────────────────────────────────────────────────────── */
+@layer base {
+  * {
+    @apply border-border;
   }
 
-  @layer utilities {
-    .glass {
-      @apply bg-white/10 backdrop-blur-lg border border-white/20 shadow-xl;
-    }
-    .dark .glass {
-      @apply bg-black/20 backdrop-blur-lg border border-white/10 shadow-xl;
-    }
-    .text-gradient {
-      @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-500 to-accent;
-    }
-  }
-  
-  /* Custom Scrollbar Styles */
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+  html {
+    font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
-  ::-webkit-scrollbar-track {
-    background: transparent; 
+  body {
+    @apply bg-background text-foreground;
   }
 
-  ::-webkit-scrollbar-thumb {
-    @apply bg-muted-foreground/30 rounded-full;
+  /* Dark mode: very faint dot-grid — the X-factor premium texture */
+  .dark body {
+    background-image: radial-gradient(
+      circle,
+      hsl(0 0% 22% / 0.35) 1px,
+      transparent 1px
+    );
+    background-size: 28px 28px;
   }
 
-  ::-webkit-scrollbar-thumb:hover {
-    @apply bg-muted-foreground/50;
+  h1, h2, h3, h4, h5, h6 {
+    letter-spacing: -0.025em;
   }
 
-  /* Table of Contents Styles - Light Container Design */
-  .table-of-contents {
-    background: #f3f0ff;
-    border: 1px solid #e0d7ff;
-    padding: 24px;
-    border-radius: 12px;
-    margin: 32px 0;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  }
-
-  .dark .table-of-contents {
-    background: #1e1b2e;
-    border: 1px solid #2d2a3f;
-  }
-
-  .toc-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 20px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid #e0d7ff;
-  }
-
-  .dark .toc-header {
-    border-bottom: 1px solid #2d2a3f;
-  }
-
-  .toc-icon {
-    font-size: 20px;
-    color: hsl(var(--primary));
-  }
-
-  .toc-title {
-    font-size: 18px;
-    font-weight: 600;
-    color: hsl(var(--foreground));
-    margin: 0;
-  }
-
-  .dark .toc-title {
+  /* Selection colour */
+  ::selection {
+    background: hsl(var(--primary) / 0.15);
     color: hsl(var(--foreground));
   }
+}
 
-  .toc-list,
-  .toc-list ul,
-  .toc-list li {
-    list-style: none !important;
-    padding: 0;
-    margin: 0;
-  }
+/* ─── Scrollbar ─────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { @apply bg-border rounded-full; }
+::-webkit-scrollbar-thumb:hover { @apply bg-muted-foreground/35; }
 
-  .toc-item {
-    margin-top: 12px;
-  }
+/* ─── Table of Contents ─────────────────────────────────────────────────── */
+.table-of-contents {
+  background: hsl(var(--muted));
+  border: 1px solid hsl(var(--border));
+  padding: 20px 24px;
+  border-radius: 8px;
+  margin: 28px 0;
+}
 
-  .toc-link {
-    color: hsl(var(--primary));
-    text-decoration: none;
-    display: inline-block;
-    padding: 4px 0;
-    transition: color 0.2s;
-    font-size: 15px;
-    opacity: 0.9;
-  }
+.dark .table-of-contents {
+  background: hsl(var(--card));
+}
 
-  .dark .toc-link {
-    color: hsl(var(--primary));
-    opacity: 0.8;
-  }
+.toc-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid hsl(var(--border));
+}
 
-  .toc-link:hover {
-    color: hsl(var(--primary));
-    opacity: 1;
-    text-decoration: underline;
-  }
+.toc-icon { font-size: 15px; color: hsl(var(--primary)); }
 
-  .dark .toc-link:hover {
-    color: hsl(var(--primary));
-    opacity: 1;
-  }
+.toc-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  margin: 0;
+  letter-spacing: -0.01em;
+}
 
-  .toc-toggle-btn {
-    background: transparent;
-    color: hsl(var(--primary));
-    border: none;
-    padding: 8px 0;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    transition: opacity 0.2s;
-    margin-top: 16px;
-  }
+.toc-list, .toc-list ul, .toc-list li {
+  list-style: none !important;
+  padding: 0; margin: 0;
+}
 
-  .toc-toggle-btn:hover {
-    opacity: 0.8;
-  }
+.toc-item { margin-top: 6px; }
 
-/* TipTap Table Styles */
-/* TipTap & Prose Table Styles - Premium Design */
-.prose table,
-.ProseMirror table {
+.toc-link {
+  color: hsl(var(--muted-foreground));
+  text-decoration: none;
+  display: inline-block;
+  padding: 2px 0;
+  transition: color 0.15s;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.toc-link:hover { color: hsl(var(--primary)); }
+
+.toc-toggle-btn {
+  background: transparent;
+  color: hsl(var(--primary));
+  border: none;
+  padding: 6px 0;
+  cursor: pointer;
+  font-size: 12.5px;
+  font-weight: 500;
+  transition: opacity 0.15s;
+  margin-top: 10px;
+}
+.toc-toggle-btn:hover { opacity: 0.7; }
+
+/* ─── Prose Tables ──────────────────────────────────────────────────────── */
+.prose table, .ProseMirror table {
   border-collapse: separate !important;
   border-spacing: 0 !important;
   width: 100%;
-  margin: 2rem 0;
+  margin: 1.75rem 0;
   overflow: hidden;
-  border-radius: 12px;
+  border-radius: 8px;
   border: 1px solid hsl(var(--border));
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  background-color: hsl(var(--card)) !important; /* Ensure background is solid */
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  background-color: hsl(var(--card)) !important;
 }
 
-/* Table Headers */
-.prose thead,
-.ProseMirror thead {
-  background-color: hsl(var(--muted));
-}
+.prose thead, .ProseMirror thead { background-color: hsl(var(--muted)); }
 
-.prose th,
-.ProseMirror th {
-  padding: 16px 20px !important;
-  vertical-align: middle;
+.prose th, .ProseMirror th {
+  padding: 11px 16px !important;
   text-align: left;
-  font-weight: 700 !important;
-  font-size: 0.8rem;
+  font-weight: 600 !important;
+  font-size: 0.72rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: hsl(var(--foreground));
-  border-bottom: 2px solid hsl(var(--border));
-  border-right: 1px solid hsl(var(--border)); /* Vertical Divider */
+  letter-spacing: 0.07em;
+  color: hsl(var(--muted-foreground));
+  border-bottom: 1px solid hsl(var(--border));
+  border-right: 1px solid hsl(var(--border));
 }
+.prose th:last-child, .ProseMirror th:last-child { border-right: none; }
 
-.prose th:last-child,
-.ProseMirror th:last-child {
-  border-right: none;
-}
-
-/* Table Cells */
-.prose td,
-.ProseMirror td {
-  padding: 14px 20px !important;
+.prose td, .ProseMirror td {
+  padding: 11px 16px !important;
   vertical-align: top;
   border-bottom: 1px solid hsl(var(--border));
   border-right: 1px solid hsl(var(--border));
   color: hsl(var(--muted-foreground));
-  font-size: 0.95rem;
-  transition: background-color 0.2s;
-  position: relative;
+  font-size: 0.875rem;
+  transition: background-color 0.12s;
+}
+.prose td:last-child, .ProseMirror td:last-child { border-right: none; }
+.prose tr:last-child td, .ProseMirror tr:last-child td { border-bottom: none; }
+.prose tr:nth-child(even), .ProseMirror tr:nth-child(even) { background: hsl(var(--muted) / 0.45); }
+.prose tr:hover td, .ProseMirror tr:hover td {
+  background-color: hsl(var(--primary) / 0.04) !important;
+  color: hsl(var(--foreground));
 }
 
-.prose td:last-child,
-.ProseMirror td:last-child {
-  border-right: none;
-}
-
-.prose tr:last-child td,
-.ProseMirror tr:last-child td {
-  border-bottom: none;
-}
-
-/* Zebra Striping & Hover */
-.prose tr:nth-child(even),
-.ProseMirror tr:nth-child(even) {
-  background-color: hsla(var(--muted), 0.3);
-}
-
-.prose tr:hover td,
-.ProseMirror tr:hover td {
-  background-color: hsla(var(--primary), 0.05) !important;
-  color: hsl(var(--foreground)); /* Darken text on hover */
-}
-
-/* Editor Specifics */
 .ProseMirror .selectedCell:after {
-  z-index: 2;
-  position: absolute;
-  content: "";
+  z-index: 2; position: absolute; content: "";
   left: 0; right: 0; top: 0; bottom: 0;
-  background: hsla(var(--primary), 0.15);
+  background: hsl(var(--primary) / 0.08);
   pointer-events: none;
 }
 
 .ProseMirror .column-resize-handle {
-  position: absolute;
-  right: -2px;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  background-color: hsl(var(--primary));
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s;
+  position: absolute; right: -2px; top: 0; bottom: 0; width: 3px;
+  background-color: hsl(var(--primary)); opacity: 0; pointer-events: none;
+  transition: opacity 0.15s;
 }
-
 .ProseMirror th:hover .column-resize-handle,
-.ProseMirror td:hover .column-resize-handle {
-  opacity: 0.5;
+.ProseMirror td:hover .column-resize-handle { opacity: 0.5; }
+
+.prose td p, .ProseMirror td p { margin: 0 !important; padding: 0 !important; }
+
+/* ─── X-Factor: Featured article card shimmer border ───────────────────── */
+@keyframes border-spin {
+  to { --angle: 360deg; }
 }
 
-/* Paragraphs in cells */
-.prose td p,
-.ProseMirror td p {
-  margin: 0 !important;
-  padding: 0 !important;
+/* ─── Prose reading typography improvements ─────────────────────────────── */
+.prose {
+  --tw-prose-body: hsl(var(--foreground));
+  --tw-prose-headings: hsl(var(--foreground));
+  --tw-prose-lead: hsl(var(--muted-foreground));
+  --tw-prose-links: hsl(var(--primary));
+  --tw-prose-bold: hsl(var(--foreground));
+  --tw-prose-counters: hsl(var(--muted-foreground));
+  --tw-prose-bullets: hsl(var(--border));
+  --tw-prose-hr: hsl(var(--border));
+  --tw-prose-quotes: hsl(var(--foreground));
+  --tw-prose-quote-borders: hsl(var(--primary));
+  --tw-prose-captions: hsl(var(--muted-foreground));
+  --tw-prose-code: hsl(var(--foreground));
+  --tw-prose-pre-code: hsl(var(--foreground));
+  --tw-prose-pre-bg: hsl(var(--muted));
+  --tw-prose-th-borders: hsl(var(--border));
+  --tw-prose-td-borders: hsl(var(--border));
 }
-
-

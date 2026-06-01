@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { motion } from "framer-motion";
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import { Calendar, Clock, ChevronLeft } from 'lucide-react';
 import { generateBlogPostSchemas } from '@/lib/schema';
 import BlogContent from '@/components/BlogContent';
 import SchemaMarkup from '@/components/SchemaMarkup';
@@ -10,7 +11,6 @@ import FAQSection from '@/components/FAQSection';
 import AuthorCard from '@/components/AuthorCard';
 import ReadingProgress from '@/components/ReadingProgress';
 import RelatedBlogs from '@/components/RelatedBlogs';
-import { notFound } from 'next/navigation';
 import CustomDialog from '@/components/CustomDialog';
 import { useDialog } from '@/lib/useDialog';
 import { API_BASE_URL } from '@/lib/api-client';
@@ -70,12 +70,8 @@ const BlogPost = ({ initialPost }) => {
             <ReadingProgress slug={params.slug} />
 
             <div className="min-h-screen pt-24 pb-12 bg-background">
-                {/* New Schema Markup Component */}
+                {/* Schema Markup */}
                 <SchemaMarkup post={post} faqs={post.faqs || []} />
-
-                {/* Background Decor */}
-                <div className="absolute top-20 left-10 w-64 h-64 bg-primary/20 rounded-full blur-[100px]" />
-                <div className="absolute bottom-20 right-10 w-80 h-80 bg-secondary/20 rounded-full blur-[120px]" />
 
                 <div className="container mx-auto px-6 max-w-screen-2xl relative z-10">
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -89,9 +85,9 @@ const BlogPost = ({ initialPost }) => {
                             {/* Back Button */}
                             <Link
                                 href="/blogs"
-                                className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-8"
+                                className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
                             >
-                                ← Back to all articles
+                                <ChevronLeft className="w-4 h-4" /> Back to articles
                             </Link>
 
                             {/* Article Header */}
@@ -100,30 +96,39 @@ const BlogPost = ({ initialPost }) => {
                                 animate={{ opacity: 1, y: 0 }}
                                 className="mb-12"
                             >
-                                <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
+                                {/* Category breadcrumb */}
+                                {post.categories?.[0] && (
+                                    <div className="flex items-center gap-2 mb-5">
+                                        <span className="text-[11px] font-semibold text-primary uppercase tracking-widest">
+                                            {post.categories[0].name}
+                                        </span>
+                                    </div>
+                                )}
+
+                                <h1 className="text-3xl md:text-4xl font-extrabold text-foreground tracking-tight mb-5 leading-tight">
                                     {post.title}
                                 </h1>
 
-                                {/* Author Byline */}
-                                {post.createdBy && (
-                                    <p className="text-lg text-muted-foreground mb-6">
-                                        by <span className="font-medium text-foreground">{post.createdBy.displayName || 'Anonymous'}</span>
-                                    </p>
-                                )}
-
-                                <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-6">
-                                    <span className="flex items-center gap-1">
-                                        📅 {new Date(post.updatedAt || post.publishedAt || post.createdAt).toLocaleDateString('en-US', {
-                                            year: 'numeric',
-                                            month: 'long',
-                                            day: 'numeric'
-                                        })}
+                                {/* Author + meta row */}
+                                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground mb-5 pb-5 border-b border-border">
+                                    {post.createdBy && (
+                                        <div className="flex items-center gap-2">
+                                            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary font-bold text-[10px]">
+                                                {(post.createdBy.displayName || post.createdBy.email || 'A')[0].toUpperCase()}
+                                            </span>
+                                            <span className="font-medium text-foreground">{post.createdBy.displayName || 'Anonymous'}</span>
+                                        </div>
+                                    )}
+                                    <span className="text-border">·</span>
+                                    <span className="flex items-center gap-1.5">
+                                        <Calendar className="w-3.5 h-3.5" />
+                                        {new Date(post.publishedAt || post.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                                     </span>
                                     {post.updatedAt && post.publishedAt && new Date(post.updatedAt) > new Date(post.publishedAt) && (
-                                        <span className="text-xs ml-1">(Updated)</span>
+                                        <span className="text-[11px] px-1.5 py-0.5 bg-muted rounded text-muted-foreground">Updated</span>
                                     )}
-                                    <span>•</span>
-                                    <span>{post.readTime} min read</span>
+                                    <span className="text-border">·</span>
+                                    <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" />{post.readTime} min read</span>
                                 </div>
 
                                 {post.excerpt && (
@@ -172,7 +177,7 @@ const BlogPost = ({ initialPost }) => {
                                         {post.tags.map((tag, index) => (
                                             <span
                                                 key={index}
-                                                className="px-3 py-1 bg-secondary/50 text-secondary-foreground rounded-full text-sm"
+                                                className="px-2.5 py-1 bg-muted text-muted-foreground rounded-md text-xs font-medium border border-border"
                                             >
                                                 {tag}
                                             </span>
@@ -225,7 +230,7 @@ const BlogPost = ({ initialPost }) => {
                             >
                                 {/* Share Button with Dropdown */}
                                 <div className="relative group">
-                                    <button className="flex items-center gap-2 px-6 py-3 bg-secondary text-secondary-foreground rounded-full hover:bg-secondary/80 transition-colors">
+                                    <button className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium bg-muted text-foreground rounded-md hover:bg-muted/80 border border-border transition-colors">
                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                                         </svg>

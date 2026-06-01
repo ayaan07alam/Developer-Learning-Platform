@@ -27,6 +27,9 @@ public class SecurityConfig {
         @Autowired
         private JwtAuthenticationFilter jwtAuthenticationFilter;
 
+        @Autowired
+        private com.blog.backend.security.RateLimitFilter rateLimitFilter;
+
         @Bean
         public PasswordEncoder passwordEncoder() {
                 return new BCryptPasswordEncoder();
@@ -116,6 +119,7 @@ public class SecurityConfig {
                                                                                                     // users
                                                 .requestMatchers("/api/comments/admin/**").hasAuthority("ADMIN")
                                                 .anyRequest().permitAll())
+                                .addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class)
                                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
                 // For H2 console

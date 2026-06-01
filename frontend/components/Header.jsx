@@ -1,10 +1,14 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Moon, Sun, Menu, X, Terminal, LogOut, User, Search, ChevronDown, LayoutDashboard, Users, MessageSquare, Folder, PenTool, Bell } from "lucide-react";
+import {
+  Moon, Sun, Menu, LogOut, User, Search,
+  LayoutDashboard, Users, MessageSquare, Folder, PenTool, Bell
+} from "lucide-react";
 import NotificationBell from "./NotificationBell";
 import {
   Sheet,
@@ -18,189 +22,196 @@ const Header = () => {
   const [mounted, setMounted] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const { user, logout, isAuthenticated, isEditor } = useAuth();
-
+  const [searchOpen, setSearchOpen] = useState(false);
+  const { user, logout, isAuthenticated } = useAuth();
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  if (!mounted) {
-    return null;
-  }
+  if (!mounted) return null;
 
   const navLinks = [
-    { name: "Home", href: "/" },
-    { name: "Learn", href: "/learn" },
-    { name: "Blogs", href: "/blogs" },
+    { name: "Home",     href: "/" },
+    { name: "Learn",    href: "/learn" },
+    { name: "Blogs",    href: "/blogs" },
     { name: "Compiler", href: "/compiler" },
-    { name: "Tools", href: "/tools" },
-    { name: "Jobs", href: "/jobs", target: "_blank" },
+    { name: "Tools",    href: "/tools" },
+    { name: "Jobs",     href: "/jobs", target: "_blank" },
   ];
+
+  const isActive = (href) => {
+    if (href === "/") return pathname === "/";
+    return pathname.startsWith(href);
+  };
 
   return (
     <header
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b",
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-200",
         scrolled
-          ? "bg-background/80 backdrop-blur-md border-border/50 py-2 md:py-3"
-          : "bg-transparent border-transparent py-3 md:py-5"
+          ? "bg-background/98 backdrop-blur-sm border-b border-border"
+          : "bg-background border-b border-border"
       )}
     >
-      <div className="container mx-auto px-3 md:px-6 max-w-screen-2xl flex items-center justify-between gap-2 md:gap-4">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 md:gap-3 group shrink-0">
-          <div className="relative flex items-center justify-center w-9 h-9 md:w-11 md:h-11 rounded-xl bg-gradient-to-br from-cyan-400/20 to-blue-500/20 border border-cyan-400/30 group-hover:border-cyan-400/60 transition-all duration-300 group-hover:scale-110">
-            <Terminal className="w-5 h-5 md:w-6 md:h-6 text-cyan-400 group-hover:rotate-12 transition-transform duration-300" />
-            <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/30 to-blue-500/30 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      <div className="container mx-auto px-4 md:px-6 max-w-screen-xl flex items-center justify-between h-14 md:h-16">
+
+        {/* ── Logo ── */}
+        <Link href="/" className="flex items-center gap-2.5 group shrink-0">
+          {/* Wordmark mark — a simple geometric "R" indicator */}
+          <div className="flex items-center justify-center w-8 h-8 rounded-md bg-primary text-primary-foreground font-black text-sm select-none">
+            RR
           </div>
-          <div className="flex flex-col">
-            <span className="text-xl md:text-2xl font-bold tracking-tight leading-none bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-500 to-primary bg-[length:200%_auto] animate-gradient">
-              Runtime<span className="font-extrabold">River</span>
-            </span>
-            <span className="hidden md:block text-[10px] text-muted-foreground tracking-wider uppercase">Flow State for Developers</span>
-          </div>
+          <span className="text-base font-bold tracking-tight text-foreground hidden sm:block">
+            Runtime<span className="text-primary">River</span>
+          </span>
         </Link>
 
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-1 bg-secondary/5 rounded-full px-2 py-1 border border-white/5">
+        {/* ── Desktop Nav ── */}
+        <nav className="hidden md:flex items-center gap-0.5">
           {navLinks.map((link) => (
             <Link
               key={link.name}
               href={link.href}
               target={link.target}
               rel={link.target === "_blank" ? "noopener noreferrer" : undefined}
-              className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors hover:bg-white/5 rounded-full"
+              className={cn(
+                "px-3.5 py-2 text-sm font-medium transition-colors rounded-md",
+                isActive(link.href)
+                  ? "text-primary bg-primary/8"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+              )}
             >
               {link.name}
             </Link>
           ))}
         </nav>
 
-        {/* Actions */}
-        <div className="hidden md:flex items-center gap-4">
-          {/* Search Bar */}
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              if (searchQuery.trim()) {
-                window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
-              }
-            }}
-            className="relative"
-          >
-            <input
-              type="text"
-              placeholder="Search blogs..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 py-2 w-48 rounded-full bg-secondary/10 border border-border/50 focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm transition-all"
-            />
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          </form>
+        {/* ── Desktop Actions ── */}
+        <div className="hidden md:flex items-center gap-2">
 
-          {/* Write Button - Only show for authenticated users */}
-          {isAuthenticated && (
-            <Link href="/dashboard/posts/new">
-              <Button
-                size="sm"
-                className="gap-2 bg-primary hover:bg-primary/90 text-white font-medium px-4 py-2 rounded-full shadow-lg shadow-primary/20"
+          {/* Search */}
+          <div className="relative">
+            {searchOpen ? (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (searchQuery.trim()) {
+                    window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
+                    setSearchOpen(false);
+                  }
+                }}
+                className="flex items-center"
               >
-                <PenTool className="w-4 h-4" />
-                <span className="hidden lg:inline">Write</span>
+                <input
+                  autoFocus
+                  type="text"
+                  placeholder="Search articles..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onBlur={() => !searchQuery && setSearchOpen(false)}
+                  className="w-52 pl-3 pr-3 py-1.5 text-sm rounded-md bg-muted border border-border focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all"
+                />
+              </form>
+            ) : (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setSearchOpen(true)}
+                className="h-9 w-9 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted"
+              >
+                <Search className="w-4 h-4" />
               </Button>
-            </Link>
-          )}
+            )}
+          </div>
 
+          {/* Theme toggle */}
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="rounded-full hover:bg-primary/10 hover:text-primary"
+            className="h-9 w-9 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted"
           >
-            {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           </Button>
-
-
 
           {/* Notification Bell */}
           {isAuthenticated && <NotificationBell />}
 
           {isAuthenticated ? (
             <>
-              {/* User Menu Dropdown - Icon Only */}
+              {/* Write */}
+              <Link href="/dashboard/posts/new">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="h-9 gap-1.5 rounded-md border-border text-sm font-medium"
+                >
+                  <PenTool className="w-3.5 h-3.5" />
+                  Write
+                </Button>
+              </Link>
+
+              {/* User dropdown */}
               <div className="relative group">
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="rounded-full hover:bg-primary/10 hover:text-primary border border-border/50"
+                  className="h-9 w-9 rounded-md border border-border text-muted-foreground hover:text-foreground hover:bg-muted"
                 >
-                  <User className="w-5 h-5" />
+                  <User className="w-4 h-4" />
                 </Button>
-
-                {/* Dropdown Menu */}
-                <div className="absolute right-0 mt-2 w-56 bg-card border border-border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                  <div className="py-2">
-                    {/* User Info Header */}
-                    <div className="px-4 py-2 border-b border-border">
-                      <p className="font-semibold text-sm truncate">{user?.displayName || user?.email?.split('@')[0]}</p>
-                      <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
+                <div className="absolute right-0 mt-1 w-52 bg-popover border border-border rounded-lg shadow-lg shadow-black/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
+                  <div className="py-1">
+                    <div className="px-3 py-2.5 border-b border-border">
+                      <p className="font-semibold text-sm truncate text-foreground">{user?.displayName || user?.email?.split('@')[0]}</p>
+                      <p className="text-xs text-muted-foreground truncate mt-0.5">{user?.email}</p>
                       {user?.role && user.role !== 'VIEWER' && user.role !== 'USER' && (
-                        <span className="inline-block mt-1 text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-bold">
+                        <span className="inline-block mt-1.5 text-[10px] px-2 py-0.5 rounded bg-primary/10 text-primary font-semibold tracking-wide uppercase">
                           {user.role}
                         </span>
                       )}
                     </div>
-
-                    {/* Dashboard Link - Visible to all, logic handled by page */}
-                    <Link href="/dashboard" className="flex items-center gap-3 px-4 py-2 hover:bg-muted transition-colors">
-                      <LayoutDashboard className="w-4 h-4" />
-                      <span>Dashboard</span>
+                    <Link href="/dashboard" className="flex items-center gap-2.5 px-3 py-2 text-sm hover:bg-muted transition-colors text-foreground">
+                      <LayoutDashboard className="w-3.5 h-3.5 text-muted-foreground" />
+                      Dashboard
                     </Link>
-
-                    {/* Admin Links */}
                     {user?.role === 'ADMIN' && (
                       <>
-                        <Link href="/dashboard/users" className="flex items-center gap-3 px-4 py-2 hover:bg-muted transition-colors">
-                          <Users className="w-4 h-4" />
-                          <span>Users</span>
+                        <Link href="/dashboard/users" className="flex items-center gap-2.5 px-3 py-2 text-sm hover:bg-muted transition-colors text-foreground">
+                          <Users className="w-3.5 h-3.5 text-muted-foreground" />
+                          Users
                         </Link>
-                        <Link href="/dashboard/comments" className="flex items-center gap-3 px-4 py-2 hover:bg-muted transition-colors">
-                          <MessageSquare className="w-4 h-4" />
-                          <span>Comments</span>
+                        <Link href="/dashboard/comments" className="flex items-center gap-2.5 px-3 py-2 text-sm hover:bg-muted transition-colors text-foreground">
+                          <MessageSquare className="w-3.5 h-3.5 text-muted-foreground" />
+                          Comments
                         </Link>
-                        <Link href="/dashboard/categories" className="flex items-center gap-3 px-4 py-2 hover:bg-muted transition-colors">
-                          <Folder className="w-4 h-4" />
-                          <span>Categories</span>
+                        <Link href="/dashboard/categories" className="flex items-center gap-2.5 px-3 py-2 text-sm hover:bg-muted transition-colors text-foreground">
+                          <Folder className="w-3.5 h-3.5 text-muted-foreground" />
+                          Categories
                         </Link>
-                        <Link href="/dashboard/admin/notifications" className="flex items-center gap-3 px-4 py-2 hover:bg-muted transition-colors">
-                          <Bell className="w-4 h-4" />
-                          <span>Broadcast</span>
+                        <Link href="/dashboard/admin/notifications" className="flex items-center gap-2.5 px-3 py-2 text-sm hover:bg-muted transition-colors text-foreground">
+                          <Bell className="w-3.5 h-3.5 text-muted-foreground" />
+                          Broadcast
                         </Link>
                       </>
                     )}
-
-                    {/* Profile Link */}
-                    <Link href="/dashboard/profile" className="flex items-center gap-3 px-4 py-2 hover:bg-muted transition-colors">
-                      <User className="w-4 h-4" />
-                      <span>Profile</span>
+                    <Link href="/dashboard/profile" className="flex items-center gap-2.5 px-3 py-2 text-sm hover:bg-muted transition-colors text-foreground">
+                      <User className="w-3.5 h-3.5 text-muted-foreground" />
+                      Profile
                     </Link>
-
-                    <div className="border-t border-border my-2"></div>
-
-                    {/* Logout */}
+                    <div className="border-t border-border my-1" />
                     <button
                       onClick={logout}
-                      className="w-full flex items-center gap-3 px-4 py-2 hover:bg-muted transition-colors text-red-500"
+                      className="w-full flex items-center gap-2.5 px-3 py-2 text-sm hover:bg-muted transition-colors text-destructive"
                     >
-                      <LogOut className="w-4 h-4" />
-                      <span>Logout</span>
+                      <LogOut className="w-3.5 h-3.5" />
+                      Sign out
                     </button>
                   </div>
                 </div>
@@ -208,63 +219,72 @@ const Header = () => {
             </>
           ) : (
             <>
-              <Link href="/login?redirect=/dashboard/write">
-                <Button variant="outline" className="border-primary/30 hover:bg-primary/10 rounded-full px-6 font-semibold flex items-center gap-2">
-                  <PenTool className="w-4 h-4" />
-                  Write
+              <Link href="/login">
+                <Button variant="ghost" size="sm" className="h-9 text-sm font-medium rounded-md text-muted-foreground hover:text-foreground">
+                  Sign in
                 </Button>
               </Link>
-              <Link href="/login">
-                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-6 font-semibold shadow-lg shadow-primary/20">
-                  Login
+              <Link href="/register">
+                <Button size="sm" className="h-9 rounded-md bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-medium px-4">
+                  Get started
                 </Button>
               </Link>
             </>
           )}
         </div>
 
-        {/* Mobile Menu */}
-        <div className="md:hidden flex items-center gap-2">
+        {/* ── Mobile Actions ── */}
+        <div className="md:hidden flex items-center gap-1.5">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="rounded-full"
+            className="h-9 w-9 rounded-md text-muted-foreground"
           >
-            {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           </Button>
 
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <Menu className="w-6 h-6" />
+              <Button variant="ghost" size="icon" className="h-9 w-9 rounded-md text-muted-foreground">
+                <Menu className="w-5 h-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[300px] border-l border-border/50 bg-background/95 backdrop-blur-xl">
-              <div className="flex flex-col gap-6 mt-8">
-                {/* Search in Mobile */}
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    if (searchQuery.trim()) {
-                      window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
-                      setIsOpen(false);
-                    }
-                  }}
-                  className="relative px-4"
-                >
-                  <input
-                    type="text"
-                    placeholder="Search blogs..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 pr-4 py-2.5 w-full rounded-lg bg-secondary/10 border border-border/50 focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm transition-all"
-                  />
-                  <Search className="absolute left-7 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                </form>
+            <SheetContent side="right" className="w-[280px] border-l border-border bg-background p-0">
+              <div className="flex flex-col h-full">
+                {/* Mobile Header */}
+                <div className="flex items-center gap-2.5 px-5 py-4 border-b border-border">
+                  <div className="flex items-center justify-center w-7 h-7 rounded-md bg-primary text-primary-foreground font-black text-xs">
+                    RR
+                  </div>
+                  <span className="text-sm font-bold text-foreground">RuntimeRiver</span>
+                </div>
 
-                {/* Navigation Links */}
-                <div className="flex flex-col gap-1">
+                {/* Mobile Search */}
+                <div className="px-4 pt-4">
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      if (searchQuery.trim()) {
+                        window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
+                        setIsOpen(false);
+                      }
+                    }}
+                    className="relative"
+                  >
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+                    <input
+                      type="text"
+                      placeholder="Search articles..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full pl-9 pr-3 py-2 text-sm rounded-md bg-muted border border-border focus:border-primary/50 focus:outline-none transition-all"
+                    />
+                  </form>
+                </div>
+
+                {/* Mobile Nav */}
+                <nav className="flex flex-col gap-0.5 px-3 pt-4">
                   {navLinks.map((link) => (
                     <Link
                       key={link.name}
@@ -272,86 +292,53 @@ const Header = () => {
                       target={link.target}
                       onClick={() => setIsOpen(false)}
                       rel={link.target === "_blank" ? "noopener noreferrer" : undefined}
-                      className="text-base font-medium px-4 py-3 rounded-lg hover:bg-primary/10 hover:text-primary transition-colors"
+                      className={cn(
+                        "px-3 py-2.5 rounded-md text-sm font-medium transition-colors",
+                        isActive(link.href)
+                          ? "text-primary bg-primary/8"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                      )}
                     >
                       {link.name}
                     </Link>
                   ))}
-                </div>
+                </nav>
 
-                {/* Auth Buttons */}
-                <div className="flex flex-col gap-3 px-4 pt-4 border-t border-border/50">
+                {/* Mobile Auth */}
+                <div className="mt-auto px-4 pb-6 pt-4 border-t border-border flex flex-col gap-2">
                   {isAuthenticated ? (
                     <>
-                      {/* Write Button for All Authenticated Users */}
-                      <Link href="/dashboard/posts/new">
-                        <Button
-                          onClick={() => setIsOpen(false)}
-                          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg font-semibold shadow-lg shadow-primary/20 gap-2"
-                        >
-                          <PenTool className="w-4 h-4" />
-                          Write
+                      <Link href="/dashboard/posts/new" onClick={() => setIsOpen(false)}>
+                        <Button className="w-full h-9 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-medium gap-2 rounded-md">
+                          <PenTool className="w-3.5 h-3.5" />
+                          Write an article
                         </Button>
                       </Link>
-
-                      {/* Dashboard Link */}
-                      <Link href="/dashboard">
-                        <Button
-                          onClick={() => setIsOpen(false)}
-                          variant="outline"
-                          className="w-full border-border/50 hover:bg-accent gap-2"
-                        >
-                          <LayoutDashboard className="w-4 h-4" />
+                      <Link href="/dashboard" onClick={() => setIsOpen(false)}>
+                        <Button variant="outline" className="w-full h-9 text-sm rounded-md border-border gap-2">
+                          <LayoutDashboard className="w-3.5 h-3.5" />
                           Dashboard
                         </Button>
                       </Link>
-
-                      {/* Profile Link */}
-                      <Link href="/profile">
-                        <Button
-                          onClick={() => setIsOpen(false)}
-                          variant="outline"
-                          className="w-full border-border/50 hover:bg-accent gap-2"
-                        >
-                          <User className="w-4 h-4" />
-                          Profile
-                        </Button>
-                      </Link>
-
-                      {/* Logout */}
                       <Button
-                        onClick={() => {
-                          logout();
-                          setIsOpen(false);
-                        }}
+                        onClick={() => { logout(); setIsOpen(false); }}
                         variant="ghost"
-                        className="w-full text-red-500 hover:bg-red-500/10 gap-2"
+                        className="w-full h-9 text-sm text-destructive hover:bg-destructive/8 rounded-md gap-2"
                       >
-                        <LogOut className="w-4 h-4" />
-                        Logout
+                        <LogOut className="w-3.5 h-3.5" />
+                        Sign out
                       </Button>
                     </>
                   ) : (
                     <>
-                      {/* Write Button - Redirects to Login */}
-                      <Link href="/login?redirect=/dashboard/write">
-                        <Button
-                          onClick={() => setIsOpen(false)}
-                          variant="outline"
-                          className="w-full border-primary/30 hover:bg-primary/10 rounded-lg font-semibold gap-2"
-                        >
-                          <PenTool className="w-4 h-4" />
-                          Write
+                      <Link href="/register" onClick={() => setIsOpen(false)}>
+                        <Button className="w-full h-9 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-medium rounded-md">
+                          Get started — free
                         </Button>
                       </Link>
-
-                      {/* Login Button */}
-                      <Link href="/login">
-                        <Button
-                          onClick={() => setIsOpen(false)}
-                          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg font-semibold shadow-lg shadow-primary/20"
-                        >
-                          Login
+                      <Link href="/login" onClick={() => setIsOpen(false)}>
+                        <Button variant="ghost" className="w-full h-9 text-sm font-medium rounded-md text-muted-foreground">
+                          Sign in
                         </Button>
                       </Link>
                     </>
@@ -361,8 +348,9 @@ const Header = () => {
             </SheetContent>
           </Sheet>
         </div>
+
       </div>
-    </header >
+    </header>
   );
 };
 
