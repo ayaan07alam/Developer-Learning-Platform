@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Github, Twitter, Linkedin, Mail, Code2, Terminal } from "lucide-react";
 
 const footerLinks = {
@@ -40,13 +41,13 @@ const Footer = () => {
 
           {/* Brand */}
           <div className="md:col-span-4 space-y-5">
-            <Link href="/" className="flex items-center gap-2.5 group w-fit">
-              <div className="flex items-center justify-center w-8 h-8 rounded-md bg-primary text-primary-foreground font-black text-sm select-none">
-                RR
+            <Link href="/" className="flex items-center group w-fit">
+              <div className="relative w-40 h-10 md:w-48 md:h-12 hidden dark:block">
+                 <Image src="/logo-minimal.png" alt="Runtime River" fill className="object-contain object-left" />
               </div>
-              <span className="text-base font-bold tracking-tight text-foreground">
-                Runtime<span className="text-primary">River</span>
-              </span>
+              <div className="relative w-40 h-10 md:w-48 md:h-12 block dark:hidden">
+                 <Image src="/logo.png" alt="Runtime River" fill className="object-contain object-left" />
+              </div>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
               A developer platform for reading and writing technical articles, running code

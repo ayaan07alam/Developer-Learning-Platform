@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
@@ -62,14 +63,13 @@ const Header = () => {
       <div className="container mx-auto px-4 md:px-6 max-w-screen-xl flex items-center justify-between h-14 md:h-16">
 
         {/* ── Logo ── */}
-        <Link href="/" className="flex items-center gap-2.5 group shrink-0">
-          {/* Wordmark mark — a simple geometric "R" indicator */}
-          <div className="flex items-center justify-center w-8 h-8 rounded-md bg-primary text-primary-foreground font-black text-sm select-none">
-            RR
+        <Link href="/" className="flex items-center group shrink-0">
+          <div className="relative w-40 h-10 md:w-48 md:h-12 hidden dark:block">
+             <Image src="/logo-minimal.png" alt="Runtime River" fill className="object-contain object-left" priority />
           </div>
-          <span className="text-base font-bold tracking-tight text-foreground hidden sm:block">
-            Runtime<span className="text-primary">River</span>
-          </span>
+          <div className="relative w-40 h-10 md:w-48 md:h-12 block dark:hidden">
+             <Image src="/logo.png" alt="Runtime River" fill className="object-contain object-left" priority />
+          </div>
         </Link>
 
         {/* ── Desktop Nav ── */}

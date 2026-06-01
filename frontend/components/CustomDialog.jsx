@@ -95,11 +95,8 @@ export default function CustomDialog({
                 className={`relative w-full max-w-md transform transition-all duration-200 ${isAnimating ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
                     }`}
             >
-                {/* Glassmorphism Container */}
-                <div className="relative overflow-hidden rounded-2xl bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border border-gray-200/50 dark:border-gray-700/50 shadow-2xl">
-                    {/* Gradient Border Effect */}
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-500/20 via-purple-500/20 to-violet-500/20 opacity-50" />
-
+                {/* Container */}
+                <div className="relative overflow-hidden rounded-2xl bg-card border border-border shadow-2xl">
                     {/* Content */}
                     <div className="relative p-6">
                         {/* Header */}
@@ -107,9 +104,9 @@ export default function CustomDialog({
                             <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
                                 {title}
                             </h3>
-                            <button
+                                <button
                                 onClick={handleClose}
-                                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                                className="text-muted-foreground hover:text-foreground transition-colors"
                                 aria-label="Close dialog"
                             >
                                 <X className="w-5 h-5" />
@@ -118,7 +115,7 @@ export default function CustomDialog({
 
                         {/* Message */}
                         <div className="mb-6">
-                            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                            <p className="text-muted-foreground leading-relaxed">
                                 {message}
                             </p>
                         </div>
@@ -128,16 +125,16 @@ export default function CustomDialog({
                             {type === 'confirm' && (
                                 <button
                                     onClick={handleClose}
-                                    className="px-5 py-2.5 rounded-lg font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200 border border-gray-300 dark:border-gray-600"
+                                    className="px-5 py-2.5 rounded-lg font-medium text-secondary-foreground bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-border"
                                 >
                                     {cancelText}
                                 </button>
                             )}
                             <button
                                 onClick={type === 'confirm' ? handleConfirm : handleClose}
-                                className={`px-5 py-2.5 rounded-lg font-medium text-white transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 ${variant === 'danger'
-                                        ? 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700'
-                                        : 'bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-600 hover:to-purple-700'
+                                className={`px-5 py-2.5 rounded-lg font-medium text-white transition-all duration-200 ${variant === 'danger'
+                                        ? 'bg-destructive hover:bg-destructive/90'
+                                        : 'bg-primary hover:bg-primary/90'
                                     }`}
                             >
                                 {type === 'confirm' ? confirmText : 'OK'}

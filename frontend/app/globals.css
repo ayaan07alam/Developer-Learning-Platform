@@ -106,18 +106,11 @@
     transition: background-color 0.15s ease, color 0.15s ease;
   }
 
-  /* ── Premium dark mode texture: subtle neutral dot-grid ─────────────────
-     Neutral gray dots (#2E2E2E) on near-black — like Linear's website.
-     NOT teal-tinted — just gives depth to the flat dark background.
+  /* ── Premium dark mode texture ───────────────────────────────────────────
+     Completely flat dark background per user request.
   ────────────────────────────────────────────────────────────────────────── */
   .dark body {
-    background-image: radial-gradient(
-      circle,
-      hsl(0 0% 18% / 0.7) 1px,
-      transparent 1px
-    );
-    background-size: 28px 28px;
-    background-attachment: local;
+    background-color: hsl(var(--background));
   }
 
   h1, h2, h3, h4, h5, h6 {

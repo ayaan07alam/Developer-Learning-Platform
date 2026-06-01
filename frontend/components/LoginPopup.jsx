@@ -101,13 +101,8 @@ export default function LoginPopup() {
             {/* Backdrop with blur */}
             <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={handleClose}></div>
 
-            {/* Popup Card with Glassmorphism */}
-            <div className="relative bg-gradient-to-br from-card/95 to-card/90 backdrop-blur-xl border border-border/50 rounded-3xl shadow-2xl max-w-md w-full p-8 animate-in zoom-in-95 duration-300">
-                {/* Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 rounded-3xl pointer-events-none"></div>
-
-                {/* Glass Shine Effect */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-transparent to-transparent rounded-3xl pointer-events-none"></div>
+            {/* Popup Card */}
+            <div className="relative bg-card border border-border rounded-3xl shadow-xl max-w-md w-full p-8 animate-in zoom-in-95 duration-300">
 
                 {/* Close Button */}
                 <button
@@ -121,7 +116,7 @@ export default function LoginPopup() {
                 {/* Content */}
                 <div className="relative text-center">
                     <div className="mb-6">
-                        <h2 className="text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_auto] animate-gradient">
+                        <h2 className="text-3xl font-bold mb-2 text-foreground">
                             Welcome! 👋
                         </h2>
                         <p className="text-muted-foreground">
@@ -155,12 +150,12 @@ export default function LoginPopup() {
                         </div>
 
                         <Link href="/register" onClick={() => handleSignInClick('/register')}>
-                            <button className="w-full px-6 py-3 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-xl font-semibold hover:shadow-lg hover:shadow-primary/50 transition-all duration-200 hover:scale-[1.02]">
+                            <button className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-xl font-semibold hover:bg-primary/90 transition-all duration-200">
                                 Create Free Account
                             </button>
                         </Link>
                         <Link href="/login" onClick={() => handleSignInClick('/login')}>
-                            <button className="w-full px-6 py-3 bg-white/10 backdrop-blur-sm text-foreground rounded-xl font-semibold hover:bg-white/20 transition-all duration-200 border border-white/20">
+                            <button className="w-full px-6 py-3 bg-secondary text-secondary-foreground rounded-xl font-semibold hover:bg-secondary/80 transition-all duration-200 border border-border">
                                 Sign In with Email
                             </button>
                         </Link>

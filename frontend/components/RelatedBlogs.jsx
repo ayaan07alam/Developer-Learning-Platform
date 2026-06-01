@@ -51,7 +51,7 @@ const RelatedBlogs = ({ currentPost }) => {
 
     return (
         <div className="sticky top-24 space-y-6">
-            <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
+            <h3 className="text-xl font-bold text-foreground">
                 Related Articles
             </h3>
 
