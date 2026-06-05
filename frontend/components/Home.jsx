@@ -106,9 +106,9 @@ const FeaturedCard = ({ post }) => {
           {/* ── Content — right column ── */}
           <div className="flex flex-col flex-1 p-6 md:p-8">
 
-            {/* Category label — small-caps text, no background badge */}
+            {/* Category label */}
             {post.categories?.[0] && (
-              <p className="text-[11px] font-semibold text-primary uppercase tracking-[0.11em] mb-3">
+              <p className="text-xs font-bold text-primary uppercase tracking-widest mb-4">
                 {post.categories[0].name}
               </p>
             )}
@@ -120,28 +120,28 @@ const FeaturedCard = ({ post }) => {
 
             {/* Excerpt */}
             {post.excerpt && (
-              <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3 mb-5 flex-1">
+              <p className="text-base text-muted-foreground leading-relaxed line-clamp-3 mb-6 flex-1">
                 {post.excerpt}
               </p>
             )}
 
             {/* Author + meta — the editorial byline */}
-            <div className="flex items-center gap-2.5 text-[12.5px] text-muted-foreground mt-auto pt-4 border-t border-border">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary font-bold text-[10px] shrink-0">
+            <div className="flex items-center gap-3 text-sm text-muted-foreground mt-auto pt-5 border-t border-border/60">
+              <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-bold text-xs shrink-0">
                 {authorInitial}
               </span>
-              <span className="font-medium text-foreground/80">{authorName}</span>
+              <span className="font-semibold text-foreground/90">{authorName}</span>
               {date && (
                 <>
-                  <span className="text-border">·</span>
-                  <span className="flex items-center gap-1">
-                    <Calendar className="w-3 h-3" />{date}
+                  <span className="text-muted-foreground/30">•</span>
+                  <span className="flex items-center gap-1.5 font-medium">
+                    <Calendar className="w-3.5 h-3.5" />{date}
                   </span>
                 </>
               )}
-              <span className="text-border">·</span>
-              <span className="flex items-center gap-1">
-                <Clock className="w-3 h-3" />{post.readTime || 5} min read
+              <span className="text-muted-foreground/30">•</span>
+              <span className="flex items-center gap-1.5 font-medium">
+                <Clock className="w-3.5 h-3.5" />{post.readTime || 5} min read
               </span>
             </div>
           </div>
@@ -173,8 +173,8 @@ const ArticleCard = ({ post, index = 0, compact = false }) => {
 
           {/* ── Image ── */}
           <div className={cn(
-            "relative overflow-hidden bg-muted shrink-0",
-            compact ? "w-28 h-28 sm:w-36 sm:h-full" : "h-44 w-full"
+            "relative overflow-hidden bg-muted shrink-0 border-b border-border/50",
+            compact ? "w-32 h-32 sm:w-40 sm:h-full border-r border-b-0" : "aspect-[16/9] w-full"
           )}>
             <PostImage src={post.mainImage} title={post.title} />
           </div>
@@ -184,35 +184,35 @@ const ArticleCard = ({ post, index = 0, compact = false }) => {
 
             {/* Category */}
             {post.categories?.[0] && (
-              <p className="text-[10.5px] font-semibold text-primary uppercase tracking-[0.1em] mb-2">
+              <p className="text-xs font-bold text-primary uppercase tracking-widest mb-3">
                 {post.categories[0].name}
               </p>
             )}
 
             {/* Title */}
             <h3 className={cn(
-              "font-semibold text-foreground leading-snug group-hover:text-primary transition-colors duration-150",
-              compact ? "text-[13.5px] line-clamp-3 mb-2" : "text-[14.5px] line-clamp-2 mb-2.5"
+              "font-bold text-foreground leading-tight group-hover:text-primary transition-colors duration-200",
+              compact ? "text-base line-clamp-3 mb-3" : "text-lg md:text-xl line-clamp-2 mb-3"
             )}>
               {post.title}
             </h3>
 
             {/* Excerpt — only in non-compact mode */}
             {!compact && post.excerpt && (
-              <p className="text-[12.5px] text-muted-foreground line-clamp-2 leading-relaxed flex-1 mb-3">
+              <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed flex-1 mb-4">
                 {post.excerpt}
               </p>
             )}
 
             {/* Meta row */}
-            <div className="flex items-center gap-2 text-[11px] text-muted-foreground mt-auto pt-3 border-t border-border">
-              <span className="flex items-center justify-center w-4 h-4 rounded-full bg-primary/10 text-primary font-bold text-[9px] shrink-0">
+            <div className="flex items-center gap-3 text-xs text-muted-foreground mt-auto pt-4 border-t border-border/60">
+              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary font-bold text-xs shrink-0">
                 {authorInitial}
               </span>
-              <span className="font-medium text-foreground/70 truncate">{authorName}</span>
-              <span className="text-border shrink-0">·</span>
-              <span className="shrink-0 flex items-center gap-0.5">
-                <Clock className="w-2.5 h-2.5" />{post.readTime || 5}m
+              <span className="font-semibold text-foreground/80 truncate">{authorName}</span>
+              <span className="text-muted-foreground/30 shrink-0">•</span>
+              <span className="shrink-0 flex items-center gap-1 font-medium">
+                <Clock className="w-3 h-3" />{post.readTime || 5}m
               </span>
             </div>
           </div>

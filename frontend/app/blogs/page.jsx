@@ -47,25 +47,25 @@ const ArticleCard = ({ post, index = 0 }) => {
         <div className="flex flex-col h-full bg-card border border-border rounded-xl overflow-hidden hover:border-primary/35 hover:shadow-md transition-all duration-200">
 
           {/* Image */}
-          <div className="relative h-44 overflow-hidden bg-muted shrink-0">
+          <div className="relative aspect-[16/9] w-full overflow-hidden bg-muted shrink-0 border-b border-border/50">
             <PostImage src={post.mainImage} title={post.title} />
           </div>
 
           {/* Content */}
           <div className="flex flex-col flex-1 p-5">
 
-            {/* Category — text label, no background badge */}
+            {/* Category */}
             {post.categories?.[0] && (
-              <p className="text-[10.5px] font-semibold text-primary uppercase tracking-[0.1em] mb-2">
+              <p className="text-xs font-bold text-primary uppercase tracking-widest mb-3">
                 {post.categories[0].name}
               </p>
             )}
 
             {/* Tags */}
             {post.tags?.length > 0 && !post.categories?.[0] && (
-              <div className="flex flex-wrap gap-1.5 mb-2.5">
+              <div className="flex flex-wrap gap-2 mb-3">
                 {post.tags.slice(0, 3).map((tag, i) => (
-                  <span key={i} className="text-[11px] font-medium text-muted-foreground bg-muted px-2 py-0.5 rounded border border-border">
+                  <span key={i} className="text-xs font-medium text-muted-foreground bg-muted/50 px-2.5 py-1 rounded-md border border-border/50">
                     {tag}
                   </span>
                 ))}
@@ -73,32 +73,32 @@ const ArticleCard = ({ post, index = 0 }) => {
             )}
 
             {/* Title */}
-            <h2 className="text-[14.5px] font-semibold text-foreground leading-snug line-clamp-2 mb-2.5 group-hover:text-primary transition-colors duration-150">
+            <h2 className="text-lg md:text-xl font-bold text-foreground leading-tight line-clamp-2 mb-3 group-hover:text-primary transition-colors duration-200">
               {post.title}
             </h2>
 
             {/* Excerpt */}
             {post.excerpt && (
-              <p className="text-[12.5px] text-muted-foreground line-clamp-2 leading-relaxed flex-1 mb-3">
+              <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed flex-1 mb-6">
                 {post.excerpt}
               </p>
             )}
 
             {/* Author + meta */}
-            <div className="flex items-center gap-2 text-[11px] text-muted-foreground mt-auto pt-3 border-t border-border">
-              <span className="flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 text-primary font-bold text-[9px] shrink-0">
+            <div className="flex items-center gap-3 text-xs text-muted-foreground mt-auto pt-4 border-t border-border/60">
+              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary font-bold text-xs shrink-0">
                 {authorInitial}
               </span>
-              <span className="font-medium text-foreground/75 truncate">{authorName}</span>
+              <span className="font-semibold text-foreground/80 truncate">{authorName}</span>
               {date && (
                 <>
-                  <span className="text-border shrink-0">·</span>
-                  <span className="shrink-0">{date}</span>
+                  <span className="text-muted-foreground/30 shrink-0">•</span>
+                  <span className="shrink-0 font-medium">{date}</span>
                 </>
               )}
-              <span className="text-border shrink-0">·</span>
-              <span className="shrink-0 flex items-center gap-0.5">
-                <Clock className="w-2.5 h-2.5" />{post.readTime || 5}m
+              <span className="text-muted-foreground/30 shrink-0">•</span>
+              <span className="shrink-0 flex items-center gap-1 font-medium">
+                <Clock className="w-3 h-3" />{post.readTime || 5}m
               </span>
             </div>
           </div>
