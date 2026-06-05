@@ -42,11 +42,11 @@ const Footer = () => {
           {/* Brand */}
           <div className="md:col-span-4 space-y-5">
             <Link href="/" className="flex items-center group w-fit">
-              <div className="relative w-40 h-10 md:w-48 md:h-12 hidden dark:block">
+              <div className="relative w-[180px] h-14 md:w-[220px] md:h-16 hidden dark:block">
                  <Image src="/logo-minimal.png" alt="Runtime River" fill className="object-contain object-left" />
               </div>
-              <div className="relative w-40 h-10 md:w-48 md:h-12 block dark:hidden">
-                 <Image src="/logo.png" alt="Runtime River" fill className="object-contain object-left" />
+              <div className="relative w-[180px] h-14 md:w-[220px] md:h-16 block dark:hidden">
+                 <Image src="/logo-minimal.png" alt="Runtime River" fill className="object-contain object-left" />
               </div>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">

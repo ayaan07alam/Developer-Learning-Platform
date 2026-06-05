@@ -60,15 +60,15 @@ const Header = () => {
           : "bg-background border-b border-border"
       )}
     >
-      <div className="container mx-auto px-4 md:px-6 max-w-screen-xl flex items-center justify-between h-14 md:h-16">
+      <div className="container mx-auto px-4 md:px-6 max-w-screen-xl flex items-center justify-between h-16 md:h-[72px]">
 
         {/* ── Logo ── */}
         <Link href="/" className="flex items-center group shrink-0">
-          <div className="relative w-40 h-10 md:w-48 md:h-12 hidden dark:block">
+          <div className="relative w-[180px] h-14 md:w-[220px] md:h-16 hidden dark:block">
              <Image src="/logo-minimal.png" alt="Runtime River" fill className="object-contain object-left" priority />
           </div>
-          <div className="relative w-40 h-10 md:w-48 md:h-12 block dark:hidden">
-             <Image src="/logo.png" alt="Runtime River" fill className="object-contain object-left" priority />
+          <div className="relative w-[180px] h-14 md:w-[220px] md:h-16 block dark:hidden">
+             <Image src="/logo-minimal.png" alt="Runtime River" fill className="object-contain object-left" priority />
           </div>
         </Link>
 
@@ -254,11 +254,10 @@ const Header = () => {
             <SheetContent side="right" className="w-[280px] border-l border-border bg-background p-0">
               <div className="flex flex-col h-full">
                 {/* Mobile Header */}
-                <div className="flex items-center gap-2.5 px-5 py-4 border-b border-border">
-                  <div className="flex items-center justify-center w-7 h-7 rounded-md bg-primary text-primary-foreground font-black text-xs">
-                    RR
+                <div className="flex items-center px-5 py-4 border-b border-border">
+                  <div className="relative w-[140px] h-10">
+                    <Image src="/logo-minimal.png" alt="Runtime River" fill className="object-contain object-left" />
                   </div>
-                  <span className="text-sm font-bold text-foreground">RuntimeRiver</span>
                 </div>
 
                 {/* Mobile Search */}

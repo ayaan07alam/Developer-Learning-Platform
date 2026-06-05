@@ -227,15 +227,15 @@ const SectionHeader = ({ label, title, description, action }) => (
   <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10">
     <div>
       {label && (
-        <p className="text-[10.5px] font-semibold text-primary uppercase tracking-[0.14em] mb-2">{label}</p>
+        <p className="text-[11px] font-semibold text-primary uppercase tracking-[0.12em] mb-2.5">{label}</p>
       )}
-      <h2 className="text-2xl md:text-[1.7rem] font-bold text-foreground tracking-tight leading-tight">{title}</h2>
+      <h2 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight leading-tight">{title}</h2>
       {description && (
-        <p className="text-muted-foreground mt-1.5 text-sm max-w-lg leading-relaxed">{description}</p>
+        <p className="text-muted-foreground mt-2 text-[15px] max-w-lg leading-relaxed">{description}</p>
       )}
     </div>
     {action && (
-      <Link href={action.href} className="text-sm font-medium text-primary hover:text-primary/80 flex items-center gap-1 shrink-0 transition-colors">
+      <Link href={action.href} className="text-sm font-medium text-primary hover:text-primary/80 flex items-center gap-1.5 shrink-0 transition-colors">
         {action.label} <ArrowRight className="w-3.5 h-3.5" />
       </Link>
     )}
@@ -341,41 +341,41 @@ const Home = () => {
     <div className="flex flex-col min-h-screen">
 
       {/* ═══ HERO ════════════════════════════════════════════════════════════ */}
-      <section className="pt-20 pb-14 md:pt-28 md:pb-20 border-b border-border">
+      <section className="pt-24 pb-16 md:pt-32 md:pb-24 border-b border-border">
         <div className="container mx-auto px-4 md:px-6 max-w-screen-xl">
-          <div className="grid lg:grid-cols-[1fr_400px] gap-10 lg:gap-14 items-start">
+          <div className="grid lg:grid-cols-[1fr_400px] gap-12 lg:gap-16 items-start">
 
             {/* Left: headline */}
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
-              {/* Label — no animated pulse dot */}
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-primary/20 bg-primary/5 mb-6">
+              {/* Label */}
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-primary/20 bg-primary/5 mb-8">
                 <span className="w-1.5 h-1.5 rounded-full bg-primary" />
                 <span className="text-[11px] font-semibold text-primary tracking-widest uppercase">
                   Where Knowledge Flows &amp; Code Runs
                 </span>
               </div>
 
-              <h1 className="text-4xl md:text-5xl lg:text-[3.1rem] font-extrabold leading-[1.09] tracking-tight text-foreground mb-5">
+              <h1 className="text-4xl md:text-5xl lg:text-[3.5rem] font-extrabold leading-[1.08] tracking-tight text-foreground mb-6">
                 The Developer Platform{" "}
                 <span className="text-primary">Built for Learning</span>
               </h1>
 
-              <p className="text-[16px] text-muted-foreground leading-relaxed mb-7 max-w-[510px]">
+              <p className="text-[17px] text-muted-foreground leading-relaxed mb-8 max-w-[520px]">
                 Read technical articles, run code in your browser, use 40+ free developer tools —
                 all in one continuous flow.
               </p>
 
-              <div className="flex flex-wrap gap-3 mb-8">
+              <div className="flex flex-wrap gap-3 mb-10">
                 <Button
                   size="lg"
-                  className="h-11 px-6 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-md"
+                  className="h-12 px-7 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-lg text-[15px]"
                   asChild
                 >
                   <Link href="/blogs">Browse Articles</Link>
                 </Button>
                 <Button
                   size="lg" variant="outline"
-                  className="h-11 px-5 font-medium rounded-md border-border text-foreground hover:bg-muted"
+                  className="h-12 px-6 font-medium rounded-lg border-border text-foreground hover:bg-muted text-[15px]"
                   asChild
                 >
                   <Link href="/compiler"><Terminal className="w-4 h-4 mr-2" />Try the Compiler</Link>
@@ -383,10 +383,10 @@ const Home = () => {
               </div>
 
               {/* Trust signals */}
-              <div className="flex flex-wrap gap-x-5 gap-y-2">
+              <div className="flex flex-wrap gap-x-6 gap-y-2">
                 {trustSignals.map(({ icon: Icon, label }) => (
-                  <div key={label} className="flex items-center gap-1.5 text-[12px] text-muted-foreground">
-                    <Icon className="w-3.5 h-3.5 text-primary/70 shrink-0" />
+                  <div key={label} className="flex items-center gap-2 text-[13px] text-muted-foreground">
+                    <Icon className="w-4 h-4 text-primary/60 shrink-0" />
                     <span>{label}</span>
                   </div>
                 ))}
@@ -448,7 +448,7 @@ const Home = () => {
       </section>
 
       {/* ═══ START READING — editorial featured layout ════════════════════════ */}
-      <section className="py-14 border-b border-border">
+      <section className="py-16 md:py-20 border-b border-border">
         <div className="container mx-auto px-4 md:px-6 max-w-screen-xl">
           <SectionHeader
             label="Latest articles"
@@ -512,7 +512,7 @@ const Home = () => {
 
       {/* ═══ TRENDING ════════════════════════════════════════════════════════ */}
       {(loading || trendingPosts.length > 0) && (
-        <section className="py-14 border-b border-border">
+        <section className="py-16 md:py-20 border-b border-border">
           <div className="container mx-auto px-4 md:px-6 max-w-screen-xl">
             <SectionHeader
               label="Trending this week"
@@ -534,7 +534,7 @@ const Home = () => {
       )}
 
       {/* ═══ PLATFORM PILLARS ════════════════════════════════════════════════ */}
-      <section className="py-14 border-b border-border">
+      <section className="py-16 md:py-20 border-b border-border">
         <div className="container mx-auto px-4 md:px-6 max-w-screen-xl">
           <SectionHeader
             label="Platform overview"
@@ -577,7 +577,7 @@ const Home = () => {
       </section>
 
       {/* ═══ POPULAR TOOLS ═══════════════════════════════════════════════════ */}
-      <section className="py-14 border-b border-border">
+      <section className="py-16 md:py-20 border-b border-border">
         <div className="container mx-auto px-4 md:px-6 max-w-screen-xl">
           <SectionHeader
             label="Developer utilities"
@@ -612,7 +612,7 @@ const Home = () => {
       </section>
 
       {/* ═══ LATEST ARTICLES ══════════════════════════════════════════════════ */}
-      <section className="py-14 border-b border-border">
+      <section className="py-16 md:py-20 border-b border-border">
         <div className="container mx-auto px-4 md:px-6 max-w-screen-xl">
           <SectionHeader
             label="Fresh content"
@@ -635,7 +635,7 @@ const Home = () => {
       </section>
 
       {/* ═══ DEVELOPER QUOTE ══════════════════════════════════════════════════ */}
-      <section className="py-14 border-b border-border">
+      <section className="py-16 md:py-20 border-b border-border">
         <div className="container mx-auto px-4 md:px-6 max-w-screen-xl">
           <div className="max-w-2xl mx-auto">
             <div className="bg-card border border-border rounded-xl p-8 md:p-10 relative overflow-hidden">
@@ -675,7 +675,7 @@ const Home = () => {
       </section>
 
       {/* ═══ COMMUNITY ARTICLES ═══════════════════════════════════════════════ */}
-      <section className="py-14 border-b border-border">
+      <section className="py-16 md:py-20 border-b border-border">
         <div className="container mx-auto px-4 md:px-6 max-w-screen-xl">
           <SectionHeader
             label="Community"

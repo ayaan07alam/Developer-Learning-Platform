@@ -1,4 +1,4 @@
-import { Space_Grotesk } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
@@ -12,7 +12,11 @@ import { ToastProvider } from "@/contexts/ToastContext";
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import LoginPopup from "@/components/LoginPopup";
 
-const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+});
 
 export const metadata = {
   metadataBase: new URL('https://runtimeriver.com'),
@@ -127,7 +131,7 @@ export default function RootLayout({ children }) {
       />
       <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5593264837587690"
         crossorigin="anonymous"></Script>
-      <body className={`${spaceGrotesk.variable} ${spaceGrotesk.className}`}>
+      <body className={`${inter.variable} ${inter.className}`}>
         <NextTopLoader
           color="#007272"
           initialPosition={0.08}
