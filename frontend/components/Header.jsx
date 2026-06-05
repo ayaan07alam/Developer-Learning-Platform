@@ -56,7 +56,7 @@ const Header = () => {
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-200",
         scrolled
-          ? "bg-background/98 backdrop-blur-sm border-b border-border"
+          ? "bg-background border-b border-border shadow-sm"
           : "bg-background border-b border-border"
       )}
     >
@@ -272,13 +272,13 @@ const Header = () => {
                     }}
                     className="relative"
                   >
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+                    <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <input
                       type="text"
                       placeholder="Search articles..."
                       value={searchQuery}
                       onChange={e => setSearchQuery(e.target.value)}
-                      className="w-full pl-9 pr-3 py-2 text-sm bg-secondary border border-border rounded-md focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all"
+                      className="w-full pl-10 pr-4 py-2.5 text-[15px] bg-muted border border-border rounded-lg focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all placeholder:text-muted-foreground"
                     />
                   </form>
                 </div>
@@ -305,39 +305,39 @@ const Header = () => {
                 </nav>
 
                 {/* Mobile Auth */}
-                <div className="mt-auto px-4 pb-6 pt-4 border-t border-border flex flex-col gap-2">
+                <div className="mt-auto px-4 pb-8 pt-4 border-t border-border flex flex-col gap-3">
                   {isAuthenticated ? (
                     <>
                       <Link href="/dashboard/posts/new" onClick={() => setIsOpen(false)}>
-                        <Button className="w-full h-9 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-medium gap-2 rounded-md">
-                          <PenTool className="w-3.5 h-3.5" />
+                        <Button className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground text-[15px] font-semibold gap-2 rounded-lg">
+                          <PenTool className="w-4 h-4" />
                           Write an article
                         </Button>
                       </Link>
                       <Link href="/dashboard" onClick={() => setIsOpen(false)}>
-                        <Button variant="outline" className="w-full h-9 text-sm rounded-md border-border gap-2">
-                          <LayoutDashboard className="w-3.5 h-3.5" />
+                        <Button variant="outline" className="w-full h-11 text-[15px] rounded-lg border-border font-medium gap-2">
+                          <LayoutDashboard className="w-4 h-4" />
                           Dashboard
                         </Button>
                       </Link>
                       <Button
                         onClick={() => { logout(); setIsOpen(false); }}
                         variant="ghost"
-                        className="w-full h-9 text-sm text-destructive hover:bg-destructive/8 rounded-md gap-2"
+                        className="w-full h-11 text-[15px] font-medium text-destructive hover:bg-destructive/10 rounded-lg gap-2"
                       >
-                        <LogOut className="w-3.5 h-3.5" />
+                        <LogOut className="w-4 h-4" />
                         Sign out
                       </Button>
                     </>
                   ) : (
                     <>
                       <Link href="/register" onClick={() => setIsOpen(false)}>
-                        <Button className="w-full h-9 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-medium rounded-md">
+                        <Button className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground text-[15px] font-semibold rounded-lg">
                           Get started — free
                         </Button>
                       </Link>
                       <Link href="/login" onClick={() => setIsOpen(false)}>
-                        <Button variant="ghost" className="w-full h-9 text-sm font-medium rounded-md text-muted-foreground">
+                        <Button variant="outline" className="w-full h-11 text-[15px] font-medium rounded-lg text-foreground border-border hover:bg-muted">
                           Sign in
                         </Button>
                       </Link>

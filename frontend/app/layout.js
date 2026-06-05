@@ -10,7 +10,6 @@ import Script from "next/script";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ToastProvider } from "@/contexts/ToastContext";
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import LoginPopup from "@/components/LoginPopup";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -160,7 +159,6 @@ export default function RootLayout({ children }) {
                 </div>
                 <SpeedInsights />
                 <ScrollToTop />
-                <LoginPopup />
                 <Footer />
               </ThemeProvider>
             </ToastProvider>

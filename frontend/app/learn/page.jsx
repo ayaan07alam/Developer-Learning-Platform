@@ -109,9 +109,7 @@ const Learn = () => {
   }, [selectedId]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-background to-muted/20 relative overflow-hidden pt-24 pb-12">
-      {/* Subtle Background Pattern */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent" />
+    <div className="min-h-screen bg-background relative overflow-hidden pt-24 pb-12">
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center max-w-2xl mx-auto mb-16">
@@ -139,19 +137,10 @@ const Learn = () => {
                 layoutId={item.id}
                 key={item.id}
                 onClick={() => setSelectedId(item.id)}
-                whileHover={{ y: -6, rotateX: 5 }}
+                whileHover={{ y: -4 }}
                 whileTap={{ scale: 0.98 }}
-                className="group cursor-pointer relative bg-card/80 backdrop-blur-sm hover:bg-card border border-border/50 rounded-xl p-5 transition-all duration-300 shadow-lg hover:shadow-xl hover:border-border min-h-[120px] flex flex-col"
-                style={{
-                  transformStyle: 'preserve-3d',
-                  perspective: '1000px'
-                }}
+                className="group cursor-pointer relative bg-card hover:bg-muted border border-border rounded-xl p-5 transition-colors duration-200 shadow-sm hover:shadow-md min-h-[120px] flex flex-col"
               >
-                {/* 3D depth layer */}
-                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-
-                {/* Bottom shadow for 3D effect */}
-                <div className="absolute -bottom-1 left-2 right-2 h-1 bg-black/10 dark:bg-black/30 rounded-full blur-sm opacity-0 group-hover:opacity-100 transition-opacity" />
 
                 {/* Category name with colored text */}
                 <h3 className={cn(
@@ -189,10 +178,10 @@ const Learn = () => {
 
               <motion.div
                 layoutId={selectedId}
-                initial={{ scale: 0.9, opacity: 0 }}
+                initial={{ scale: 0.95, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                className="relative w-full max-w-md bg-card/95 backdrop-blur-xl rounded-2xl border border-border shadow-2xl overflow-hidden"
+                exit={{ scale: 0.95, opacity: 0 }}
+                className="relative w-full max-w-md bg-card rounded-2xl border border-border shadow-2xl overflow-hidden"
               >
                 <button
                   onClick={() => setSelectedId(null)}

@@ -60,8 +60,8 @@ export default function ExcelToolsPage() {
                     animate={{ opacity: 1, y: 0 }}
                     className="text-center mb-12"
                 >
-                    <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center">
-                        <Table className="w-10 h-10 text-white" />
+                    <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-primary/10 flex items-center justify-center">
+                        <Table className="w-10 h-10 text-primary" />
                     </div>
                     <h1 className="text-4xl font-bold mb-4">Excel Tools</h1>
                     <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
@@ -85,8 +85,8 @@ export default function ExcelToolsPage() {
                                     </div>
                                 )}
 
-                                <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${tool.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                                    <Table className="w-7 h-7 text-white" />
+                                <div className={`w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group- transition-transform`}>
+                                    <Table className="w-7 h-7 text-primary" />
                                 </div>
 
                                 <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
@@ -106,3 +106,4 @@ export default function ExcelToolsPage() {
         </div>
     );
 }
+

@@ -96,10 +96,11 @@ export default function DashboardPage() {
                             Welcome back, {user?.displayName}!
                         </p>
                         {/* Inspirational Writing Quote */}
-                        <div className="mt-4 p-4 rounded-lg bg-gradient-to-r from-primary/10 via-blue-500/10 to-purple-500/10 border border-primary/20 backdrop-blur-sm">
-                            <p className="text-lg font-serif italic text-foreground/90 leading-relaxed">
-                                "{randomQuote}"
-                            </p>
+                        <div className="mt-4 p-4 rounded-lg bg-card border border-border">
+                            <h3 className="text-sm font-semibold text-foreground mb-2">Total Impressions</h3>
+                            <div className="text-2xl font-bold text-primary">
+                                {stats?.totalViews?.toLocaleString() || 0}
+                            </div>
                         </div>
                     </div>
 
@@ -112,13 +113,11 @@ export default function DashboardPage() {
                                 <button
                                     key={tab.id}
                                     onClick={() => setActiveTab(tab.id)}
-                                    className={`
-                                        px-6 py-3 font-semibold rounded-full transition-all duration-300 flex items-center gap-2
-                                        ${isActive
-                                            ? 'bg-gradient-to-r from-primary to-blue-600 text-white shadow-lg shadow-primary/30 scale-105'
-                                            : 'text-muted-foreground hover:text-foreground hover:bg-secondary/40 hover:scale-105'
-                                        }
-                                    `}
+                                    className={`pb-4 px-2 text-sm font-medium transition-colors border-b-2 ${
+                                        activeTab === tab.id
+                                        ? 'border-primary text-primary'
+                                        : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'
+                                    }`}
                                 >
                                     <Icon className={`w-5 h-5 ${isActive ? 'animate-pulse' : ''}`} />
                                     <span className="font-bold">{tab.label}</span>

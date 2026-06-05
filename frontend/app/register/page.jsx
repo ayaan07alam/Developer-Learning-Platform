@@ -53,9 +53,6 @@ export default function RegisterPage() {
 
     return (
         <div className="min-h-screen pt-24 pb-12 bg-background relative overflow-hidden flex items-center justify-center">
-            {/* Background Decor */}
-            <div className="absolute top-20 left-10 w-64 h-64 bg-primary/20 rounded-full blur-[100px]" />
-            <div className="absolute bottom-20 right-10 w-80 h-80 bg-secondary/20 rounded-full blur-[120px]" />
 
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -63,7 +60,7 @@ export default function RegisterPage() {
                 className="w-full max-w-md px-6 relative z-10"
             >
                 <div className="bg-card rounded-2xl border border-border p-8 shadow-2xl">
-                    <h1 className="text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
+                    <h1 className="text-3xl font-bold mb-2 text-foreground tracking-tight">
                         Create Account
                     </h1>
                     <p className="text-muted-foreground mb-8">

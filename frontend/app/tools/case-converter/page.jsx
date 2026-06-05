@@ -48,8 +48,8 @@ export default function CaseConverterPage() {
                     animate={{ opacity: 1, y: 0 }}
                     className="text-center mb-8"
                 >
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-teal-500 to-green-500 flex items-center justify-center">
-                        <Type className="w-8 h-8 text-white" />
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-primary/10 flex items-center justify-center">
+                        <Type className="w-8 h-8 text-primary" />
                     </div>
                     <h1 className="text-4xl font-bold mb-3">Case Converter</h1>
                     <p className="text-muted-foreground text-lg">
@@ -110,3 +110,4 @@ export default function CaseConverterPage() {
         </div>
     );
 }
+

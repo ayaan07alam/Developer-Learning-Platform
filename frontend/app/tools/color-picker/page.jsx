@@ -81,8 +81,8 @@ export default function ColorPickerPage() {
                     animate={{ opacity: 1, y: 0 }}
                     className="text-center mb-8"
                 >
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center">
-                        <Palette className="w-8 h-8 text-white" />
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-primary/10 flex items-center justify-center">
+                        <Palette className="w-8 h-8 text-primary" />
                     </div>
                     <h1 className="text-4xl font-bold mb-3">Color Picker</h1>
                     <p className="text-muted-foreground text-lg">
@@ -155,7 +155,7 @@ export default function ColorPickerPage() {
                             <button
                                 key={preset}
                                 onClick={() => setColor(preset)}
-                                className="w-full aspect-square rounded-lg cursor-pointer hover:scale-110 transition-transform border-2 border-white/20"
+                                className="w-full aspect-square rounded-lg cursor-pointer  transition-transform border-2 border-white/20"
                                 style={{ backgroundColor: preset }}
                                 title={preset}
                             />
@@ -166,3 +166,4 @@ export default function ColorPickerPage() {
         </div>
     );
 }
+
