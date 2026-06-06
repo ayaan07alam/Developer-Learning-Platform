@@ -64,11 +64,11 @@ const Header = () => {
 
         {/* ── Logo ── */}
         <Link href="/" className="flex items-center group shrink-0">
-          <div className="relative w-[260px] h-16 md:w-[320px] md:h-[84px] hidden dark:block">
-             <Image src="/logo-minimal.png" alt="Runtime River" fill className="object-contain object-left brightness-0 invert" priority />
+          <div className="relative w-[220px] h-12 md:w-[260px] md:h-14 hidden dark:block">
+             <Image src="/logo-minimal.png" alt="Runtime River" fill className="object-contain object-left scale-[1.8] origin-left brightness-0 invert" priority />
           </div>
-          <div className="relative w-[260px] h-16 md:w-[320px] md:h-[84px] block dark:hidden">
-             <Image src="/logo-minimal.png" alt="Runtime River" fill className="object-contain object-left" priority />
+          <div className="relative w-[220px] h-12 md:w-[260px] md:h-14 block dark:hidden">
+             <Image src="/logo-minimal.png" alt="Runtime River" fill className="object-contain object-left scale-[1.8] origin-left" priority />
           </div>
         </Link>
 
