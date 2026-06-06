@@ -99,11 +99,17 @@
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     scroll-behavior: smooth;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
   }
 
   body {
     @apply bg-background text-foreground;
     transition: background-color 0.15s ease, color 0.15s ease;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
   }
 
   /* ── Premium dark mode texture ───────────────────────────────────────────
