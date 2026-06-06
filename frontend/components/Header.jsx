@@ -64,10 +64,10 @@ const Header = () => {
 
         {/* ── Logo ── */}
         <Link href="/" className="flex items-center group shrink-0">
-          <div className="relative w-[180px] h-14 md:w-[220px] md:h-16 hidden dark:block">
+          <div className="relative w-[220px] h-16 md:w-[260px] md:h-[72px] hidden dark:block">
              <Image src="/logo-minimal.png" alt="Runtime River" fill className="object-contain object-left" priority />
           </div>
-          <div className="relative w-[180px] h-14 md:w-[220px] md:h-16 block dark:hidden">
+          <div className="relative w-[220px] h-16 md:w-[260px] md:h-[72px] block dark:hidden">
              <Image src="/logo-minimal.png" alt="Runtime River" fill className="object-contain object-left" priority />
           </div>
         </Link>
@@ -151,7 +151,7 @@ const Header = () => {
                 <Button
                   size="sm"
                   variant="outline"
-                  className="h-9 gap-1.5 rounded-md border-border text-sm font-medium"
+                  className="h-9 gap-1.5 rounded-md border-border text-foreground hover:bg-muted text-sm font-medium"
                 >
                   <PenTool className="w-3.5 h-3.5" />
                   Write
