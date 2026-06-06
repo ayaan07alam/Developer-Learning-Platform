@@ -312,9 +312,9 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
     };
 
     return (
-        <div className="border border-border rounded-lg bg-card flex flex-col overflow-hidden" style={{ height: '900px' }}>
+        <div className="border border-border rounded-lg bg-card flex flex-col min-h-[600px]">
             {/* Sticky Toolbar - Fixed at top */}
-            <div className="flex-none bg-card border-b border-border shadow-sm">
+            <div className="sticky top-16 md:top-[72px] z-40 flex-none bg-card border-b border-border shadow-sm rounded-t-lg">
                 <div className="flex flex-wrap items-center gap-1 p-2">
                     {/* Text Formatting */}
                     <Button
@@ -887,7 +887,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
 
 
             {/* Editor - Scrollable content area */}
-            <div className="flex-1 overflow-y-auto">
+            <div className="flex-1">
                 <EditorContent editor={editor} />
             </div>
 
