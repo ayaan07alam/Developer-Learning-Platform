@@ -122,7 +122,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
         },
         editorProps: {
             attributes: {
-                class: 'prose prose-sm sm:prose xl:prose-lg dark:prose-invert focus:outline-none min-h-[600px] max-w-none p-6',
+                class: 'prose prose-sm sm:prose xl:prose-lg dark:prose-invert focus:outline-none min-h-[600px] max-w-none',
             },
         },
     });
@@ -312,10 +312,10 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
     };
 
     return (
-        <div className="border border-border rounded-lg bg-card flex flex-col min-h-[600px]">
-            {/* Sticky Toolbar - Fixed at top */}
-            <div className="sticky top-16 md:top-[72px] z-40 flex-none bg-card border-b border-border shadow-sm rounded-t-lg">
-                <div className="flex flex-wrap items-center gap-1 p-2">
+        <div className="border border-border rounded-lg bg-card flex flex-col lg:flex-row min-h-[600px] items-start relative">
+            {/* Sticky Sidebar Toolbar */}
+            <div className="sticky top-16 md:top-[88px] z-40 flex-none bg-card border-b lg:border-b-0 lg:border-r border-border shadow-sm rounded-t-lg lg:rounded-l-lg lg:rounded-tr-none w-full lg:w-20">
+                <div className="flex flex-nowrap lg:flex-wrap items-center justify-start lg:justify-center gap-1.5 p-2 overflow-x-auto lg:overflow-y-auto lg:max-h-[calc(100vh-120px)] hide-scrollbar">
                     {/* Text Formatting */}
                     <Button
                         type="button"
@@ -358,7 +358,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
                         <Strikethrough className="w-4 h-4" />
                     </Button>
 
-                    <div className="w-px h-6 bg-border mx-1" />
+                    <div className="shrink-0 w-px h-6 lg:w-full lg:h-px bg-border mx-1 lg:mx-0 lg:my-1" />
 
                     {/* Colors */}
                     <Button
@@ -382,7 +382,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
                         <Highlighter className="w-4 h-4" />
                     </Button>
 
-                    <div className="w-px h-6 bg-border mx-1" />
+                    <div className="shrink-0 w-px h-6 lg:w-full lg:h-px bg-border mx-1 lg:mx-0 lg:my-1" />
 
                     {/* Headings */}
                     <Button
@@ -416,7 +416,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
                         <Heading3 className="w-4 h-4" />
                     </Button>
 
-                    <div className="w-px h-6 bg-border mx-1" />
+                    <div className="shrink-0 w-px h-6 lg:w-full lg:h-px bg-border mx-1 lg:mx-0 lg:my-1" />
 
                     {/* Alignment */}
                     <Button
@@ -460,7 +460,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
                         <AlignJustify className="w-4 h-4" />
                     </Button>
 
-                    <div className="w-px h-6 bg-border mx-1" />
+                    <div className="shrink-0 w-px h-6 lg:w-full lg:h-px bg-border mx-1 lg:mx-0 lg:my-1" />
 
                     {/* Lists */}
                     <Button
@@ -484,7 +484,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
                         <ListOrdered className="w-4 h-4" />
                     </Button>
 
-                    <div className="w-px h-6 bg-border mx-1" />
+                    <div className="shrink-0 w-px h-6 lg:w-full lg:h-px bg-border mx-1 lg:mx-0 lg:my-1" />
 
                     {/* Code & Quote */}
                     <Button
@@ -508,7 +508,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
                         <Quote className="w-4 h-4" />
                     </Button>
 
-                    <div className="w-px h-6 bg-border mx-1" />
+                    <div className="shrink-0 w-px h-6 lg:w-full lg:h-px bg-border mx-1 lg:mx-0 lg:my-1" />
 
                     {/* Superscript/Subscript */}
                     <Button
@@ -532,7 +532,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
                         <SubscriptIcon className="w-4 h-4" />
                     </Button>
 
-                    <div className="w-px h-6 bg-border mx-1" />
+                    <div className="shrink-0 w-px h-6 lg:w-full lg:h-px bg-border mx-1 lg:mx-0 lg:my-1" />
 
                     {/* Horizontal Rule */}
                     <Button
@@ -558,7 +558,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
                         <Eraser className="w-4 h-4" />
                     </Button>
 
-                    <div className="w-px h-6 bg-border mx-1" />
+                    <div className="shrink-0 w-px h-6 lg:w-full lg:h-px bg-border mx-1 lg:mx-0 lg:my-1" />
 
                     {/* Media & Links */}
                     <Button
@@ -582,7 +582,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
                         <LinkIcon className="w-4 h-4" />
                     </Button>
 
-                    <div className="w-px h-6 bg-border mx-1" />
+                    <div className="shrink-0 w-px h-6 lg:w-full lg:h-px bg-border mx-1 lg:mx-0 lg:my-1" />
 
                     {/* TOC */}
                     <Button
@@ -596,7 +596,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
                         <ListTree className="w-4 h-4" />
                     </Button>
 
-                    <div className="w-px h-6 bg-border mx-1" />
+                    <div className="shrink-0 w-px h-6 lg:w-full lg:h-px bg-border mx-1 lg:mx-0 lg:my-1" />
 
                     {/* Table */}
                     <Button
@@ -610,7 +610,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
                         <Grid className="w-4 h-4" />
                     </Button>
 
-                    <div className="w-px h-6 bg-border mx-1" />
+                    <div className="shrink-0 w-px h-6 lg:w-full lg:h-px bg-border mx-1 lg:mx-0 lg:my-1" />
 
                     {/* Undo/Redo */}
                     <Button
@@ -637,7 +637,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
 
                 {/* Table Context Menu - only visible when table is active */}
                 {editor.isActive('table') && (
-                    <div className="flex flex-wrap items-center gap-1 p-2 border-t border-border bg-muted/20">
+                    <div className="flex flex-wrap items-center gap-1 p-2 border-t lg:border-t-0 lg:border-l border-border bg-muted/20">
                         <span className="text-xs text-muted-foreground mr-2 font-medium">Table Tools:</span>
 
                         <Button
@@ -887,7 +887,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
 
 
             {/* Editor - Scrollable content area */}
-            <div className="flex-1">
+            <div className="flex-1 w-full min-w-0 p-4 lg:p-6">
                 <EditorContent editor={editor} />
             </div>
 
