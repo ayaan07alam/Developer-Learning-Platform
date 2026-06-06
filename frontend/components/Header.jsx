@@ -60,7 +60,7 @@ const Header = () => {
           : "bg-background border-b border-border"
       )}
     >
-      <div className="container mx-auto px-4 md:px-6 max-w-screen-xl flex items-center justify-between h-16 md:h-[72px]">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-screen-xl flex items-center justify-between h-16 md:h-[72px]">
 
         {/* ── Logo ── */}
         <Link href="/" className="flex items-center group shrink-0">

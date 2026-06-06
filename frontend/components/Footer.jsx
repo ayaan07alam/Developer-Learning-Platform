@@ -34,7 +34,7 @@ const socials = [
 const Footer = () => {
   return (
     <footer className="bg-card border-t border-border">
-      <div className="container mx-auto px-4 md:px-6 max-w-screen-xl">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-screen-xl">
 
         {/* ─── Main grid ───────────────────────────────────────────────── */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 py-14">
@@ -104,14 +104,14 @@ const Footer = () => {
                 Get the latest tutorials and developer news delivered to your inbox.
               </p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-3">
               <input
                 type="email"
                 placeholder="Your email address"
-                className="flex-1 px-3 py-2.5 text-sm rounded-md bg-background border border-border focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all"
+                className="flex-1 min-w-0 px-3 py-2.5 text-sm rounded-md bg-background border border-border focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all"
               />
-              <Link href="/contact">
-                <button className="px-4 py-2.5 text-sm font-medium rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors flex items-center gap-1.5 whitespace-nowrap">
+              <Link href="/contact" className="w-full sm:w-auto shrink-0">
+                <button className="w-full justify-center px-4 py-2.5 text-sm font-medium rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors flex items-center gap-1.5 whitespace-nowrap">
                   <Mail className="w-3.5 h-3.5" />
                   Subscribe
                 </button>
@@ -121,7 +121,7 @@ const Footer = () => {
         </div>
 
         {/* ─── Bottom bar ──────────────────────────────────────────────── */}
-        <div className="border-t border-border py-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
+        <div className="border-t border-border pt-6 pb-12 md:py-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-muted-foreground text-center md:text-left">
           <span>&copy; {new Date().getFullYear()} RuntimeRiver. All rights reserved.</span>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-1.5">
