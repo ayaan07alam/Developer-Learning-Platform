@@ -151,6 +151,7 @@ export default function RootLayout({ children }) {
                 enableSystem
                 disableTransitionOnChange
                 storageKey="runtimeriver-theme"
+              >
                 <div className="relative flex flex-col min-h-[100dvh] w-full overflow-x-clip">
                   <Header />
                   <main className="flex-1 w-full flex flex-col">
