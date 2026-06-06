@@ -152,14 +152,15 @@ export default function RootLayout({ children }) {
                 disableTransitionOnChange
                 storageKey="runtimeriver-theme"
               >
-                <Header></Header>
-
-                <div className="min-h-[100dvh]">
-                  {children}
+                <div className="relative flex flex-col min-h-[100dvh] w-full overflow-x-hidden">
+                  <Header />
+                  <main className="flex-1 w-full flex flex-col">
+                    {children}
+                  </main>
+                  <Footer />
                 </div>
                 <SpeedInsights />
                 <ScrollToTop />
-                <Footer />
               </ThemeProvider>
             </ToastProvider>
           </AuthProvider>
