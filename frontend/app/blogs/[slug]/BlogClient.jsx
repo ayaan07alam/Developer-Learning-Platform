@@ -122,7 +122,16 @@ const BlogPost = ({ initialPost }) => {
                                     <span className="text-border">·</span>
                                     <span className="flex items-center gap-1.5">
                                         <Calendar className="w-3.5 h-3.5" />
-                                        {new Date(post.publishedAt || post.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                                        {(() => {
+                                            try {
+                                                const dateVal = post.publishedAt || post.createdAt;
+                                                if (!dateVal) return '';
+                                                let d = Array.isArray(dateVal) 
+                                                    ? new Date(dateVal[0], dateVal[1] - 1, dateVal[2]) 
+                                                    : new Date(dateVal);
+                                                return isNaN(d.getTime()) ? '' : d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                                            } catch (e) { return ''; }
+                                        })()}
                                     </span>
                                     {post.updatedAt && post.publishedAt && new Date(post.updatedAt) > new Date(post.publishedAt) && (
                                         <span className="text-[11px] px-1.5 py-0.5 bg-muted rounded text-muted-foreground">Updated</span>

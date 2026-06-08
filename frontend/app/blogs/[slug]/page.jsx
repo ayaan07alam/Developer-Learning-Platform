@@ -15,7 +15,8 @@ async function getPost(slug) {
             return null;
         }
 
-        return res.json();
+        const data = await res.json();
+        return data;
     } catch (error) {
         console.error('Error fetching post:', error);
         return null;
@@ -53,7 +54,18 @@ export async function generateMetadata({ params }) {
                     alt: post.title,
                 },
             ],
-            publishedTime: post.publishedAt || post.createdAt,
+            publishedTime: (() => {
+                const dateVal = post.publishedAt || post.createdAt;
+                if (!dateVal) return undefined;
+                if (Array.isArray(dateVal)) {
+                    if (dateVal.length >= 3) {
+                        return new Date(dateVal[0], dateVal[1] - 1, dateVal[2], dateVal[3] || 0, dateVal[4] || 0, dateVal[5] || 0).toISOString();
+                    }
+                    return undefined;
+                }
+                const d = new Date(dateVal);
+                return isNaN(d.getTime()) ? undefined : d.toISOString();
+            })(),
             authors: [post.createdBy?.displayName || 'RuntimeRiver Team'],
             tags: post.tags,
         },

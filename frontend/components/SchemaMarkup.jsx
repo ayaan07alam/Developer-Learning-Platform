@@ -9,7 +9,18 @@ export default function SchemaMarkup({ post, faqs = [] }) {
         "headline": post.title,
         "description": post.excerpt || post.metaDescription,
         "image": post.featuredImage || post.mainImage,
-        "datePublished": post.publishedAt || post.createdAt,
+        "datePublished": (() => {
+            const dateVal = post.publishedAt || post.createdAt;
+            if (!dateVal) return undefined;
+            if (Array.isArray(dateVal)) {
+                if (dateVal.length >= 3) {
+                    return new Date(dateVal[0], dateVal[1] - 1, dateVal[2], dateVal[3] || 0, dateVal[4] || 0, dateVal[5] || 0).toISOString();
+                }
+                return undefined;
+            }
+            const d = new Date(dateVal);
+            return isNaN(d.getTime()) ? undefined : d.toISOString();
+        })(),
         "dateModified": post.updatedAt,
         "author": {
             "@type": "Person",
