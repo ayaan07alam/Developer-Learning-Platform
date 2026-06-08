@@ -167,7 +167,7 @@ const Header = () => {
                 >
                   <User className="w-4 h-4" />
                 </Button>
-                <div className="absolute right-0 mt-1 w-52 bg-popover border border-border rounded-lg shadow-lg shadow-black/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
+                <div className="absolute right-0 mt-1 w-52 bg-popover border border-border rounded-lg shadow-lg shadow-black/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-150 z-50">
                   <div className="py-1">
                     <div className="px-3 py-2.5 border-b border-border">
                       <p className="font-semibold text-sm truncate text-foreground">{user?.displayName || user?.email?.split('@')[0]}</p>

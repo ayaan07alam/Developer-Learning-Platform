@@ -2,8 +2,8 @@ import React from 'react';
 
 const TermsOfService = () => {
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-semibold mb-4">TERMS OF SERVICE</h1>
+    <div className="max-w-prose mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12">
+      <h1 className="text-3xl font-bold mb-4">TERMS OF SERVICE</h1>
 
 
       <h2 className="text-2xl font-semibold mt-8">AGREEMENT TO OUR LEGAL TERMS</h2>

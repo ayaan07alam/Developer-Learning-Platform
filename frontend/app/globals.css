@@ -42,6 +42,15 @@
     --destructive:          0  72%  51%;
     --destructive-foreground: 0 0% 100%;
 
+    --success:             142  71%  45%;   /* Green */
+    --success-foreground:    0   0% 100%;
+
+    --warning:              38  92%  50%;   /* Yellow/Orange */
+    --warning-foreground:    0   0%   9%;
+
+    --info:                214  95%  56%;   /* Blue */
+    --info-foreground:       0   0% 100%;
+
     /* Neutral structure — NO teal tint on borders/inputs */
     --border:               0   0%  91%;   /* #E8E8E8                    */
     --input:                0   0%  91%;
@@ -131,6 +140,16 @@
   .dark ::selection {
     background-color: hsl(180 100% 28% / 0.22);
   }
+
+@layer utilities {
+  .glass {
+    @apply bg-background/80 backdrop-blur-md border border-border/50;
+  }
+  
+  .skip-to-content {
+    @apply absolute -top-40 left-0 bg-primary text-primary-foreground px-4 py-2 z-50 focus:top-0 transition-all;
+  }
+}
 
   /* Teal focus ring — clear but not harsh */
   :focus-visible {

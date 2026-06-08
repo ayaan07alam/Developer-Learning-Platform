@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { MessageSquare, Send, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { API_BASE_URL } from '@/lib/api-client';
+import Image from 'next/image';
 
 export default function InternalAuditChat({ postId }) {
     const { user, token } = useAuth();
@@ -84,7 +85,7 @@ export default function InternalAuditChat({ postId }) {
                         <div key={comment.id} className={`flex gap-3 ${comment.user.id === user?.id ? 'flex-row-reverse' : ''}`}>
                             <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
                                 {comment.user?.profilePhoto ? (
-                                    <img src={comment.user.profilePhoto} alt={comment.user.displayName} className="w-full h-full rounded-full object-cover" />
+                                    <Image src={comment.user.profilePhoto} alt={comment.user.displayName} width={32} height={32} className="w-full h-full rounded-full object-cover" />
                                 ) : (
                                     <User className="w-4 h-4 text-primary" />
                                 )}

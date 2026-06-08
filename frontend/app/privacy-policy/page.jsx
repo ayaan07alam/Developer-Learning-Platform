@@ -3,10 +3,10 @@ import Link from 'next/link';
 
 const PrivacyPolicy = () => {
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="max-w-prose mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12">
             <h1 className="text-3xl font-bold mb-8">PRIVACY POLICY</h1>
 
-            <p className="text-gray-600">Last updated December 28, 2025</p>
+            <p className="text-muted-foreground">Last updated December 28, 2025</p>
 
             <p className="mt-4">
                 This privacy notice for RuntimeRiver ("<strong>we</strong>," "<strong>us</strong>," or "<strong>our</strong>"), describes how and why we might collect, store, use, and/or share ("<strong>process</strong>") your information when you use our services ("<strong>Services</strong>"), such as when you:
@@ -196,7 +196,7 @@ const PrivacyPolicy = () => {
                 We may use cookies and similar tracking technologies (like web beacons and pixels) to gather information when you interact with our Services.
             </p>
 
-            <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg mt-4 border border-l-4 border-l-primary">
+            <div className="bg-muted p-4 rounded-lg mt-4 border-l-4 border-l-primary">
                 <h4 className="font-bold">Google AdSense & DoubleClick Cookie</h4>
                 <p className="mt-2 text-sm">
                     Google, as a third-party vendor, uses cookies to serve ads on our Service. Google's use of the DoubleClick cookie enables it and its partners to serve ads to our users based on their visit to our Service and/or other websites on the Internet.

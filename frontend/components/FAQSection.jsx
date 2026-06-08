@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { ChevronDown, HelpCircle } from 'lucide-react';
 import DOMPurify from 'isomorphic-dompurify';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function FAQSection({ faqs }) {
     const [openIndex, setOpenIndex] = useState(null);
@@ -43,16 +44,26 @@ export default function FAQSection({ faqs }) {
                         </button>
 
                         {/* Answer */}
-                        {openIndex === index && (
-                            <div
-                                className="p-4 pt-0 text-muted-foreground"
-                                itemScope
-                                itemProp="acceptedAnswer"
-                                itemType="https://schema.org/Answer"
-                            >
-                                <div itemProp="text" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(faq.answer) }} />
-                            </div>
-                        )}
+                        <AnimatePresence>
+                            {openIndex === index && (
+                                <motion.div
+                                    initial={{ height: 0, opacity: 0 }}
+                                    animate={{ height: "auto", opacity: 1 }}
+                                    exit={{ height: 0, opacity: 0 }}
+                                    transition={{ duration: 0.2 }}
+                                    className="overflow-hidden"
+                                >
+                                    <div
+                                        className="p-4 pt-0 text-muted-foreground"
+                                        itemScope
+                                        itemProp="acceptedAnswer"
+                                        itemType="https://schema.org/Answer"
+                                    >
+                                        <div itemProp="text" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(faq.answer) }} />
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </div>
                 ))}
             </div>

@@ -81,20 +81,20 @@ export const metadata = {
     address: false,
     telephone: false,
   },
-  og: {
+  openGraph: {
     url: 'https://www.runtimeriver.com',
     type: 'website',
     title: 'RuntimeRiver - Code, Content & Community',
     description: 'Read and **write** technical articles, run code instantly, and build your profile. The open community for developers.',
-    image: 'https://www.runtimeriver.com/og-image.jpg',
-    site_name: 'RuntimeRiver'
+    images: ['https://www.runtimeriver.com/og-image.jpg'],
+    siteName: 'RuntimeRiver'
   },
   twitter: {
     card: 'summary_large_image',
     site: '@RuntimeRiver',
     title: 'RuntimeRiver - Read, Write, Run',
     description: 'Read articles, write your own, and run code instantly.',
-    image: 'https://www.runtimeriver.com/twitter-image.jpg',
+    images: ['https://www.runtimeriver.com/twitter-image.jpg'],
     creator: '@RuntimeRiver'
   },
 
@@ -111,25 +111,27 @@ export default function RootLayout({ children }) {
 
   return (
     <html lang="en">
-      <Script id="ga-script"
-        async
-        src={`https://www.googletagmanager.com/gtag/js?id=G-S7LJXQ788V`}>
-      </Script>
-      <Script id="ga-init">
-        {
-          `window.dataLayer = window.dataLayer || [];
-                    function gtag(){dataLayer.push(arguments);}
-                    gtag('js', new Date());
-                    gtag('config', 'G-S7LJXQ788V');`
-        }
-      </Script>
-      <Script
-        id="json-ld"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5593264837587690"
-        crossorigin="anonymous"></Script>
+      <head>
+        <Script id="ga-script"
+          strategy="afterInteractive"
+          src={`https://www.googletagmanager.com/gtag/js?id=G-S7LJXQ788V`}>
+        </Script>
+        <Script id="ga-init" strategy="afterInteractive">
+          {
+            `window.dataLayer = window.dataLayer || [];
+                      function gtag(){dataLayer.push(arguments);}
+                      gtag('js', new Date());
+                      gtag('config', 'G-S7LJXQ788V');`
+          }
+        </Script>
+        <Script
+          id="json-ld"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <Script strategy="afterInteractive" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5593264837587690"
+          crossOrigin="anonymous"></Script>
+      </head>
       <body className={`${inter.variable} ${inter.className}`}>
         <NextTopLoader
           color="#007272"
