@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import DOMPurify from 'isomorphic-dompurify';
 import CodeBlockRenderer from './CodeBlockRenderer';
@@ -188,10 +188,16 @@ export default function BlogContent({ htmlContent }) {
         };
     }, []); // Empty array = runs once on mount, cleanup on unmount only
 
-    const sanitizedContent = DOMPurify.sanitize(htmlContent, {
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    const sanitizedContent = isMounted ? DOMPurify.sanitize(htmlContent, {
         ADD_TAGS: ['iframe'], // Allow iframes for embeds if needed, otherwise remove
         ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling']
-    });
+    }) : htmlContent;
 
     return (
         <div
@@ -205,6 +211,7 @@ export default function BlogContent({ htmlContent }) {
                        hover:prose-a:decoration-primary prose-a:transition-colors
                        prose-a:cursor-pointer"
             dangerouslySetInnerHTML={{ __html: sanitizedContent }}
+            suppressHydrationWarning={true}
         />
     );
 }

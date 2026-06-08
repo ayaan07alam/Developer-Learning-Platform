@@ -1,11 +1,16 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronDown, HelpCircle } from 'lucide-react';
 import DOMPurify from 'isomorphic-dompurify';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function FAQSection({ faqs }) {
     const [openIndex, setOpenIndex] = useState(null);
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
     if (!faqs || faqs.length === 0) return null;
 
@@ -59,7 +64,7 @@ export default function FAQSection({ faqs }) {
                                         itemProp="acceptedAnswer"
                                         itemType="https://schema.org/Answer"
                                     >
-                                        <div itemProp="text" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(faq.answer) }} />
+                                        <div itemProp="text" dangerouslySetInnerHTML={{ __html: isMounted ? DOMPurify.sanitize(faq.answer) : faq.answer }} suppressHydrationWarning={true} />
                                     </div>
                                 </motion.div>
                             )}
