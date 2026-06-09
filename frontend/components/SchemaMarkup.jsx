@@ -1,5 +1,6 @@
 "use client";
 import Script from 'next/script';
+import { parseApiDate } from '@/lib/seo-utils';
 
 export default function SchemaMarkup({ post, faqs = [] }) {
     // Article Schema
@@ -9,19 +10,8 @@ export default function SchemaMarkup({ post, faqs = [] }) {
         "headline": post.title,
         "description": post.excerpt || post.metaDescription,
         "image": post.featuredImage || post.mainImage,
-        "datePublished": (() => {
-            const dateVal = post.publishedAt || post.createdAt;
-            if (!dateVal) return undefined;
-            if (Array.isArray(dateVal)) {
-                if (dateVal.length >= 3) {
-                    return new Date(dateVal[0], dateVal[1] - 1, dateVal[2], dateVal[3] || 0, dateVal[4] || 0, dateVal[5] || 0).toISOString();
-                }
-                return undefined;
-            }
-            const d = new Date(dateVal);
-            return isNaN(d.getTime()) ? undefined : d.toISOString();
-        })(),
-        "dateModified": post.updatedAt,
+        "datePublished": parseApiDate(post.publishedAt || post.createdAt)?.toISOString(),
+        "dateModified": parseApiDate(post.updatedAt || post.publishedAt || post.createdAt)?.toISOString(),
         "author": {
             "@type": "Person",
             "name": post.author?.name || post.createdBy?.displayName || "Anonymous",

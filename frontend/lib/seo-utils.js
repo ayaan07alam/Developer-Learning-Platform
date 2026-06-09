@@ -107,11 +107,25 @@ export function buildBreadcrumbs(pathname) {
 }
 
 /**
+ * Parse API date values (ISO strings or Java LocalDateTime arrays) safely.
+ */
+export function parseApiDate(date) {
+    if (!date) return null;
+    if (Array.isArray(date)) {
+        if (date.length < 3) return null;
+        const d = new Date(date[0], date[1] - 1, date[2], date[3] || 0, date[4] || 0, date[5] || 0);
+        return isNaN(d.getTime()) ? null : d;
+    }
+    const d = new Date(date);
+    return isNaN(d.getTime()) ? null : d;
+}
+
+/**
  * Format date for schema markup
  */
 export function formatSchemaDate(date) {
-    if (!date) return new Date().toISOString();
-    return new Date(date).toISOString();
+    const d = parseApiDate(date);
+    return (d || new Date()).toISOString();
 }
 
 /**

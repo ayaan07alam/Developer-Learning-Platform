@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import DOMPurify from 'isomorphic-dompurify';
 import CodeBlockRenderer from './CodeBlockRenderer';
 
 export default function BlogContent({ htmlContent }) {
@@ -186,18 +185,28 @@ export default function BlogContent({ htmlContent }) {
         return () => {
             document.removeEventListener('click', handleHashLinkClick, true);
         };
-    }, []); // Empty array = runs once on mount, cleanup on unmount only
-
-    const [isMounted, setIsMounted] = useState(false);
-
-    useEffect(() => {
-        setIsMounted(true);
     }, []);
 
-    const sanitizedContent = isMounted ? DOMPurify.sanitize(htmlContent, {
-        ADD_TAGS: ['iframe'], // Allow iframes for embeds if needed, otherwise remove
-        ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling']
-    }) : htmlContent;
+    const [sanitizedContent, setSanitizedContent] = useState(htmlContent || '');
+
+    useEffect(() => {
+        if (!htmlContent) {
+            setSanitizedContent('');
+            return;
+        }
+
+        let isMounted = true;
+        import('isomorphic-dompurify').then((DOMPurify) => {
+            if (isMounted) {
+                setSanitizedContent(DOMPurify.default.sanitize(htmlContent, {
+                    ADD_TAGS: ['iframe'],
+                    ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling']
+                }));
+            }
+        }).catch(err => console.error("Failed to load DOMPurify:", err));
+        
+        return () => { isMounted = false; };
+    }, [htmlContent]);
 
     return (
         <div
