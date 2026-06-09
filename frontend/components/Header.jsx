@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -26,16 +26,24 @@ const Header = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const { user, logout, isAuthenticated } = useAuth();
   const pathname = usePathname();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
     const handleScroll = () => setScrolled(window.scrollY > 10);
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  if (!mounted) return null;
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+      setSearchOpen(false);
+      setIsOpen(false);
+    }
+  };
 
   const navLinks = [
     { name: "Home",     href: "/" },
@@ -54,10 +62,10 @@ const Header = () => {
   return (
     <header
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-200",
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
         scrolled
-          ? "bg-background border-b border-border shadow-sm"
-          : "bg-background border-b border-border"
+          ? "bg-background/90 backdrop-blur-lg border-b border-border/80 shadow-sm"
+          : "bg-background/80 backdrop-blur-md border-b border-border/60"
       )}
     >
       <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-screen-xl flex items-center justify-between h-16 md:h-[72px]">
@@ -99,16 +107,7 @@ const Header = () => {
           {/* Search */}
           <div className="relative">
             {searchOpen ? (
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  if (searchQuery.trim()) {
-                    window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
-                    setSearchOpen(false);
-                  }
-                }}
-                className="flex items-center"
-              >
+              <form onSubmit={handleSearch} className="flex items-center">
                 <input
                   autoFocus
                   type="text"
@@ -138,7 +137,7 @@ const Header = () => {
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             className="h-9 w-9 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted"
           >
-            {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            {mounted && theme === "dark" ? <Sun className="w-4 h-4" /> : mounted ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4 opacity-0" />}
           </Button>
 
           {/* Notification Bell */}
@@ -242,7 +241,7 @@ const Header = () => {
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             className="h-9 w-9 rounded-md text-muted-foreground"
           >
-            {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            {mounted && theme === "dark" ? <Sun className="w-4 h-4" /> : mounted ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4 opacity-0" />}
           </Button>
 
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -262,16 +261,7 @@ const Header = () => {
 
                 {/* Mobile Search */}
                 <div className="px-4 pt-4">
-                  <form
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      if (searchQuery.trim()) {
-                        window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
-                        setIsOpen(false);
-                      }
-                    }}
-                    className="relative"
-                  >
+                  <form onSubmit={handleSearch} className="relative">
                     <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <input
                       type="text"

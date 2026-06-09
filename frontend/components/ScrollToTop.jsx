@@ -1,29 +1,30 @@
 "use client"
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowUp } from 'lucide-react';
 
 const ScrollToTop = () => {
+  const pathname = usePathname();
   const [isVisible, setIsVisible] = useState(false);
 
+  const isBlogArticle = pathname?.startsWith('/blogs/') && pathname !== '/blogs';
+
   useEffect(() => {
+    if (isBlogArticle) return;
+
     const toggleVisibility = () => {
-      if (window.pageYOffset > 300) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
+      setIsVisible(window.pageYOffset > 300);
     };
 
-    window.addEventListener('scroll', toggleVisibility);
-
+    window.addEventListener('scroll', toggleVisibility, { passive: true });
     return () => window.removeEventListener('scroll', toggleVisibility);
-  }, []);
+  }, [isBlogArticle]);
+
+  if (isBlogArticle) return null;
 
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -31,25 +32,14 @@ const ScrollToTop = () => {
       <AnimatePresence>
         {isVisible && (
           <motion.button
-            initial={{ opacity: 0, scale: 0.8, y: 20 }}
+            initial={{ opacity: 0, scale: 0.9, y: 12 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.8, y: 20 }}
+            exit={{ opacity: 0, scale: 0.9, y: 12 }}
             onClick={scrollToTop}
-            className="bg-primary text-primary-foreground p-3 rounded-md shadow-md hover:bg-primary/90 hover:shadow-lg transition-colors flex items-center justify-center"
+            className="flex items-center justify-center w-10 h-10 rounded-full bg-card border border-border text-muted-foreground hover:text-primary hover:border-primary/40 shadow-premium transition-colors"
             aria-label="Scroll to top"
           >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path d="M5 15l7-7 7 7"></path>
-            </svg>
+            <ArrowUp className="w-4 h-4" />
           </motion.button>
         )}
       </AnimatePresence>

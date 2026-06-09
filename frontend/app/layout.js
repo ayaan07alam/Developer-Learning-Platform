@@ -155,8 +155,9 @@ export default function RootLayout({ children }) {
                 storageKey="runtimeriver-theme"
               >
                 <div className="relative flex flex-col min-h-[100dvh] w-full overflow-x-clip">
+                  <a href="#main-content" className="skip-to-content">Skip to content</a>
                   <Header />
-                  <main className="flex-1 w-full flex flex-col">
+                  <main id="main-content" className="flex-1 w-full flex flex-col">
                     {children}
                   </main>
                   <Footer />

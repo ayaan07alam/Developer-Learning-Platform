@@ -49,7 +49,7 @@ const techTags = [
 
 const trustSignals = [
   { icon: BadgeCheck, label: "Community reviewed" },
-  { icon: ShieldCheck, label: "100% free, no ads" },
+  { icon: ShieldCheck, label: "Free to read & contribute" },
   { icon: Zap,         label: "Updated regularly" },
   { icon: Globe,       label: "Open to contributors" },
 ];

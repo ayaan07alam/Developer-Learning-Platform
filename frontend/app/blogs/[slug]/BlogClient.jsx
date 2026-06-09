@@ -11,6 +11,7 @@ import FAQSection from '@/components/FAQSection';
 import AuthorCard from '@/components/AuthorCard';
 import ReadingProgress from '@/components/ReadingProgress';
 import RelatedBlogs from '@/components/RelatedBlogs';
+import ArticleOutline from '@/components/marketing/ArticleOutline';
 import CustomDialog from '@/components/CustomDialog';
 import { useDialog } from '@/lib/useDialog';
 import { API_BASE_URL } from '@/lib/api-client';
@@ -31,8 +32,6 @@ const BlogPost = ({ initialPost }) => {
                     throw new Error('Post not found');
                 }
                 const data = await response.json();
-                console.log('Post data:', data);
-                console.log('FAQs:', data.faqs);
                 setPost(data);
             } catch (err) {
                 setError(err.message);
@@ -52,12 +51,15 @@ const BlogPost = ({ initialPost }) => {
 
     if (error || !post) {
         return (
-            <div className="min-h-screen pt-24 pb-12 bg-background flex items-center justify-center">
+            <div className="min-h-screen pt-24 pb-12 bg-background flex items-center justify-center px-6">
                 <div className="text-center max-w-md">
-                    <h1 className="text-4xl font-bold mb-4">404</h1>
-                    <p className="text-muted-foreground mb-6">Article not found</p>
-                    <Link href="/blogs" className="inline-block px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors">
-                        Back to Blogs
+                    <p className="section-label mb-3">404</p>
+                    <h1 className="text-3xl font-extrabold tracking-tight mb-3">Article not found</h1>
+                    <p className="text-muted-foreground mb-8 leading-relaxed">
+                        This article may have been removed or the URL might be incorrect.
+                    </p>
+                    <Link href="/blogs" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium">
+                        Browse all articles
                     </Link>
                 </div>
             </div>
@@ -98,11 +100,12 @@ const BlogPost = ({ initialPost }) => {
                             >
                                 {/* Category breadcrumb */}
                                 {post.categories?.[0] && (
-                                    <div className="flex items-center gap-2 mb-5">
-                                        <span className="text-[11px] font-semibold text-primary uppercase tracking-widest">
-                                            {post.categories[0].name}
-                                        </span>
-                                    </div>
+                                    <Link
+                                        href={`/categories/${post.categories[0].slug}`}
+                                        className="section-label inline-block mb-5 hover:underline"
+                                    >
+                                        {post.categories[0].name}
+                                    </Link>
                                 )}
 
                                 <h1 className="text-3xl md:text-4xl font-extrabold text-foreground tracking-tight mb-5 leading-tight">
@@ -169,6 +172,7 @@ const BlogPost = ({ initialPost }) => {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.3 }}
+                                className="article-content"
                             >
                                 <BlogContent htmlContent={post.content || post.smallDescription} />
                             </motion.div>
@@ -307,12 +311,9 @@ const BlogPost = ({ initialPost }) => {
 
                         </article>
 
-                        {/* Right Sidebar - Ad Space (2 cols) */}
+                        {/* Right Sidebar - Article outline */}
                         <aside className="hidden lg:block lg:col-span-2">
-                            <div className="sticky top-24 space-y-6">
-                                {/* Ad Space - Invisible Container */}
-                                <div className="h-[600px] w-full" />
-                            </div>
+                            <ArticleOutline containerSelector=".article-content" />
                         </aside>
                     </div>
                 </div>
