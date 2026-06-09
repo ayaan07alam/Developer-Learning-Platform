@@ -6,9 +6,30 @@ import CodeBlockRenderer from './CodeBlockRenderer';
 export default function BlogContent({ htmlContent }) {
     const contentRef = useRef(null);
 
-    // First useEffect: Setup content (headings, code blocks) when HTML changes
+    const [sanitizedContent, setSanitizedContent] = useState(htmlContent || '');
+
     useEffect(() => {
-        if (!contentRef.current) return;
+        if (!htmlContent) {
+            setSanitizedContent('');
+            return;
+        }
+
+        let isMounted = true;
+        import('isomorphic-dompurify').then((DOMPurify) => {
+            if (isMounted) {
+                setSanitizedContent(DOMPurify.default.sanitize(htmlContent, {
+                    ADD_TAGS: ['iframe'],
+                    ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling', 'data-toc', 'id'],
+                }));
+            }
+        }).catch(err => console.error("Failed to load DOMPurify:", err));
+
+        return () => { isMounted = false; };
+    }, [htmlContent]);
+
+    // Run after sanitized HTML is in the DOM (headings, code blocks, TOC)
+    useEffect(() => {
+        if (!contentRef.current || !sanitizedContent) return;
 
         const contentElement = contentRef.current;
 
@@ -135,7 +156,7 @@ export default function BlogContent({ htmlContent }) {
                 });
             });
 
-            // Style the View all button
+            // Style and wire up the View all button (inline onclick is stripped by DOMPurify)
             const button = firstCell.querySelector('button');
             if (button) {
                 button.style.background = 'transparent';
@@ -146,9 +167,17 @@ export default function BlogContent({ htmlContent }) {
                 button.style.fontSize = '14px';
                 button.style.fontWeight = '500';
                 button.style.marginTop = '16px';
+
+                button.onclick = () => {
+                    const hidden = contentElement.querySelector('#toc-hidden-items');
+                    if (!hidden) return;
+                    const isHidden = hidden.style.display === 'none' || !hidden.style.display;
+                    hidden.style.display = isHidden ? 'block' : 'none';
+                    button.textContent = isHidden ? 'View less ↑' : 'View all ↓';
+                };
             }
         });
-    }, [htmlContent]);
+    }, [sanitizedContent]);
 
     // Second useEffect: Global click handler (runs ONCE, never removed until unmount)
     useEffect(() => {
@@ -186,27 +215,6 @@ export default function BlogContent({ htmlContent }) {
             document.removeEventListener('click', handleHashLinkClick, true);
         };
     }, []);
-
-    const [sanitizedContent, setSanitizedContent] = useState(htmlContent || '');
-
-    useEffect(() => {
-        if (!htmlContent) {
-            setSanitizedContent('');
-            return;
-        }
-
-        let isMounted = true;
-        import('isomorphic-dompurify').then((DOMPurify) => {
-            if (isMounted) {
-                setSanitizedContent(DOMPurify.default.sanitize(htmlContent, {
-                    ADD_TAGS: ['iframe'],
-                    ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling']
-                }));
-            }
-        }).catch(err => console.error("Failed to load DOMPurify:", err));
-        
-        return () => { isMounted = false; };
-    }, [htmlContent]);
 
     return (
         <div
