@@ -4,6 +4,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import RichTextEditor from '@/components/RichTextEditor';
 import FAQBuilder from '@/components/FAQBuilder';
+import TOCBuilder from '@/components/TOCBuilder';
 import { Button } from '@/components/ui/button';
 import { Save, Eye, Trash2, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
@@ -45,6 +46,7 @@ export default function EditPostPage() {
         metaDescription: '',
         tags: [],
         faqs: [],
+        tocItems: [],
         status: 'DRAFT'
     });
 
@@ -140,6 +142,14 @@ export default function EditPostPage() {
     };
 
     const loadPostData = (post) => {
+        // Parse tocItems: could be a JSON string or an array
+        let tocItems = [];
+        try {
+            tocItems = typeof post.tocItems === 'string'
+                ? JSON.parse(post.tocItems || '[]')
+                : (Array.isArray(post.tocItems) ? post.tocItems : []);
+        } catch { tocItems = []; }
+
         setFormData({
             title: post.title || '',
             slug: post.slug || '',
@@ -150,6 +160,7 @@ export default function EditPostPage() {
             metaDescription: post.metaDescription || '',
             tags: post.tags || [],
             faqs: post.faqs || [],
+            tocItems,
             status: post.status || 'DRAFT'
         });
         if (post.categories && post.categories.length > 0) {
@@ -158,6 +169,13 @@ export default function EditPostPage() {
     };
 
     const loadRevisionData = (revision) => {
+        let tocItems = [];
+        try {
+            tocItems = typeof revision.tocItems === 'string'
+                ? JSON.parse(revision.tocItems || '[]')
+                : (Array.isArray(revision.tocItems) ? revision.tocItems : []);
+        } catch { tocItems = []; }
+
         setFormData({
             title: revision.title || '',
             slug: revision.slug || '',
@@ -168,7 +186,8 @@ export default function EditPostPage() {
             metaDescription: revision.metaDescription || '',
             tags: revision.tags || [],
             faqs: revision.faqs || [],
-            status: 'DRAFT' // Revisions are always drafts
+            tocItems,
+            status: 'DRAFT'
         });
         if (revision.categories && revision.categories.length > 0) {
             setSelectedCategories(revision.categories.map(cat => cat.id));
@@ -232,7 +251,8 @@ export default function EditPostPage() {
                         body: JSON.stringify({
                             ...formData,
                             tags: formData.tags.filter(t => t.trim()),
-                            categoryIds: selectedCategories
+                            categoryIds: selectedCategories,
+                            tocItems: JSON.stringify(formData.tocItems || [])
                         })
                     });
 
@@ -255,7 +275,8 @@ export default function EditPostPage() {
                         ...formData,
                         status: targetAction,
                         tags: formData.tags.filter(t => t.trim()),
-                        categoryIds: selectedCategories
+                        categoryIds: selectedCategories,
+                        tocItems: JSON.stringify(formData.tocItems || [])
                     })
                 });
 
@@ -699,6 +720,15 @@ export default function EditPostPage() {
                             <FAQBuilder
                                 faqs={formData.faqs}
                                 onChange={(faqs) => setFormData({ ...formData, faqs })}
+                            />
+                        </div>
+
+                        {/* TOC Builder */}
+                        <div className="pt-6 border-t border-border">
+                            <TOCBuilder
+                                content={formData.content}
+                                tocItems={formData.tocItems}
+                                onChange={(tocItems) => setFormData(prev => ({ ...prev, tocItems }))}
                             />
                         </div>
                     </div>

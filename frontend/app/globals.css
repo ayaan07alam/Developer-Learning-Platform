@@ -151,7 +151,7 @@
 
 @layer utilities {
   .glass {
-    @apply bg-background/80 backdrop-blur-md border border-border/50;
+    @apply bg-card border border-border;
   }
 
   .skip-to-content {
@@ -178,13 +178,14 @@
 ::-webkit-scrollbar-thumb         { background: hsl(var(--border)); border-radius: 9999px; }
 ::-webkit-scrollbar-thumb:hover   { background: hsl(var(--muted-foreground) / 0.4); }
 
-/* ─── Table of Contents ─────────────────────────────────────────────────────── */
+/* ─── Table of Contents (in-article) ────────────────────────────────────────── */
 .table-of-contents {
-  background: hsl(var(--muted));
+  background: hsl(var(--card));
   border: 1px solid hsl(var(--border));
+  border-left: 3px solid hsl(var(--primary));
   padding: 20px 24px;
   border-radius: 8px;
-  margin: 28px 0;
+  margin: 32px 0;
 }
 
 .toc-header {
@@ -198,11 +199,12 @@
 
 .toc-icon  { color: hsl(var(--primary)); }
 .toc-title {
-  font-size: 13.5px;
-  font-weight: 600;
-  color: hsl(var(--foreground));
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: hsl(var(--primary));
   margin: 0;
-  letter-spacing: -0.01em;
 }
 
 .toc-list, .toc-list ul, .toc-list li {
@@ -217,12 +219,12 @@
   color: hsl(var(--muted-foreground));
   text-decoration: none;
   display: inline-block;
-  padding: 2px 0;
-  font-size: 13px;
-  line-height: 1.55;
+  padding: 3px 0;
+  font-size: 13.5px;
+  line-height: 1.5;
   transition: color 0.15s ease;
 }
-.toc-link:hover { color: hsl(var(--primary)); }
+.toc-link:hover { color: hsl(var(--primary)); text-decoration: underline; text-underline-offset: 3px; }
 
 .toc-toggle-btn {
   background: transparent;
@@ -236,6 +238,71 @@
   margin-top: 10px;
 }
 .toc-toggle-btn:hover { opacity: 0.7; }
+
+/* ─── In-article TOC: hidden on desktop (sidebar TOC handles navigation) ─────── */
+/*
+   On lg+ screens the right sidebar "On this page" panel is visible and sticky.
+   Showing the same TOC again inside the article body is pure redundancy.
+   On mobile/tablet (below lg) the sidebar is hidden — so the in-article TOC
+   remains visible and functional for those users.
+*/
+@media (min-width: 1024px) {
+  .article-toc-table {
+    display: none !important;
+  }
+}
+
+
+/* ─── Premium Article Reading Enhancements ───────────────────────────────────── */
+
+/* Blockquote — editorial-style */
+.prose blockquote {
+  border-left: 3px solid hsl(var(--primary)) !important;
+  background: hsl(var(--muted) / 0.5) !important;
+  padding: 16px 20px !important;
+  border-radius: 0 8px 8px 0 !important;
+  margin: 28px 0 !important;
+  font-style: normal !important;
+  color: hsl(var(--foreground)) !important;
+}
+.prose blockquote p { margin: 0 !important; }
+.dark .prose blockquote {
+  background: hsl(var(--muted) / 0.4) !important;
+}
+
+/* Inline code — clean pill */
+.prose :not(pre) > code {
+  background: hsl(var(--primary) / 0.08) !important;
+  color: hsl(var(--primary)) !important;
+  border: 1px solid hsl(var(--primary) / 0.2) !important;
+  border-radius: 4px !important;
+  padding: 1px 6px !important;
+  font-size: 0.85em !important;
+}
+.dark .prose :not(pre) > code {
+  background: hsl(var(--primary) / 0.12) !important;
+  border-color: hsl(var(--primary) / 0.25) !important;
+}
+
+/* HR — subtle separator */
+.prose hr {
+  border: none !important;
+  border-top: 1px solid hsl(var(--border)) !important;
+  margin: 40px 0 !important;
+}
+
+/* H2 — add subtle top border accent */
+.prose h2 {
+  padding-bottom: 8px !important;
+  border-bottom: 1px solid hsl(var(--border)) !important;
+  margin-bottom: 16px !important;
+}
+
+/* Smooth image loading */
+.prose img {
+  border-radius: 10px !important;
+  border: 1px solid hsl(var(--border)) !important;
+}
 
 /* ─── Prose Table Styles ────────────────────────────────────────────────────── */
 .prose table,

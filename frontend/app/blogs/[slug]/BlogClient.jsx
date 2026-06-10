@@ -82,8 +82,8 @@ const BlogPost = ({ initialPost }) => {
                             <RelatedBlogs currentPost={post} />
                         </aside>
 
-                        {/* Main Content (8 cols) - Centered */}
-                        <article className="lg:col-span-8">
+                        {/* Main Content (7 cols) - Centered */}
+                        <article className="lg:col-span-7">
                             {/* Back Button */}
                             <Link
                                 href="/blogs"
@@ -311,9 +311,12 @@ const BlogPost = ({ initialPost }) => {
 
                         </article>
 
-                        {/* Right Sidebar - Article outline */}
-                        <aside className="hidden lg:block lg:col-span-2">
-                            <ArticleOutline containerSelector=".article-content" />
+                        {/* Right Sidebar - Sticky TOC + Google Ads slot (3 cols) */}
+                        <aside className="hidden lg:block lg:col-span-3">
+                            <ArticleOutline
+                                containerSelector=".article-content"
+                                tocItems={post.tocItems}
+                            />
                         </aside>
                     </div>
                 </div>

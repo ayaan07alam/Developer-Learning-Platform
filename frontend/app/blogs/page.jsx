@@ -178,7 +178,7 @@ const Blogs = () => {
       </div>
 
       {/* ─── Sticky filter bar ───────────────────────────────────────── */}
-      <div className="sticky top-14 md:top-16 z-30 bg-background/95 backdrop-blur-sm border-b border-border">
+      <div className="sticky top-14 md:top-16 z-30 bg-background border-b border-border">
         <div className="container mx-auto px-4 md:px-6 max-w-screen-xl py-3 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
           {/* Search */}
           <div className="relative flex-1 max-w-sm">

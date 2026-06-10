@@ -1,29 +1,57 @@
 "use client";
-import { useEffect, useState } from "react";
-import { List } from "lucide-react";
+import { useEffect, useState, useRef } from "react";
 
-export default function ArticleOutline({ containerSelector = ".article-content" }) {
+export default function ArticleOutline({ containerSelector = ".article-content", tocItems }) {
     const [headings, setHeadings] = useState([]);
     const [activeId, setActiveId] = useState("");
+    const navRef = useRef(null);
 
     useEffect(() => {
-        const container = document.querySelector(containerSelector);
-        if (!container) return;
+        // ── Strategy 1: Editor-curated tocItems from the database ────────────
+        // If the author explicitly selected headings in the dashboard, use those.
+        // tocItems arrives as a JSON string (stored in DB) or parsed array.
+        if (tocItems) {
+            let parsed = [];
+            try {
+                parsed = typeof tocItems === "string"
+                    ? JSON.parse(tocItems)
+                    : (Array.isArray(tocItems) ? tocItems : []);
+            } catch { parsed = []; }
 
-        const elements = container.querySelectorAll("h2, h3");
-        const items = Array.from(elements)
-            .map((el) => ({
-                id: el.id,
-                text: el.textContent?.trim() || "",
-                level: el.tagName === "H3" ? 3 : 2,
-            }))
-            .filter((h) => h.id && h.text);
+            if (parsed.length > 0) {
+                setHeadings(parsed);
+                setupScrollSpy(parsed);
+                return;
+            }
+        }
 
-        setHeadings(items);
+        // ── Strategy 2: Auto-detect from DOM (legacy posts / no curation) ────
+        // Delay lets BlogContent finish injecting IDs into heading elements.
+        const timer = setTimeout(() => {
+            const container = document.querySelector(containerSelector);
+            if (!container) return;
+
+            const elements = container.querySelectorAll("h2, h3");
+            const items = Array.from(elements)
+                .map((el) => ({
+                    id: el.id,
+                    text: el.textContent?.trim() || "",
+                    level: el.tagName === "H3" ? 3 : 2,
+                }))
+                .filter((h) => h.id && h.text);
+
+            setHeadings(items);
+            setupScrollSpy(items);
+        }, 700);
+
+        return () => clearTimeout(timer);
+    }, [containerSelector, tocItems]);
+
+    const setupScrollSpy = (items) => {
         if (!items.length) return;
 
         const handleScroll = () => {
-            const offset = 120;
+            const offset = 130;
             let current = items[0]?.id || "";
             for (const item of items) {
                 const el = document.getElementById(item.id);
@@ -36,45 +64,92 @@ export default function ArticleOutline({ containerSelector = ".article-content" 
 
         window.addEventListener("scroll", handleScroll, { passive: true });
         handleScroll();
+        // Note: cleanup is handled by the component's unmount (useEffect return)
         return () => window.removeEventListener("scroll", handleScroll);
-    }, [containerSelector]);
-
-    if (headings.length < 2) return null;
+    };
 
     const scrollTo = (id, e) => {
         e.preventDefault();
-        document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+        const el = document.getElementById(id);
+        if (el) {
+            el.scrollIntoView({ behavior: "smooth", block: "start" });
+            if (window.history.pushState) {
+                window.history.pushState(null, null, `#${id}`);
+            }
+        }
     };
 
     return (
-        <nav className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto">
-            <div className="rounded-xl border border-border bg-card/80 backdrop-blur-sm p-4">
-                <div className="flex items-center gap-2 mb-3 pb-3 border-b border-border">
-                    <List className="w-4 h-4 text-primary" />
-                    <span className="text-xs font-semibold uppercase tracking-widest text-foreground">
-                        On this page
-                    </span>
-                </div>
-                <ul className="space-y-0.5">
-                    {headings.map((heading) => (
-                        <li key={heading.id}>
-                            <a
-                                href={`#${heading.id}`}
-                                onClick={(e) => scrollTo(heading.id, e)}
-                                className={`block py-1.5 text-[13px] leading-snug transition-colors rounded-md no-underline ${
-                                    heading.level === 3 ? "pl-4" : "pl-1"
-                                } ${
-                                    activeId === heading.id
-                                        ? "text-primary font-medium"
-                                        : "text-muted-foreground hover:text-foreground"
-                                }`}
-                            >
-                                {heading.text}
-                            </a>
-                        </li>
-                    ))}
-                </ul>
+        <div className="sticky top-24 flex flex-col gap-4">
+
+            {/* ── TOC Panel ─────────────────────────────────────────── */}
+            {headings.length >= 2 && (
+                <nav
+                    ref={navRef}
+                    className="rounded-xl border border-border bg-card overflow-hidden"
+                >
+                    {/* Header */}
+                    <div className="px-4 pt-3.5 pb-3 border-b border-border">
+                        <p className="text-[10.5px] font-bold uppercase tracking-[0.14em] text-primary">
+                            On this page
+                        </p>
+                    </div>
+
+                    {/* Scrollable list — capped so ads slot always shows */}
+                    <ul
+                        className="py-1.5 overflow-y-auto"
+                        style={{ maxHeight: "38vh" }}
+                    >
+                        {headings.map((heading) => {
+                            const isActive = activeId === heading.id;
+                            return (
+                                <li key={heading.id} className="relative">
+                                    {/* Left border active indicator */}
+                                    <span
+                                        className="absolute left-0 top-0 bottom-0 w-0.5 rounded-r transition-all duration-200"
+                                        style={{
+                                            background: isActive
+                                                ? "hsl(var(--primary))"
+                                                : "transparent",
+                                        }}
+                                    />
+                                    <a
+                                        href={`#${heading.id}`}
+                                        onClick={(e) => scrollTo(heading.id, e)}
+                                        title={heading.text}
+                                        className={[
+                                            "block py-1.5 pr-3 text-[12px] leading-snug transition-colors duration-150 no-underline truncate",
+                                            heading.level === 3 ? "pl-7" : "pl-4",
+                                            isActive
+                                                ? "text-primary font-semibold"
+                                                : "text-muted-foreground hover:text-foreground",
+                                        ].join(" ")}
+                                    >
+                                        {heading.text}
+                                    </a>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </nav>
+            )}
+
+            {/* ── Google Ads slot ──────────────────────────────────── */}
+            {/*
+                Reserved for Google AdSense.
+                Replace inner content with <ins class="adsbygoogle" ...> when ready.
+                min-height ensures the slot holds space even before ad loads.
+            */}
+            <div
+                className="rounded-xl border border-dashed border-border/50 bg-muted/20 flex flex-col items-center justify-center"
+                style={{ minHeight: "260px" }}
+                aria-label="Advertisement"
+            >
+                <span className="text-[9.5px] font-bold uppercase tracking-widest text-muted-foreground/30 select-none pointer-events-none">
+                    Advertisement
+                </span>
             </div>
-        </nav>
+
+        </div>
     );
 }

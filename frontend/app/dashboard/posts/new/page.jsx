@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import RichTextEditor from '@/components/RichTextEditor';
 import FAQBuilder from '@/components/FAQBuilder';
+import TOCBuilder from '@/components/TOCBuilder';
 import { Button } from '@/components/ui/button';
 import { Save, Eye, Trash2 } from 'lucide-react';
 import CustomDialog from '@/components/CustomDialog';
@@ -52,6 +53,7 @@ export default function NewPostPage() {
         metaDescription: '',
         tags: [],
         faqs: [],
+        tocItems: [],
         categoryIds: []
     });
 
@@ -149,7 +151,8 @@ export default function NewPostPage() {
                 body: JSON.stringify({
                     ...formData,
                     status,
-                    categoryIds: selectedCategories
+                    categoryIds: selectedCategories,
+                    tocItems: JSON.stringify(formData.tocItems || [])
                 })
             });
 
@@ -586,6 +589,15 @@ export default function NewPostPage() {
                             <FAQBuilder
                                 faqs={formData.faqs}
                                 onChange={(faqs) => setFormData({ ...formData, faqs })}
+                            />
+                        </div>
+
+                        {/* TOC Builder */}
+                        <div className="pt-6 border-t border-border">
+                            <TOCBuilder
+                                content={formData.content}
+                                tocItems={formData.tocItems}
+                                onChange={(tocItems) => setFormData(prev => ({ ...prev, tocItems }))}
                             />
                         </div>
                     </div>

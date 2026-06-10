@@ -84,6 +84,7 @@ export default function BlogContent({ htmlContent }) {
             if (tocTables.length === 0 && !firstCell.textContent.includes('Table of Contents')) return;
 
             // Apply container styles
+            table.className = (table.className || '') + ' article-toc-table';
             table.style.width = '100%';
             table.style.height = 'auto'; // ensure height matches content
             table.style.background = 'hsl(var(--card))'; // Use theme card color
