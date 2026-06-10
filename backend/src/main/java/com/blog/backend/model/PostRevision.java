@@ -96,6 +96,9 @@ public class PostRevision {
     @Column(name = "show_toc")
     private Boolean showToc = true;
 
+    @Column(name = "key_takeaways", columnDefinition = "TEXT")
+    private String keyTakeaways; // JSON array of key takeaway strings
+
     // FAQs for this revision
     @OneToMany(mappedBy = "revision", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("displayOrder ASC")

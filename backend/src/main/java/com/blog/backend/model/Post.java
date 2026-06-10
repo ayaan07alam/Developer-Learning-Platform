@@ -139,6 +139,9 @@ public class Post {
         @Column(name = "show_toc")
         private Boolean showToc = true; // Whether to display TOC on live site
 
+        @Column(name = "key_takeaways", columnDefinition = "TEXT")
+        private String keyTakeaways; // JSON array of key takeaway strings
+
         @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
         @OrderBy("displayOrder ASC")
         private List<FAQ> faqs = new ArrayList<>();

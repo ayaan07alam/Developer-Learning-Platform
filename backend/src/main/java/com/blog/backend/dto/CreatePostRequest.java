@@ -38,5 +38,6 @@ public class CreatePostRequest {
     private List<String> tags = new ArrayList<>();
     private String tocItems; // JSON string
     private Boolean showToc = true;
+    private String keyTakeaways; // JSON array of key takeaway strings
     private List<FAQDTO> faqs = new ArrayList<>();
 }

@@ -16,6 +16,7 @@ import CustomDialog from '@/components/CustomDialog';
 import { useDialog } from '@/lib/useDialog';
 import { API_BASE_URL } from '@/lib/api-client';
 import LoadingPage from '@/components/Loader/Loader';
+import KeyTakeaways from '@/components/KeyTakeaways';
 
 const BlogPost = ({ initialPost }) => {
     const params = useParams();
@@ -165,6 +166,11 @@ const BlogPost = ({ initialPost }) => {
                                         className="w-full h-auto max-h-[500px] object-cover"
                                     />
                                 </motion.div>
+                            )}
+
+                            {/* Key Takeaways — after image, before body */}
+                            {post.keyTakeaways && (
+                                <KeyTakeaways keyTakeaways={post.keyTakeaways} />
                             )}
 
                             {/* Article Content */}

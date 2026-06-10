@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import RichTextEditor from '@/components/RichTextEditor';
 import FAQBuilder from '@/components/FAQBuilder';
 import TOCBuilder from '@/components/TOCBuilder';
+import KeyTakeawaysBuilder from '@/components/KeyTakeawaysBuilder';
 import { Button } from '@/components/ui/button';
 import { Save, Eye, Trash2, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
@@ -47,6 +48,7 @@ export default function EditPostPage() {
         tags: [],
         faqs: [],
         tocItems: [],
+        keyTakeaways: [],
         status: 'DRAFT'
     });
 
@@ -150,6 +152,14 @@ export default function EditPostPage() {
                 : (Array.isArray(post.tocItems) ? post.tocItems : []);
         } catch { tocItems = []; }
 
+        // Parse keyTakeaways
+        let keyTakeaways = [];
+        try {
+            keyTakeaways = typeof post.keyTakeaways === 'string'
+                ? JSON.parse(post.keyTakeaways || '[]')
+                : (Array.isArray(post.keyTakeaways) ? post.keyTakeaways : []);
+        } catch { keyTakeaways = []; }
+
         setFormData({
             title: post.title || '',
             slug: post.slug || '',
@@ -161,6 +171,7 @@ export default function EditPostPage() {
             tags: post.tags || [],
             faqs: post.faqs || [],
             tocItems,
+            keyTakeaways,
             status: post.status || 'DRAFT'
         });
         if (post.categories && post.categories.length > 0) {
@@ -176,6 +187,13 @@ export default function EditPostPage() {
                 : (Array.isArray(revision.tocItems) ? revision.tocItems : []);
         } catch { tocItems = []; }
 
+        let keyTakeaways = [];
+        try {
+            keyTakeaways = typeof revision.keyTakeaways === 'string'
+                ? JSON.parse(revision.keyTakeaways || '[]')
+                : (Array.isArray(revision.keyTakeaways) ? revision.keyTakeaways : []);
+        } catch { keyTakeaways = []; }
+
         setFormData({
             title: revision.title || '',
             slug: revision.slug || '',
@@ -187,6 +205,7 @@ export default function EditPostPage() {
             tags: revision.tags || [],
             faqs: revision.faqs || [],
             tocItems,
+            keyTakeaways,
             status: 'DRAFT'
         });
         if (revision.categories && revision.categories.length > 0) {
@@ -252,7 +271,8 @@ export default function EditPostPage() {
                             ...formData,
                             tags: formData.tags.filter(t => t.trim()),
                             categoryIds: selectedCategories,
-                            tocItems: JSON.stringify(formData.tocItems || [])
+                            tocItems: JSON.stringify(formData.tocItems || []),
+                            keyTakeaways: JSON.stringify(formData.keyTakeaways || [])
                         })
                     });
 
@@ -276,7 +296,8 @@ export default function EditPostPage() {
                         status: targetAction,
                         tags: formData.tags.filter(t => t.trim()),
                         categoryIds: selectedCategories,
-                        tocItems: JSON.stringify(formData.tocItems || [])
+                        tocItems: JSON.stringify(formData.tocItems || []),
+                        keyTakeaways: JSON.stringify(formData.keyTakeaways || [])
                     })
                 });
 
@@ -729,6 +750,14 @@ export default function EditPostPage() {
                                 content={formData.content}
                                 tocItems={formData.tocItems}
                                 onChange={(tocItems) => setFormData(prev => ({ ...prev, tocItems }))}
+                            />
+                        </div>
+
+                        {/* Key Takeaways Builder */}
+                        <div className="pt-6 border-t border-border">
+                            <KeyTakeawaysBuilder
+                                items={formData.keyTakeaways}
+                                onChange={(keyTakeaways) => setFormData(prev => ({ ...prev, keyTakeaways }))}
                             />
                         </div>
                     </div>

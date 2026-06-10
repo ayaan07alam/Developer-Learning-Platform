@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import RichTextEditor from '@/components/RichTextEditor';
 import FAQBuilder from '@/components/FAQBuilder';
 import TOCBuilder from '@/components/TOCBuilder';
+import KeyTakeawaysBuilder from '@/components/KeyTakeawaysBuilder';
 import { Button } from '@/components/ui/button';
 import { Save, Eye, Trash2 } from 'lucide-react';
 import CustomDialog from '@/components/CustomDialog';
@@ -54,6 +55,7 @@ export default function NewPostPage() {
         tags: [],
         faqs: [],
         tocItems: [],
+        keyTakeaways: [],
         categoryIds: []
     });
 
@@ -152,7 +154,8 @@ export default function NewPostPage() {
                     ...formData,
                     status,
                     categoryIds: selectedCategories,
-                    tocItems: JSON.stringify(formData.tocItems || [])
+                    tocItems: JSON.stringify(formData.tocItems || []),
+                    keyTakeaways: JSON.stringify(formData.keyTakeaways || [])
                 })
             });
 
@@ -598,6 +601,14 @@ export default function NewPostPage() {
                                 content={formData.content}
                                 tocItems={formData.tocItems}
                                 onChange={(tocItems) => setFormData(prev => ({ ...prev, tocItems }))}
+                            />
+                        </div>
+
+                        {/* Key Takeaways Builder */}
+                        <div className="pt-6 border-t border-border">
+                            <KeyTakeawaysBuilder
+                                items={formData.keyTakeaways}
+                                onChange={(keyTakeaways) => setFormData(prev => ({ ...prev, keyTakeaways }))}
                             />
                         </div>
                     </div>

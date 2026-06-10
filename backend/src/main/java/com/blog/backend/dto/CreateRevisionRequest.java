@@ -21,5 +21,6 @@ public class CreateRevisionRequest {
     private List<FAQDTO> faqs;
     private String tocItems;
     private Boolean showToc;
+    private String keyTakeaways;
     private String revisionNotes;
 }
