@@ -1,5 +1,7 @@
 package com.blog.backend.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -20,8 +22,9 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/tools/word")
-@CrossOrigin(origins = "*")
 public class WordToolsController {
+
+    private static final Logger log = LoggerFactory.getLogger(WordToolsController.class);
 
     @PostMapping("/compress")
     public ResponseEntity<?> compressWord(@RequestParam("file") MultipartFile file) {
@@ -43,8 +46,9 @@ public class WordToolsController {
             return new ResponseEntity<>(compressedBytes, headers, HttpStatus.OK);
 
         } catch (IOException e) {
+            log.error("Word compression failed", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to compress Word document: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to compress Word document"));
         }
     }
 
@@ -83,8 +87,9 @@ public class WordToolsController {
             return new ResponseEntity<>(outputStream.toByteArray(), headers, HttpStatus.OK);
 
         } catch (IOException e) {
+            log.error("Word to PDF conversion failed", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to convert Word to PDF: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to convert Word to PDF"));
         }
     }
 
@@ -112,8 +117,9 @@ public class WordToolsController {
             return new ResponseEntity<>(outputStream.toByteArray(), headers, HttpStatus.OK);
 
         } catch (IOException e) {
+            log.error("Text to Word conversion failed", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to create Word document: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to create Word document"));
         }
     }
 

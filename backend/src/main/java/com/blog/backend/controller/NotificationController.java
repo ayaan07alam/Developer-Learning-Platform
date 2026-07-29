@@ -1,5 +1,7 @@
 package com.blog.backend.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.blog.backend.model.Notification;
 import com.blog.backend.model.Role;
 import com.blog.backend.model.User;
@@ -14,10 +16,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/notifications")
 public class NotificationController {
+
+    private static final Logger log = LoggerFactory.getLogger(NotificationController.class);
 
     @Autowired
     private NotificationService notificationService;
@@ -85,7 +88,8 @@ public class NotificationController {
             }
             return ResponseEntity.ok(Map.of("message", "Notification sent successfully"));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+            log.warn("Invalid notification request", e);
+            return ResponseEntity.badRequest().body(Map.of("error", "Invalid notification request"));
         }
     }
 }

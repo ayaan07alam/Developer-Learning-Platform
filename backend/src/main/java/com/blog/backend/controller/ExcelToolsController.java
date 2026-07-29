@@ -1,5 +1,7 @@
 package com.blog.backend.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -19,8 +21,9 @@ import java.util.Iterator;
 
 @RestController
 @RequestMapping("/api/tools/excel")
-@CrossOrigin(origins = "*")
 public class ExcelToolsController {
+
+    private static final Logger log = LoggerFactory.getLogger(ExcelToolsController.class);
 
     @PostMapping("/compress")
     public ResponseEntity<?> compressExcel(@RequestParam("file") MultipartFile file) {
@@ -53,7 +56,8 @@ public class ExcelToolsController {
                     .body(compressedData);
 
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error compressing Excel: " + e.getMessage());
+            log.error("Excel compression failed", e);
+            return ResponseEntity.badRequest().body("Error compressing Excel");
         }
     }
 
@@ -149,7 +153,8 @@ public class ExcelToolsController {
                     .body(outputStream.toByteArray());
 
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error converting Excel to PDF: " + e.getMessage());
+            log.error("Excel to PDF conversion failed", e);
+            return ResponseEntity.badRequest().body("Error converting Excel to PDF");
         }
     }
 }

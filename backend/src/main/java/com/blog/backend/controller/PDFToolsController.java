@@ -1,5 +1,7 @@
 package com.blog.backend.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -19,8 +21,9 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/tools/pdf")
-@CrossOrigin(origins = "*")
 public class PDFToolsController {
+
+    private static final Logger log = LoggerFactory.getLogger(PDFToolsController.class);
 
     @PostMapping("/compress")
     public ResponseEntity<?> compressPDF(@RequestParam("file") MultipartFile file) {
@@ -41,8 +44,9 @@ public class PDFToolsController {
             return new ResponseEntity<>(compressedBytes, headers, HttpStatus.OK);
 
         } catch (IOException e) {
+            log.error("PDF compression failed", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to compress PDF: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to compress PDF"));
         }
     }
 
@@ -71,8 +75,9 @@ public class PDFToolsController {
             return new ResponseEntity<>(outputStream.toByteArray(), headers, HttpStatus.OK);
 
         } catch (IOException e) {
+            log.error("PDF to Word conversion failed", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to convert PDF to Word: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to convert PDF to Word"));
         }
     }
 
@@ -109,8 +114,9 @@ public class PDFToolsController {
             return new ResponseEntity<>(outputStream.toByteArray(), headers, HttpStatus.OK);
 
         } catch (IOException e) {
+            log.error("Text to PDF conversion failed", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to create PDF: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to create PDF"));
         }
     }
 

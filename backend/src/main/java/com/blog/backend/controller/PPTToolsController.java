@@ -1,5 +1,7 @@
 package com.blog.backend.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -21,8 +23,9 @@ import java.io.InputStream;
 
 @RestController
 @RequestMapping("/api/tools/ppt")
-@CrossOrigin(origins = "*")
 public class PPTToolsController {
+
+    private static final Logger log = LoggerFactory.getLogger(PPTToolsController.class);
 
     @PostMapping("/compress")
     public ResponseEntity<?> compressPPT(@RequestParam("file") MultipartFile file) {
@@ -56,7 +59,7 @@ public class PPTToolsController {
                         }
                     } catch (Exception e) {
                         // Ignore image errors and continue
-                        System.err.println("Failed to compress image: " + e.getMessage());
+                        log.warn("Failed to compress image in PPT slide", e);
                     }
                 }
             }
@@ -77,7 +80,8 @@ public class PPTToolsController {
                     .body(compressedData);
 
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error compressing PPT: " + e.getMessage());
+            log.error("PPT compression failed", e);
+            return ResponseEntity.badRequest().body("Error compressing PPT");
         }
     }
 
@@ -150,7 +154,8 @@ public class PPTToolsController {
                     .body(outputStream.toByteArray());
 
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error converting PPT to PDF: " + e.getMessage());
+            log.error("PPT to PDF conversion failed", e);
+            return ResponseEntity.badRequest().body("Error converting PPT to PDF");
         }
     }
 }

@@ -1,5 +1,7 @@
 package com.blog.backend.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.blog.backend.dto.CreatePostRequest;
 import com.blog.backend.dto.UpdatePostRequest;
 import com.blog.backend.model.*;
@@ -16,10 +18,11 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/posts")
 public class PostController {
+
+    private static final Logger log = LoggerFactory.getLogger(PostController.class);
 
     @Autowired
     private PostRepository postRepository;
@@ -269,8 +272,9 @@ public class PostController {
 
             return ResponseEntity.status(HttpStatus.CREATED).body(savedPost);
         } catch (Exception e) {
+            log.error("Post creation failed", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to create post: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to create post"));
         }
     }
 
@@ -389,8 +393,9 @@ public class PostController {
 
             return ResponseEntity.ok(savedPost);
         } catch (Exception e) {
+            log.error("Post update failed", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to update post: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to update post"));
         }
     }
 
@@ -457,8 +462,9 @@ public class PostController {
 
             return ResponseEntity.ok(Map.of("message", "Post deleted successfully"));
         } catch (Exception e) {
+            log.error("Post deletion failed", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to delete post: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to delete post"));
         }
     }
 
@@ -513,8 +519,9 @@ public class PostController {
 
             return ResponseEntity.ok(Map.of("message", "Deletion request submitted successfully"));
         } catch (Exception e) {
+            log.error("Deletion request submission failed", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to submit deletion request: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to submit deletion request"));
         }
     }
 
@@ -662,8 +669,9 @@ public class PostController {
                     "message", "Post submitted for approval successfully",
                     "post", updatedPost));
         } catch (Exception e) {
+            log.error("Post submission failed", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to submit post: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to submit post"));
         }
     }
 
@@ -719,8 +727,9 @@ public class PostController {
                     "message", "Post approved and published successfully",
                     "post", updatedPost));
         } catch (Exception e) {
+            log.error("Post approval failed", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to approve post: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to approve post"));
         }
     }
 
@@ -777,8 +786,9 @@ public class PostController {
                     "message", "Post rejected successfully",
                     "post", updatedPost));
         } catch (Exception e) {
+            log.error("Post rejection failed", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to reject post: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to reject post"));
         }
     }
 
@@ -830,8 +840,9 @@ public class PostController {
                     "message", "Post retracted to draft successfully",
                     "post", updatedPost));
         } catch (Exception e) {
+            log.error("Post unsubmission failed", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to unsubmit post: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to unsubmit post"));
         }
     }
 

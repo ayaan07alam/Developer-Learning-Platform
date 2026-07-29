@@ -1,5 +1,7 @@
 package com.blog.backend.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.blog.backend.dto.*;
 import com.blog.backend.model.*;
 import com.blog.backend.repository.*;
@@ -15,8 +17,9 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/jobs")
-@CrossOrigin(origins = "http://localhost:3000")
 public class JobController {
+
+    private static final Logger log = LoggerFactory.getLogger(JobController.class);
 
     @Autowired
     private JobRepository jobRepository;
@@ -56,8 +59,9 @@ public class JobController {
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
+            log.error("Failed to fetch jobs", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to fetch jobs: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to fetch jobs"));
         }
     }
 
@@ -87,8 +91,9 @@ public class JobController {
             JobResponse response = JobResponse.fromJob(job, includeEmployerInfo);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
+            log.error("Failed to fetch job", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to fetch job: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to fetch job"));
         }
     }
 
@@ -148,8 +153,9 @@ public class JobController {
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(JobResponse.fromJob(savedJob, true));
         } catch (Exception e) {
+            log.error("Job creation failed", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to create job: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to create job"));
         }
     }
 
@@ -216,8 +222,9 @@ public class JobController {
 
             return ResponseEntity.ok(JobResponse.fromJob(updatedJob, true));
         } catch (Exception e) {
+            log.error("Job update failed", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to update job: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to update job"));
         }
     }
 
@@ -252,8 +259,9 @@ public class JobController {
 
             return ResponseEntity.ok(Map.of("message", "Job deleted successfully"));
         } catch (Exception e) {
+            log.error("Job deletion failed", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to delete job: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to delete job"));
         }
     }
 
@@ -288,8 +296,9 @@ public class JobController {
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
+            log.error("Failed to fetch user jobs", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to fetch jobs: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to fetch jobs"));
         }
     }
 
@@ -324,8 +333,9 @@ public class JobController {
 
             return ResponseEntity.ok(JobResponse.fromJob(closedJob, true));
         } catch (Exception e) {
+            log.error("Job close failed", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to close job: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to close job"));
         }
     }
 
@@ -385,8 +395,9 @@ public class JobController {
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(JobApplicationResponse.fromApplication(savedApplication));
         } catch (Exception e) {
+            log.error("Job application failed", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to apply for job: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to apply for job"));
         }
     }
 
@@ -423,8 +434,9 @@ public class JobController {
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
+            log.error("Failed to fetch my applications", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to fetch applications: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to fetch applications"));
         }
     }
 
@@ -459,8 +471,9 @@ public class JobController {
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
+            log.error("Failed to fetch job applications", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to fetch applications: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to fetch applications"));
         }
     }
 

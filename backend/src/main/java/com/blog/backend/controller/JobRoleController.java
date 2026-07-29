@@ -1,5 +1,7 @@
 package com.blog.backend.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.blog.backend.model.JobRole;
 import com.blog.backend.model.User;
 import com.blog.backend.repository.UserRepository;
@@ -16,8 +18,9 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = { "http://localhost:3000", "http://localhost:3001" })
 public class JobRoleController {
+
+    private static final Logger log = LoggerFactory.getLogger(JobRoleController.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -71,11 +74,9 @@ public class JobRoleController {
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
-            System.err.println("ERROR in getJobRole:");
-            e.printStackTrace();
+            log.error("Failed to get job role", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error",
-                            "Failed to get job role: " + e.getClass().getSimpleName() + " - " + e.getMessage()));
+                    .body(Map.of("error", "Failed to get job role"));
         }
     }
 
@@ -121,7 +122,7 @@ public class JobRoleController {
                     "message", "Job role selected successfully",
                     "jobRole", jobRole.name()));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Failed to select job role", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Failed to select job role"));
         }
@@ -169,7 +170,7 @@ public class JobRoleController {
                     "message", "Job role changed successfully",
                     "jobRole", jobRole.name()));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Failed to change job role", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Failed to change job role"));
         }

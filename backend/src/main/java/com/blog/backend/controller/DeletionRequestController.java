@@ -1,5 +1,7 @@
 package com.blog.backend.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.blog.backend.model.*;
 import com.blog.backend.repository.PostDeletionRequestRepository;
 import com.blog.backend.repository.PostRepository;
@@ -17,8 +19,9 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/admin/deletion-requests")
-@CrossOrigin(origins = "*")
 public class DeletionRequestController {
+
+    private static final Logger log = LoggerFactory.getLogger(DeletionRequestController.class);
 
     @Autowired
     private PostDeletionRequestRepository deletionRequestRepository;
@@ -126,8 +129,9 @@ public class DeletionRequestController {
 
             return ResponseEntity.ok(Map.of("message", "Post deleted successfully"));
         } catch (Exception e) {
+            log.error("Deletion approval failed", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to approve deletion: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to approve deletion"));
         }
     }
 
@@ -171,8 +175,9 @@ public class DeletionRequestController {
 
             return ResponseEntity.ok(Map.of("message", "Deletion request denied"));
         } catch (Exception e) {
+            log.error("Deletion denial failed", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to deny deletion: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to deny deletion"));
         }
     }
 }

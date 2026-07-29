@@ -1,5 +1,7 @@
 package com.blog.backend.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,8 +20,9 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/tools/images")
-@CrossOrigin(origins = "*")
 public class ImageToolsController {
+
+    private static final Logger log = LoggerFactory.getLogger(ImageToolsController.class);
 
     @PostMapping("/convert")
     public ResponseEntity<?> convertImage(
@@ -61,8 +64,9 @@ public class ImageToolsController {
             return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
 
         } catch (IOException e) {
+            log.error("Image conversion failed", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to convert image: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to convert image"));
         }
     }
 
@@ -119,8 +123,9 @@ public class ImageToolsController {
             return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
 
         } catch (IOException e) {
+            log.error("Image resize failed", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to resize image: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to resize image"));
         }
     }
 
@@ -171,8 +176,9 @@ public class ImageToolsController {
             return new ResponseEntity<>(compressedBytes, headers, HttpStatus.OK);
 
         } catch (IOException e) {
+            log.error("Image compression failed", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to compress image: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to compress image"));
         }
     }
 

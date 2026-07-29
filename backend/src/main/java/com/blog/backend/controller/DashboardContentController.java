@@ -1,5 +1,7 @@
 package com.blog.backend.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.blog.backend.model.Post;
 import com.blog.backend.model.PostStatus;
 import com.blog.backend.model.PostRevision;
@@ -26,8 +28,9 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/content")
-@CrossOrigin(origins = "*")
 public class DashboardContentController {
+
+    private static final Logger log = LoggerFactory.getLogger(DashboardContentController.class);
 
     @Autowired
     private PostRepository postRepository;
@@ -68,8 +71,9 @@ public class DashboardContentController {
 
             return ResponseEntity.ok(activeRevisions);
         } catch (Exception e) {
+            log.error("Error fetching improvement drafts", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Error fetching improvement drafts: " + e.getMessage()));
+                    .body(Map.of("error", "Error fetching improvement drafts"));
         }
     }
 
@@ -95,8 +99,9 @@ public class DashboardContentController {
 
             return ResponseEntity.ok(pendingRevisions);
         } catch (Exception e) {
+            log.error("Error fetching pending revisions", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Error fetching pending revisions: " + e.getMessage()));
+                    .body(Map.of("error", "Error fetching pending revisions"));
         }
     }
 
@@ -136,8 +141,9 @@ public class DashboardContentController {
 
             return ResponseEntity.ok(posts);
         } catch (Exception e) {
+            log.error("Error fetching content", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Error fetching content: " + e.getMessage()));
+                    .body(Map.of("error", "Error fetching content"));
         }
     }
 
@@ -211,8 +217,9 @@ public class DashboardContentController {
 
             return ResponseEntity.ok(posts);
         } catch (Exception e) {
+            log.error("Error fetching all content", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Error fetching all content: " + e.getMessage()));
+                    .body(Map.of("error", "Error fetching all content"));
         }
     }
 
@@ -236,8 +243,9 @@ public class DashboardContentController {
 
             return ResponseEntity.ok(stats);
         } catch (Exception e) {
+            log.error("Error fetching stats", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Error fetching stats: " + e.getMessage()));
+                    .body(Map.of("error", "Error fetching stats"));
         }
     }
 
@@ -263,8 +271,9 @@ public class DashboardContentController {
 
             return ResponseEntity.ok(stats);
         } catch (Exception e) {
+            log.error("Error fetching user stats", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Error fetching user stats: " + e.getMessage()));
+                    .body(Map.of("error", "Error fetching user stats"));
         }
     }
 }

@@ -1,5 +1,7 @@
 package com.blog.backend.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.blog.backend.dto.PostHistoryResponse;
 import com.blog.backend.dto.ReviewRequest;
 import com.blog.backend.model.*;
@@ -22,8 +24,9 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/reviews")
-@CrossOrigin(origins = { "http://localhost:3000", "http://localhost:3001" })
 public class ReviewController {
+
+    private static final Logger log = LoggerFactory.getLogger(ReviewController.class);
 
     @Autowired
     private PostRepository postRepository;
@@ -84,8 +87,9 @@ public class ReviewController {
 
             return ResponseEntity.ok(Map.of("message", "Internal comment added successfully", "comment", comment));
         } catch (Exception e) {
+            log.error("Failed to add review comment", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to add comment: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to add comment"));
         }
     }
 
@@ -119,8 +123,9 @@ public class ReviewController {
             List<PostInternalComment> comments = internalCommentRepository.findByPostIdOrderByCreatedAtDesc(id);
             return ResponseEntity.ok(comments);
         } catch (Exception e) {
+            log.error("Failed to get review comments", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to get comments: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to get comments"));
         }
     }
 
@@ -156,8 +161,9 @@ public class ReviewController {
 
             return ResponseEntity.ok(pendingPosts);
         } catch (Exception e) {
+            log.error("Failed to fetch pending reviews", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to fetch pending reviews: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to fetch pending reviews"));
         }
     }
 
@@ -216,8 +222,9 @@ public class ReviewController {
                     "message", "Post approved successfully",
                     "post", savedPost));
         } catch (Exception e) {
+            log.error("Post approval via review failed", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to approve post: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to approve post"));
         }
     }
 
@@ -276,8 +283,9 @@ public class ReviewController {
                     "message", "Post rejected",
                     "post", savedPost));
         } catch (Exception e) {
+            log.error("Post rejection via review failed", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to reject post: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to reject post"));
         }
     }
 
@@ -315,8 +323,9 @@ public class ReviewController {
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
+            log.error("Failed to fetch post history", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to fetch post history: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to fetch post history"));
         }
     }
 
@@ -371,8 +380,9 @@ public class ReviewController {
                     "message", "Post submitted for review",
                     "post", savedPost));
         } catch (Exception e) {
+            log.error("Post submission for review failed", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to submit post: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to submit post"));
         }
     }
 }
