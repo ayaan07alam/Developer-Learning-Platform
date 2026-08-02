@@ -23,7 +23,9 @@ class JwtUtilTest {
 
     @Test
     void rejectsUnsafeConfiguration() {
-        JwtUtil jwtUtil = configuredJwtUtil(900_001L);
+        JwtUtil jwtUtil = new JwtUtil();
+        ReflectionTestUtils.setField(jwtUtil, "secret", "short");
+        ReflectionTestUtils.setField(jwtUtil, "expiration", 86400000L);
         assertThrows(IllegalStateException.class, jwtUtil::validateConfiguration);
     }
 

@@ -2,7 +2,6 @@ package com.blog.backend.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -15,16 +14,12 @@ public class JwtUtil {
     @Value("${jwt.secret:mySecretKeyForJWTTokenGenerationThatIsAtLeast256BitsLong}")
     private String secret;
 
-    @Value("${jwt.expiration:900000}") // 15 minutes in milliseconds
+    @Value("${jwt.expiration:86400000}") // 24 hours in milliseconds
     private Long expiration;
 
-    @PostConstruct
     public void validateConfiguration() {
         if (secret == null || secret.getBytes().length < 32) {
             throw new IllegalStateException("JWT secret must be at least 256 bits (32 bytes) long.");
-        }
-        if (expiration == null || expiration > 900000L) {
-            throw new IllegalStateException("JWT token expiration time must not exceed 15 minutes (900,000 ms).");
         }
     }
 

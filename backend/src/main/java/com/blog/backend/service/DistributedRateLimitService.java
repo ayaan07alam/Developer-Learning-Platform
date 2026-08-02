@@ -1,5 +1,6 @@
 package com.blog.backend.service;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import java.util.List;
 
 /** Redis-backed token bucket shared by every application replica. */
 @Service
+@ConditionalOnBean(StringRedisTemplate.class)
 public class DistributedRateLimitService {
     private static final DefaultRedisScript<List> TOKEN_BUCKET = new DefaultRedisScript<>("""
         local current = redis.call('HMGET', KEYS[1], 'tokens', 'updated')
